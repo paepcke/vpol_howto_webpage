@@ -29,6 +29,18 @@
 
 <center><h1>How to Access the VPOL Online Learning Data</h1></center>
 
+<ul>
+  <li><a href="http://mono.stanford.edu:8000">AnswerServer</a></li>
+  <li><a href="#dbConn">Preparing your machine for connecting to
+      databases</a></li>
+  <li><a href="#excel">Connecting from Excel</a></li>
+  <li><a href="#spss">Connecting from SPSS</a></li>
+  <li><a href="#razorSQL">Connecting from RazorSQL or Froq</a></li>
+  <li><a href="#appA">List of available data sets</a></li>
+  <li><a href="#appB">What's a tunnel, and how do I build one?</a></li>
+</ul>
+
+
 The Vice Provost Office for Online Learning facilitates the teaching
 of online classes. The instruction delivery platforms are instrumented
 to collect a variety of data around students' interaction with the
@@ -53,7 +65,7 @@ interactive charts of data directly from our sources. We explain these
 access methods here, or point to relevant instructions on the Web.
 
 Additionally, we run
-a <a href="www.tableausoftware.com/products/server">Tableau Server</a>
+a <a href="http://www.tableausoftware.com/products/server">Tableau Server</a>
 to which you can publish visualizations you create with the Tableau
 Desktop visualization tool. Visitors can manipulate these
 visualizations to the degree you provide for. A comment area is
@@ -84,7 +96,7 @@ In the simplest case your question has been asked and answered before,
 albeit for a different context. Such a context might be a particular
 class for which the question was originally asked, or a particular
 problem set. For cases like this
-our <a href="http://datastage.stanford.edu:8000">AnswerServer</a>
+our <a href="http://mono.stanford.edu:8000">AnswerServer</a>
 might help. This server differs from a typical FAQ list in that you
 are able to adjust the question to your context. We will be growing
 the coverage of that page as we go along. If you have an idea for a
@@ -125,7 +137,7 @@ Once you installed the connector, you will find it popping up in all
 the right places among the menu options that are referred to in the
 following sections.
 
-<h3>Connecting Excel</h3>
+<h3 id="excel">Connecting Excel</h3>
 
 See <a href=http://helpdeskgeek.com/office-tips/excel-to-mysql/>this reference</a>
 for how to fill your spreadsheet with a particular dataset. The result
@@ -150,7 +162,7 @@ accessing more restricted information, or the mostly open data.
 <b>Database:</b> [the name of the database of
 	       interest. See <a href="#appA">Appendix A</a>].</br>
 
-<h3>Connecting SPSS</h3>
+<h3 id="spss">Connecting SPSS</h3>
 
 Here is how you connect an SPSS sheet to one of the VPOL data
 sources. Remember first to <href src="#dbConn">install your database connector</a>.
@@ -195,7 +207,7 @@ Web. <a href="http://download.cnet.com/Froq/3000-2065_4-189145.html">Froq</a>
 for Mac, and <a href="http://razorsql.com/">RazorSQL</a> for Mac,
 Linux, and Windows are freeware tools used in the VPOL group.
 
-<h3>RazorSQL</h3>
+<h3 id="razorSQL">RazorSQL</h3>
 
 The application <i>RazorSQL</i>, which works under Mac, Windows, and
 Linux, can create either a tunneled or a direct connection to
