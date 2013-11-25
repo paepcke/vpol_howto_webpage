@@ -36,6 +36,8 @@
   <li><a href="#excel">Connecting from Excel</a></li>
   <li><a href="#spss">Connecting from SPSS</a></li>
   <li><a href="#razorSQL">Connecting from RazorSQL or Froq</a></li>
+  <li><a href="#pickUp">Picking up data and visualizations prepared
+  by staff or friends</a></li>
   <li><a href="#appA">List of available data sets</a></li>
   <li><a href="#appB">Explanation of OpenEdx data fields (to do)</a></li>
   <li><a href="#appC">How to build an ssh tunnel</a></li>
@@ -250,6 +252,47 @@ blank. In the <i>Database</i> field you enter one of the databases of
 
 At this point, you can continue via the RazorSQL manual and help
 pages. 
+
+
+<h2 id="pickUp">Picking up data and visualizations prepared by staff
+  or friends</h2>
+
+Sometimes staff or friends might prepare either data extracts or
+visualizations for you. If they park this information on
+infoviz.stanford.edu, they will give you the name of a 'workbook' on
+that server. To see the visualizations, and/or to grab the underlying
+data as .csv files follow these instructions:
+
+<ol>
+  <li>Go to <i>infoviz.stanford.edu</i></li>
+  <li>Log in as vpol/vpol</li>
+  <li>Click on <i>Workbooks</i></li>
+  <li>Find your workbook, and click on it</li>
+</ol>
+
+<center><img src="figs/tableauServerWorkbookScreenshotWeb.png"/></center>
+
+
+You should then see some number of charts that are part of the
+material for you. Open one of these <i>views</i>. Hover over marks to
+see tooltips. To see the data that is involved in a view, click the
+leftmost of the icons above the view.  
+
+Its tooltip says <i>Export</i>. You'll get a new window with two tabs:
+the one you'll be on will be just the data that went into the
+particular view you were on when you clicked export.
+
+If you want to grab all the data, choose the
+tab <i>Underlying</i>. You'll see the first 200 rows. Note that you
+might see some data in this fully populated table that you don't see
+in the visualizations: some rows might be filtered out in the
+views. You will need to do the same if appropriate to your further
+plans. 
+
+<center><img src="figs/tableauServerExportScreenshotWeb.png"/></center>
+
+Finally, to download, click the link <i>Download all rows as a text
+file</i>
 
 
 <h2 id="appA">Appendix A: List of Available Databases</h2>
