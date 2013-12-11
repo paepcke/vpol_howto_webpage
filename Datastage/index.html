@@ -39,7 +39,7 @@
   <li><a href="#pickUp">Picking up data and visualizations prepared
   by staff or friends</a></li>
   <li><a href="#appA">List of available data sets</a></li>
-  <li><a href="#appB">Explanation of OpenEdx data fields (to do)</a></li>
+  <li><a href="#appB">Explanation of OpenEdx data fields</a></li>
   <li><a href="#appC">How to build an ssh tunnel</a></li>
   <li><a href="https://docs.google.com/document/d/1WlWkaFkpzt9i3zGVqGYAnxK_wdklUncOnh4A0T5yeJs/edit?pli=1">Example queries</a></li>
   <li><a href="http://www.tableausoftware.com/public/gallery">Gallery
@@ -661,9 +661,266 @@ vl_2013_education</br>
 vl_2013_finance</br>
 vl_2013_venture</br>
 
-<h2 id="appB">Appendix B: Explanation of OpenEdx data fields (to do)</h2>
+<h2 id="appB">Appendix B: Explanation of OpenEdx data fields</h2>
+
+The Edx and EdxPrivate databases provide a lossless translation from
+the OpenEdx platform tracking logs to relational tables. The
+translation was constructed based on tracking logs of Stanford's
+OpenEdx classes, observed up to October 2013.
+
+Each entry in a tracking log contains information about one small
+interaction that one student undertook with the learning
+platform. Examples are the submission of a problem solution, a video
+control action, like starting a video, or seeking forward, or the
+initial creation of an account. The logs were designed to hold every
+piece of information that might need to be captured in the future. Not
+all of the log fields are currently in use. Of the many columns in the
+relational tables only some therefore need to be considered at this
+point. We describe these columns now, table by table, and in
+alphabetical order. Given the sparsity of field use, plus the fact
+that important information is replicated to the <i>EdxTrackEvent</i>
+table, researchers will likely need to query only that table, plus
+the <i>Answer</i> table. The latter is required if the actual answer
+to a problem solution submission needs to be retrieved.
+<p>
+Please also see
+the 
+<a href="http://data.edx.org/en/latest/internal_data_formats/tracking_logs.html">OpenEdx
+Tracking Log documentation</a> of the original JSON formatted
+fields. Those descriptions are authoritative.
 
 </p><center><img src="figs/edxERDiagramWeb.png"></center></br>
+The first word in the following descriptions are column names, the
+information following the name is the respective column's datatype,
+and a brief explanation of the column's semantics. Three question
+marks indicate that a column's semantics are ill understood by the
+author of this guide. In each case the lack of understanding arises
+either from a lack of documentation for a field in the original
+tracking logs, or from the author's ignorance about the greater
+context of the platform.
+
+<h3>EdxTrackEvent Table</h3>
+
+<b>_id VARCHAR(40)</b>: unique identifier.<br>
+<b>agent TEXT</b>: description of the student's browser software.<br>
+<b>anon_screen_name TEXT</b>: identifier assigned to each student to
+protect their privacy. The identifier is created by applying a hash
+function to the student's screen name. The screen name is held in a
+separate table <i>Account</i> that is located in a separate
+database, <i>EdxPrivate</i> with strict access permissions. <br>
+<b>answer_fk VARCHAR(40)</b>: foreign key to the <i>Answer</i> table
+where individual student answers to problems are stored, one answer
+submission at a time. This column is used to join
+the <i>EdxTrackEvent</i> table to the <i>Answer</i> table in queries
+that refer to both tables. <br>
+<b>answer_id TEXT</b>: unique identifier of one student's answer to
+one problem. Rarely needed.<br>
+<b>attempts INT</b>: number of attempts at a problem.<br>
+<b>badly_formatted TEXT</b>: about 0.8% of entries in the tracking
+logs are malformed, and can therefore not be mapped to the tables in
+this database. The raw text is provided in this column for reference.<br>
+<b>book_interaction_type TINYTEXT</b>: currently empty<br>
+<b>can_upload_file TINYTEXT</b>: indicates whether a student is able
+to upload a file. Rarely needed.<br>
+<b>correctMap_fk VARCHAR(40)</b>: foreign key to the <i>CorrectMap</i> table
+where information about answers to problems is stored. This
+information includes, for example, whether a hint was provided. Since
+most of the <i>CorrectMap</i> entries are not used, this column is
+also rarely used.<br>
+<b>correctness TINYTEXT</b>: empty. See <i>success</i> for the
+operative field.<br>
+<b>course_id TEXT</b>: computer readable identifier for the course
+about which a row provides information. More useful is the human
+readable course name in column <i>course_display_name</i>.<br>
+<b>downtime_for DATETIME</b>: amount of time the OpenEdx platform
+server that creates the tracking logs was turned off. When this field
+is empty, or contains 00:00:00, no downtime was detected between the
+current row and the previous row. Else the column contains the amount
+of downtime. This column is derived from the server heartbeats.<br>
+<b>event_id VARCHAR(40)</b>:identifier of an event. This column is
+ties together multiple rows that contain information about the same
+event. Translation of some original tracking log entries to a
+relational format sometimes requires that the information contained in
+those entries is spread across two or three rows. The situation arises
+when an original entry contains pieces of data that must be spread
+across three or more tables, such as the <i>EdxTrackEvent<</i> table
+the <i>CorrectMap</i> table, and the <i>Answer</i> table. In this
+example a first row is created in <i>EdxTrackEvent</i> that has its
+correctMap_fk set to reference the respective <i>Answer</i> table
+row. A second row in <i>EdxTrackEvent</i> will have its answer_fk
+column reference the <i>CorrectMap</i> table. The columns in the two 
+<i>EdxTrackEvent</i> rows that are not foreign keys are repeated.<br>
+<b>event_name TINYTEXT</b>:???<br>
+<b>event_source TINYTEXT</b>:indicates whether the event was initiated
+by a student's browser, or by the platform server.<br>
+<b>event_type TEXT</b>: indicates what happened that triggered the
+event of the current row. A long list describes
+this <a href="#eventTypeValues???">column's possible values</a>.<br>
+<b>feedback TEXT</b>: empty<br>
+<b>feedback_response_selected TINYINT</b>: empty<br>
+<b>goto_dest INT</b>: destination of navigation to a learning module<br>
+<b>goto_from INT</b>: origin of navigation to a learning module<br>
+<b>group_action TINYTEXT</b>: empty<br>
+<b>group_user TINYTEXT</b>: empty<br>
+<b>hint TEXT</b>: empty<br>
+<b>hintmode TINYTEXT</b>: empty<br>
+<b>instructor_id TEXT</b>: empty<br>
+<b>ip TINYTEXT</b>: the student's originating internet address<br>
+<b>load_info_fk VARCHAR(40)</b>: foreign key that references a row in
+<i>LoadInfo</i> table. This reference enables queries to determine the
+date at which the current row was loaded into the database. The
+purpose of this information is to enable the queries of a past
+research investigation to be repeated. New rows are continuously added
+to the database, so a query today may return different values from a
+query that produced the data for a research paper last month.<br>
+<b>long_answer TEXT</b>: empty<br>
+<b>msg TEXT</b>: empty<br>
+<b>new_score INT</b>: corrected problem score<br>
+<b>new_total INT</b>: corrected total points<br>
+<b>npoints TINYINT</b>: number of points for a problem<br>
+<b>orig_score INT</b>: original achieved score<br>
+<b>orig_total INT</b>: original number of points<br>
+<b>page TEXT</b>: URL of a page visited by a student<br>
+<b>position INT</b>: ???<br>
+<b>problem_choice TEXT</b>: ???<br>
+<b>problem_id TEXT</b>: computer readable identifier of a problem. A
+more useful column is likely the resource_display_name, which is the
+corresponding human readable name. Even that name, however, is only as
+good as what the problem set creator provided.<br>
+<b>question_location TEXT</b>: ???<br>
+<b>queuestate TEXT</b>: either empty if a problem submission was not
+queued, or a key/value pair in which the value provides the time of
+queuing.<br>
+<b>rubric_category INT</b>: ???<br>
+<b>rubric_selection INT</b>: ???<br>
+<b>sequence_id TEXT</b>: computer readable learning module identifier<br>
+<b>session TEXT</b>: computer readable identifier of a user session<br>
+<b>state_fk VARCHAR(40)</b>: foreign key to the <i>State</i>
+table. Rarely needed.<br>
+<b>student_file TEXT</b>: name of a student's uploaded file<br>
+<b>student_id TEXT</b>: a platform internal identifier of a student.<br>
+<b>submission_id TEXT</b>: ???<br>
+<b>success TINYTEXT</b>: indicates whether the solution submission to
+a problem was 'correct,' or 'not correct'.<br>
+<b>time DATETIME</b>: the date and time at which the row's event occurred<br>
+<b>transcript_code TINYTEXT</b>: ???<br>
+<b>transcript_id TEXT</b>: ???<br>
+<b>video_code TEXT</b>:  ???<br>
+<b>video_current_time TINYTEXT</b>: ???<br>
+<b>video_id TEXT</b>: computer readable identifier of a video. The
+human readable column resource_display_name is likely more informative.<br>
+<b>video_new_speed TINYTEXT</b>: target video speed for events that
+speed or slow a video's playback speed.<br>
+<b>video_new_time TINYTEXT</b>: destination play head position for
+video seek events.<br>
+<b>video_old_speed TINYTEXT</b>: the initial speed of a video at the
+outset of an event that changes video speed.<br>
+<b>video_old_time TINYTEXT</b>: initial playhead position for events
+that request video seek.<br>
+<b>video_seek_type TINYTEXT</b>: ???<br>
+<b>video_speed TINYTEXT</b>: the video speed at the time of a video
+speed information request ???
+
+<h3>Answer Table</h3>
+
+answer_id VARCHAR(40)</b>: unique key identifying this row. The key is
+used in the <i>EdxTrackEvent</i> table's <i>answer_fk</i> to reference
+a row in this table.<br>
+<b>problem_id TEXT</b>: computer readable identifier of the problem to
+which this row is the answer. To find the corresponding human readable
+name:<br>
+<pre>
+SELECT resource_display_name 
+FROM Answer, EdxTrackEvent 
+WHERE EdxTrackEvent.answer_fk = Answer.answer_id
+</pre><br>
+<b>answer TEXT</b>: text of the student's answer<br>
+<b>course_id TEXT</b>: computer readable identifier of the associated
+class. To find the human readable course name:<br>
+<pre>
+SELECT course_display_name 
+FROM Answer, EdxTrackEvent 
+WHERE EdxTrackEvent.answer_fk = Answer.answer_id
+</pre>
+
+<h3>CorrectMap Table</h3>
+<br>
+<b>correct_map_id VARCHAR(40)</b>: unique identifier of this row<br>
+<b>answer_identifier TEXT</b>: computer readable identifier of this
+answer. Note that his column does not carry the same semantics as
+the <i>Answer</i> table's <i>answer_id</i>.<br>
+<b>correctness TINYTEXT</b>: one of the values 'correct' and 'not
+correct.' This value is replicated int <i>EdxTrackEvent</i>
+table's <i>success</i> column.<br>
+<b>npoints INT</b>: number of points earned (replicated in <i>EdxTrackEvent</i> table).<br>
+<b>msg TEXT</b>: text of a message sent to the student.<br>
+<b>hint TEXT</b>: hint provided to the student (replicated in <i>EdxTrackEvent</i> table).<br>
+<b>hintmode TINYTEXT</b>: empty, 'on_request,' or 'always' (replicated
+in <i>EdxTrackEvent</i> table).<br>
+<b>queuestate TEXT</b>: empty, or a key/value pair in which the value
+is a date and time (replicated in <i>EdxTrackEvent</i> table).
+
+<h3>State Table</h3>
+<br>
+<b>state_id VARCHAR(40)</b>: unique identifier for this row.<br>
+<b>seed TINYINT</b>: problem seed<br>
+<b>done TINYTEXT</b>: ???<br>
+<b>problem_id TEXT</b>: computer readable identifier of a problem
+assignment. <br>
+<b>student_answer VARCHAR(40)</b>: computer readable identifier for a
+student's answer to a problem assignment.<br>
+<b>correct_map VARCHAR(40)</b>: reference to a <i>CorrectMap</i> row.<br>
+<b>input_state VARCHAR(40)</b>: reference to an <i>InputState</i> row.
+
+<h3>InputState Table</h3>
+<br>
+<b>input_state_id VARCHAR(40)</b>: unique identifier of this row.<br>
+<b>problem_id TEXT</b>: computer readable identifier for a problem assignment.<br>
+<b>state TEXT</b>: reference to a row in the <i>State</i> table.
+
+<h3>LoadInfo</h3>
+<br>
+<b>load_info_id INT</b>: unique identifier of this row. This
+identifier is used in the <i>EdxTrackEvent</i> table's loadInfo_fk
+column to link an <i>EdxTrackEvent</i> row to its provenance.<br>
+<b>load_date_time DATETIME</b>: the date and time when the load
+of a particular tracking log file occurred.<br>
+<b>load_file TEXT</b>: name of the loaded tracking log file.
+
+<h3>Account Table</h3>
+
+Note: this table is contained in the EdxPrivate database, because it
+contains personally identifiable information.
+<br>
+<b>account_id VARCHAR(40)</b>: unique identifier of this row.<br>
+<b>screen_name TEXT</b>: the student's chosen screen name. It is
+unique in the platform. This constraint is enforced when students
+create an account.<br>
+<b>name TEXT</b>: student's first and last name.<br>
+<b>anon_screen_name TEXT</b>: anonomization name assigned to this
+student. That is the name under which information is stored in the <i>EdxTrackEvent</i> table.<br>
+<b>mailing_address TEXT</b>: postal address. This is an optional field
+during the student's account creation process, so it is sometimes empty.<br>
+<b>zipcode TINYTEXT</b>: zip code if the postal address is provided,
+and is in the US.<br>
+<b>country TINYTEXT</b>: country extracted from the postal address.<br>
+<b>gender TINYTEXT</b>: student's gender.<br>
+<b>year_of_birth TINYINT</b>: optional during account creation
+process, so not always available.<br>
+<b>level_of_education TINYTEXT</b>: student's prior education
+(primary, secondary, etc) ???<br>
+<b>goals TEXT</b>: short, plain text description of the student's goals.<br>
+<b>honor_code TINYINT</b>: whether student agreed to the honor code.<br>
+<b>terms_of_service TINYINT</b>: whether student agreed to the terms
+of service.<br>
+<b>course_id TEXT</b>: computer readable identifier of course that the
+student signs up for.<br>
+<b>enrollment_action TINYTEXT</b>: ???<br>
+<b>email TEXT</b>: student's email address<br>
+<b>receive_emails TINYTEXT</b> whether or not student wishes to
+receive email.<br>
+
+
 
 
 <h2 id="appC">Appendix C: How to Set up an SSH Tunnel</h2>
@@ -698,7 +955,7 @@ get to the data. The command says: set up a secure connection
 (<i>ssh</i>) to machine <i>datastage.stanford.edu</i>; to applications
 on my own computer the connection is to look like a database to which
 I write via my out-port <i>5556</i>. The connection should function
-like a tunnel (<i>-L</i>). On the database on the other end, the
+Like a tunnel (<i>-L</i>). On the database on the other end, the
 commands I send should look like they were issued on <b>its</b>
 machine (<i>localhost</i> from the database's point of view), and were
 issued directly into the in-port where the database normally listens
