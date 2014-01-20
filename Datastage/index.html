@@ -30,7 +30,7 @@
 <center><h1>How to Access the VPOL Online Learning Data</h1></center>
 
 <ul>
-  <li><a href="http://mono.stanford.edu:8000">AnswerServer</a></li>
+<!-- ****** <li><a href="http://mono.stanford.edu:8000">AnswerServer</a></li> -->
   <li><a href="#dbConn">Preparing your machine for connecting to
       databases</a></li>
   <li><a href="#excel">Connecting from Excel</a></li>
@@ -81,7 +81,7 @@ to the views can be limited. Again, more in this document.
 We now run through the available access paths to the data, ordered in
 increasing power (and sometimes associated complexity).
 
-<h2>Protocols for Access</h2>
+<h2 id="accessProcedure">Protocols for Access</h2>
 
 Even though we do not keep highly sensitive information on this
 server, we do need to protect the data to some degree from malicious
@@ -102,12 +102,12 @@ In the simplest case your question has been asked and answered before,
 albeit for a different context. Such a context might be a particular
 class for which the question was originally asked, or a particular
 problem set. For cases like this
-our <a href="http://mono.stanford.edu:8000">AnswerServer</a>
-might help. This server differs from a typical FAQ list in that you
-are able to adjust the question to your context. We will be growing
-the coverage of that page as we go along. If you have an idea for a
-useful one-liner question, please send email
-to <script LANGUAGE="JavaScript">showEmailAddr()</script>.
+our <a href="http://mono.stanford.edu:8000">AnswerServer</a> will
+eventually help. It is under construction. This server differs from a
+typical FAQ list in that you are able to adjust the question to your
+context. We will be growing the coverage of that page as we go
+along. If you have an idea for a useful one-liner question, please
+send email to <script LANGUAGE="JavaScript">showEmailAddr()</script>.
 
 <h2>Analysis Tools</h2>
 
@@ -666,262 +666,448 @@ vl_2013_venture</br>
 The Edx and EdxPrivate databases provide a lossless translation from
 the OpenEdx platform tracking logs to relational tables. The
 translation was constructed based on tracking logs of Stanford's
-OpenEdx classes, observed up to October 2013.
-
+OpenEdx classes.
+<p>
 Each entry in a tracking log contains information about one small
 interaction that one student undertook with the learning
 platform. Examples are the submission of a problem solution, a video
-control action, like starting a video, or seeking forward, or the
-initial creation of an account. The logs were designed to hold every
-piece of information that might need to be captured in the future. Not
-all of the log fields are currently in use. Of the many columns in the
-relational tables only some therefore need to be considered at this
-point. We describe these columns now, table by table, and in
-alphabetical order. Given the sparsity of field use, plus the fact
-that important information is replicated to the <i>EdxTrackEvent</i>
-table, researchers will likely need to query only that table, plus
-the <i>Answer</i> table. The latter is required if the actual answer
-to a problem solution submission needs to be retrieved.
+control action, like starting a video, or the initial creation of an
+account. The logs were designed to hold every piece of information
+that might need to be captured in the future. Not all of the log
+fields are currently in use. Of the many columns in the relational
+tables only some therefore need to be considered at this point. 
 <p>
+For everyday use, the following tables are recommended:
+<ul>
+  <li>EventXtract</li>
+  <li>VideoInteraction and</li>
+  <li>ActivityGrade</li>
+</ul>
+
+We describe these tables now. The first is the main table, which
+contains all the events: <i>EventXtract</i>:
+<p>
+<style type="text/css">
+.tg  {margin-left: auto; margin-right: auto}
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 8px;border-style:solid;border-width:1px;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;}
+.tg .tg-s6z2{text-align:center}
+</style>
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">EventXtract</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">anon_screen_name</td>
+    <td class="tg-031e">Anonymized student identifier</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">event_type</td>
+    <td class="tg-031e">Type of action the student took</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">ip</td>
+    <td class="tg-031e">Student's IP address while performing the action</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">time</td>
+    <td class="tg-031e">Date and time when action was taken</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">course_display_name</td>
+    <td class="tg-031e">Name of course for which action was taken</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">resource_display_name</td>
+    <td class="tg-031e">Name of video or assignment associated with the action </td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">success</td>
+    <td class="tg-031e">Whether the student succeeded, or not (context dependent)</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">video_code</td>
+    <td class="tg-031e">Machine name of video, (video actions only)</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_current_time</td>
+    <td class="tg-031e">Video player's current playhead time</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">video_speed</td>
+    <td class="tg-031e">Video player's current speed</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_old_time</td>
+    <td class="tg-031e">For video_seek action: original playhead time</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">video_new_time</td>
+    <td class="tg-031e">For video_seek action: new playhead time</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_seek_type</td>
+    <td class="tg-031e">Control used for a video seek action</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">video_new_speed</td>
+    <td class="tg-031e">For video speed change action: new speed</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_old_speed</td>
+    <td class="tg-031e">For video speed change action: original speed</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">goto_from</td>
+    <td class="tg-031e">Teaching sequence change: origin</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">goto_dest</td>
+    <td class="tg-031e">Teaching sequence change: destination</td>
+  </tr>
+</table>
+<p>
+
+<!--
+EventXtract AS
+   SELECT anon_screen_name,
+	  event_type,
+	  ip,
+	  time,
+	  course_display_name,
+	  resource_display_name,
+	  success,
+	  video_code,
+	  video_current_time,
+	  video_speed,
+	  video_old_time,
+	  video_new_time,
+	  video_seek_type,
+	  video_new_speed,
+	  video_old_speed,
+	  goto_from,
+	  goto_dest
+  FROM Edx.EdxTrackEvent
+-->
+
+If your focus is video behavior analysis, then the VideoInteraction
+table is the easiest to use. It just extracts the video events from
+the EventXtract table; the video related information is the same in
+both tables. 
+<p>
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 8px;border-style:solid;border-width:1px;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;}
+.tg .tg-s6z2{text-align:center}
+</style>
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">VideoInteraction</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">event_type</td>
+    <td class="tg-031e">Type of video action the student took</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">resource_display_name</td>
+    <td class="tg-031e">Name of video</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_current_time</td>
+    <td class="tg-031e">Video player's current playhead time</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">video_speed</td>
+    <td class="tg-031e">Video player's current speed</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_new_speed</td>
+    <td class="tg-031e">For video speed change: new speed</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">video_old_speed</td>
+    <td class="tg-031e">For video speed change: old speed</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_new_time</td>
+    <td class="tg-031e">For video seek: new playhead time</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">video_old_time</td>
+    <td class="tg-031e">For video seek: old playhead time</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_seek_type</td>
+    <td class="tg-031e">Video control used for seek</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">video_code</td>
+    <td class="tg-031e">Machine code name for video</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">time</td>
+    <td class="tg-031e">Time the video action was taken</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">course</td>
+    <td class="tg-031e">For video speed change action: new speed</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">course_display_name</td>
+    <td class="tg-031e">Name of course for which action was taken</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">anon_screen_name</td>
+    <td class="tg-031e">Teaching sequence change: destination</td>
+  </tr>
+</table>
+
+<!--
+CREATE VIEW VideoInteraction AS
+SELECT event_type,
+       resource_display_name,
+       video_current_time,
+       video_speed,
+       video_new_speed,
+       video_old_speed,
+       video_new_time,
+       video_old_time,
+       video_seek_type,
+       video_code,
+       time,
+       course_display_name,
+       anon_screen_name
+FROM Edx.EdxTrackEvent
+WHERE  CHAR_LENGTH(video_code) > 0 OR
+       CHAR_LENGTH(video_current_time) > 0 OR
+       CHAR_LENGTH(video_speed) > 0 OR
+       CHAR_LENGTH(video_old_time) > 0 OR
+       CHAR_LENGTH(video_new_time) > 0 OR
+       CHAR_LENGTH(video_seek_type) > 0 OR
+       CHAR_LENGTH(video_new_speed) > 0 OR
+       CHAR_LENGTH(video_old_speed) > 0
+-->
+<p>
+The ActivityGrade table holds events that concern homework
+assignments. Each row in the table is one solution submission, or
+inspection of one assignment by one student. The rows inform whether
+the solution was correct, in some parts, or in its entirety. If only
+parts were correct, the table shows which parts, and which incorrect
+answers the student provided.
+<p>
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 8px;border-style:solid;border-width:1px;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;}
+.tg .tg-s6z2{text-align:center}
+</style>
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">ActivityGrade</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">activity_grade_id</td>
+    <td class="tg-031e">A unique identifier for this row</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">student_id</td>
+    <td class="tg-031e">A numeric identifier used for students in various other platform tables.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">course_display_name</td>
+    <td class="tg-031e">Name of course for which assignment was created</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">grade</td>
+    <td class="tg-031e">The grade the student received for this assignment</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">max_grade</td>
+    <td class="tg-031e">The maximum grade possible for this assignment</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">percent_grade</td>
+    <td class="tg-031e">Percentage of grade from max_grade</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">parts_correctness</td>
+    <td class="tg-031e">Series of plus and minus chars indicating which problem parts were answered correctly</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">wrong_answers</td>
+    <td class="tg-031e">If any assignment parts were answered incorrectly: the wrong answers</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">numAttempts</td>
+    <td class="tg-031e">Total number of student's attempt at this assignment</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">first_submit</td>
+    <td class="tg-031e">Date and time the student first submitted the assignment solution</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">last_submit</td>
+    <td class="tg-031e">Most recent date and time the student submitted the assignment solution</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">module_type</td>
+    <td class="tg-031e">The teaching module type</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">resource_display_name</td>
+    <td class="tg-031e">Assignment name</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">anon_screen_name</td>
+    <td class="tg-031e">Student's anonymized name</td>
+  </tr>
+</table>
+<p>
+<!-- CREATE TABLE IF NOT EXISTS Edx.ActivityGrade (
+    activity_grade_id int(11) PRIMARY KEY,
+    student_id int(11) NOT NULL,
+    course_display_name varchar(255) NOT NULL,
+    grade double,
+    max_grade double,
+    percent_grade double,
+    parts_correctness varchar(50),
+    wrong_answers varchar(255),
+    numAttempts int,
+    first_submit datetime,
+    last_submit datetime,
+    module_type varchar(32) NOT NULL,
+    resource_display_name varchar(255) NOT NULL DEFAULT '',
+    anon_screen_name varchar(40) NOT NULL DEFAULT ''
+    );
+-->
+
+
+The following table is only available
+by <a href="#accessProcedure">special arrangement</a>
+
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 8px;border-style:solid;border-width:1px;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;}
+.tg .tg-s6z2{text-align:center}
+</style>
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">Account</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">account_id</td>
+    <td class="tg-031e">A unique identifier for this row</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">screen_name</td>
+    <td class="tg-031e">Student's choice of name for him/herself on the online learning platform</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">name</td>
+    <td class="tg-031e">Student's given name</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">anon_screen_name</td>
+    <td class="tg-031e">Anonymization code used for this student.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">mailing_address</td>
+    <td class="tg-031e">Surface mail address (optionally provided)</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">zipcode</td>
+    <td class="tg-031e">Zipcode if US address (optionally provided)</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">country</td>
+    <td class="tg-031e">Country of origin (optionally provided)</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">gender</td>
+    <td class="tg-031e">Student gender</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">year_of_birth</td>
+    <td class="tg-031e">Student's birth year (optionally provided)</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">level_of_education</td>
+    <td class="tg-031e">Level of prior formal education</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">goals</td>
+    <td class="tg-031e">Short statement of goals for taking this class</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">honor_code</td>
+    <td class="tg-031e">Student agreed to honor code</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">terms_of_service</td>
+    <td class="tg-031e">Student agreed to terms of service</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">course_id</td>
+    <td class="tg-031e">Course for which student is signing up</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">enrollment_action</td>
+    <td class="tg-031e">not used</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">email</td>
+    <td class="tg-031e">Student email address</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">receive_emails</td>
+    <td class="tg-031e"></td>
+  </tr>
+</table>
+<p>
+
+
+<!--CREATE TABLE IF NOT EXISTS Account (
+    account_id VARCHAR(40) NOT NULL PRIMARY KEY,
+    screen_name TEXT NOT NULL,
+    name TEXT NOT NULL,
+    anon_screen_name TEXT NOT NULL,
+    mailing_address TEXT NOT NULL,
+    zipcode VARCHAR(255) NOT NULL,
+    country VARCHAR(255) NOT NULL,
+    gender VARCHAR(255) NOT NULL,
+    year_of_birth TINYINT NOT NULL,
+    level_of_education VARCHAR(255) NOT NULL,
+    goals TEXT NOT NULL,
+    honor_code TINYINT NOT NULL,
+    terms_of_service TINYINT NOT NULL,
+    course_id TEXT NOT NULL,
+    enrollment_action VARCHAR(255) NOT NULL,
+    email TEXT NOT NULL,
+    receive_emails VARCHAR(255) NOT NULL
+-->
+
+
 Please also see
 the 
 <a href="http://data.edx.org/en/latest/internal_data_formats/tracking_logs.html">OpenEdx
 Tracking Log documentation</a> of the original JSON formatted
 fields. Those descriptions are authoritative.
+<p>
+<h3>Useful MySQL Functions</h3>
 
-</p><center><img src="figs/edxERDiagramWeb.png"></center></br>
-The first word in the following descriptions are column names, the
-information following the name is the respective column's datatype,
-and a brief explanation of the column's semantics. Three question
-marks indicate that a column's semantics are ill understood by the
-author of this guide. In each case the lack of understanding arises
-either from a lack of documentation for a field in the original
-tracking logs, or from the author's ignorance about the greater
-context of the platform.
-
-<h3>EdxTrackEvent Table</h3>
-
-<b>_id VARCHAR(40)</b>: unique identifier.<br>
-<b>agent TEXT</b>: description of the student's browser software.<br>
-<b>anon_screen_name TEXT</b>: identifier assigned to each student to
-protect their privacy. The identifier is created by applying a hash
-function to the student's screen name. The screen name is held in a
-separate table <i>Account</i> that is located in a separate
-database, <i>EdxPrivate</i> with strict access permissions. <br>
-<b>answer_fk VARCHAR(40)</b>: foreign key to the <i>Answer</i> table
-where individual student answers to problems are stored, one answer
-submission at a time. This column is used to join
-the <i>EdxTrackEvent</i> table to the <i>Answer</i> table in queries
-that refer to both tables. <br>
-<b>answer_id TEXT</b>: unique identifier of one student's answer to
-one problem. Rarely needed.<br>
-<b>attempts INT</b>: number of attempts at a problem.<br>
-<b>badly_formatted TEXT</b>: about 0.8% of entries in the tracking
-logs are malformed, and can therefore not be mapped to the tables in
-this database. The raw text is provided in this column for reference.<br>
-<b>book_interaction_type TINYTEXT</b>: currently empty<br>
-<b>can_upload_file TINYTEXT</b>: indicates whether a student is able
-to upload a file. Rarely needed.<br>
-<b>correctMap_fk VARCHAR(40)</b>: foreign key to the <i>CorrectMap</i> table
-where information about answers to problems is stored. This
-information includes, for example, whether a hint was provided. Since
-most of the <i>CorrectMap</i> entries are not used, this column is
-also rarely used.<br>
-<b>correctness TINYTEXT</b>: empty. See <i>success</i> for the
-operative field.<br>
-<b>course_id TEXT</b>: computer readable identifier for the course
-about which a row provides information. More useful is the human
-readable course name in column <i>course_display_name</i>.<br>
-<b>downtime_for DATETIME</b>: amount of time the OpenEdx platform
-server that creates the tracking logs was turned off. When this field
-is empty, or contains 00:00:00, no downtime was detected between the
-current row and the previous row. Else the column contains the amount
-of downtime. This column is derived from the server heartbeats.<br>
-<b>event_id VARCHAR(40)</b>:identifier of an event. This column is
-ties together multiple rows that contain information about the same
-event. Translation of some original tracking log entries to a
-relational format sometimes requires that the information contained in
-those entries is spread across two or three rows. The situation arises
-when an original entry contains pieces of data that must be spread
-across three or more tables, such as the <i>EdxTrackEvent<</i> table
-the <i>CorrectMap</i> table, and the <i>Answer</i> table. In this
-example a first row is created in <i>EdxTrackEvent</i> that has its
-correctMap_fk set to reference the respective <i>Answer</i> table
-row. A second row in <i>EdxTrackEvent</i> will have its answer_fk
-column reference the <i>CorrectMap</i> table. The columns in the two 
-<i>EdxTrackEvent</i> rows that are not foreign keys are repeated.<br>
-<b>event_name TINYTEXT</b>:???<br>
-<b>event_source TINYTEXT</b>:indicates whether the event was initiated
-by a student's browser, or by the platform server.<br>
-<b>event_type TEXT</b>: indicates what happened that triggered the
-event of the current row. A long list describes
-this <a href="#eventTypeValues???">column's possible values</a>.<br>
-<b>feedback TEXT</b>: empty<br>
-<b>feedback_response_selected TINYINT</b>: empty<br>
-<b>goto_dest INT</b>: destination of navigation to a learning module<br>
-<b>goto_from INT</b>: origin of navigation to a learning module<br>
-<b>group_action TINYTEXT</b>: empty<br>
-<b>group_user TINYTEXT</b>: empty<br>
-<b>hint TEXT</b>: empty<br>
-<b>hintmode TINYTEXT</b>: empty<br>
-<b>instructor_id TEXT</b>: empty<br>
-<b>ip TINYTEXT</b>: the student's originating internet address<br>
-<b>load_info_fk VARCHAR(40)</b>: foreign key that references a row in
-<i>LoadInfo</i> table. This reference enables queries to determine the
-date at which the current row was loaded into the database. The
-purpose of this information is to enable the queries of a past
-research investigation to be repeated. New rows are continuously added
-to the database, so a query today may return different values from a
-query that produced the data for a research paper last month.<br>
-<b>long_answer TEXT</b>: empty<br>
-<b>msg TEXT</b>: empty<br>
-<b>new_score INT</b>: corrected problem score<br>
-<b>new_total INT</b>: corrected total points<br>
-<b>npoints TINYINT</b>: number of points for a problem<br>
-<b>orig_score INT</b>: original achieved score<br>
-<b>orig_total INT</b>: original number of points<br>
-<b>page TEXT</b>: URL of a page visited by a student<br>
-<b>position INT</b>: ???<br>
-<b>problem_choice TEXT</b>: ???<br>
-<b>problem_id TEXT</b>: computer readable identifier of a problem. A
-more useful column is likely the resource_display_name, which is the
-corresponding human readable name. Even that name, however, is only as
-good as what the problem set creator provided.<br>
-<b>question_location TEXT</b>: ???<br>
-<b>queuestate TEXT</b>: either empty if a problem submission was not
-queued, or a key/value pair in which the value provides the time of
-queuing.<br>
-<b>rubric_category INT</b>: ???<br>
-<b>rubric_selection INT</b>: ???<br>
-<b>sequence_id TEXT</b>: computer readable learning module identifier<br>
-<b>session TEXT</b>: computer readable identifier of a user session<br>
-<b>state_fk VARCHAR(40)</b>: foreign key to the <i>State</i>
-table. Rarely needed.<br>
-<b>student_file TEXT</b>: name of a student's uploaded file<br>
-<b>student_id TEXT</b>: a platform internal identifier of a student.<br>
-<b>submission_id TEXT</b>: ???<br>
-<b>success TINYTEXT</b>: indicates whether the solution submission to
-a problem was 'correct,' or 'not correct'.<br>
-<b>time DATETIME</b>: the date and time at which the row's event occurred<br>
-<b>transcript_code TINYTEXT</b>: ???<br>
-<b>transcript_id TEXT</b>: ???<br>
-<b>video_code TEXT</b>:  ???<br>
-<b>video_current_time TINYTEXT</b>: ???<br>
-<b>video_id TEXT</b>: computer readable identifier of a video. The
-human readable column resource_display_name is likely more informative.<br>
-<b>video_new_speed TINYTEXT</b>: target video speed for events that
-speed or slow a video's playback speed.<br>
-<b>video_new_time TINYTEXT</b>: destination play head position for
-video seek events.<br>
-<b>video_old_speed TINYTEXT</b>: the initial speed of a video at the
-outset of an event that changes video speed.<br>
-<b>video_old_time TINYTEXT</b>: initial playhead position for events
-that request video seek.<br>
-<b>video_seek_type TINYTEXT</b>: ???<br>
-<b>video_speed TINYTEXT</b>: the video speed at the time of a video
-speed information request ???
-
-<h3>Answer Table</h3>
-
-answer_id VARCHAR(40)</b>: unique key identifying this row. The key is
-used in the <i>EdxTrackEvent</i> table's <i>answer_fk</i> to reference
-a row in this table.<br>
-<b>problem_id TEXT</b>: computer readable identifier of the problem to
-which this row is the answer. To find the corresponding human readable
-name:<br>
-<pre>
-SELECT resource_display_name 
-FROM Answer, EdxTrackEvent 
-WHERE EdxTrackEvent.answer_fk = Answer.answer_id
-</pre><br>
-<b>answer TEXT</b>: text of the student's answer<br>
-<b>course_id TEXT</b>: computer readable identifier of the associated
-class. To find the human readable course name:<br>
-<pre>
-SELECT course_display_name 
-FROM Answer, EdxTrackEvent 
-WHERE EdxTrackEvent.answer_fk = Answer.answer_id
-</pre>
-
-<h3>CorrectMap Table</h3>
-<br>
-<b>correct_map_id VARCHAR(40)</b>: unique identifier of this row<br>
-<b>answer_identifier TEXT</b>: computer readable identifier of this
-answer. Note that his column does not carry the same semantics as
-the <i>Answer</i> table's <i>answer_id</i>.<br>
-<b>correctness TINYTEXT</b>: one of the values 'correct' and 'not
-correct.' This value is replicated int <i>EdxTrackEvent</i>
-table's <i>success</i> column.<br>
-<b>npoints INT</b>: number of points earned (replicated in <i>EdxTrackEvent</i> table).<br>
-<b>msg TEXT</b>: text of a message sent to the student.<br>
-<b>hint TEXT</b>: hint provided to the student (replicated in <i>EdxTrackEvent</i> table).<br>
-<b>hintmode TINYTEXT</b>: empty, 'on_request,' or 'always' (replicated
-in <i>EdxTrackEvent</i> table).<br>
-<b>queuestate TEXT</b>: empty, or a key/value pair in which the value
-is a date and time (replicated in <i>EdxTrackEvent</i> table).
-
-<h3>State Table</h3>
-<br>
-<b>state_id VARCHAR(40)</b>: unique identifier for this row.<br>
-<b>seed TINYINT</b>: problem seed<br>
-<b>done TINYTEXT</b>: ???<br>
-<b>problem_id TEXT</b>: computer readable identifier of a problem
-assignment. <br>
-<b>student_answer VARCHAR(40)</b>: computer readable identifier for a
-student's answer to a problem assignment.<br>
-<b>correct_map VARCHAR(40)</b>: reference to a <i>CorrectMap</i> row.<br>
-<b>input_state VARCHAR(40)</b>: reference to an <i>InputState</i> row.
-
-<h3>InputState Table</h3>
-<br>
-<b>input_state_id VARCHAR(40)</b>: unique identifier of this row.<br>
-<b>problem_id TEXT</b>: computer readable identifier for a problem assignment.<br>
-<b>state TEXT</b>: reference to a row in the <i>State</i> table.
-
-<h3>LoadInfo</h3>
-<br>
-<b>load_info_id INT</b>: unique identifier of this row. This
-identifier is used in the <i>EdxTrackEvent</i> table's loadInfo_fk
-column to link an <i>EdxTrackEvent</i> row to its provenance.<br>
-<b>load_date_time DATETIME</b>: the date and time when the load
-of a particular tracking log file occurred.<br>
-<b>load_file TEXT</b>: name of the loaded tracking log file.
-
-<h3>Account Table</h3>
-
-Note: this table is contained in the EdxPrivate database, because it
-contains personally identifiable information.
-<br>
-<b>account_id VARCHAR(40)</b>: unique identifier of this row.<br>
-<b>screen_name TEXT</b>: the student's chosen screen name. It is
-unique in the platform. This constraint is enforced when students
-create an account.<br>
-<b>name TEXT</b>: student's first and last name.<br>
-<b>anon_screen_name TEXT</b>: anonomization name assigned to this
-student. That is the name under which information is stored in the <i>EdxTrackEvent</i> table.<br>
-<b>mailing_address TEXT</b>: postal address. This is an optional field
-during the student's account creation process, so it is sometimes empty.<br>
-<b>zipcode TINYTEXT</b>: zip code if the postal address is provided,
-and is in the US.<br>
-<b>country TINYTEXT</b>: country extracted from the postal address.<br>
-<b>gender TINYTEXT</b>: student's gender.<br>
-<b>year_of_birth TINYINT</b>: optional during account creation
-process, so not always available.<br>
-<b>level_of_education TINYTEXT</b>: student's prior education
-(primary, secondary, etc) ???<br>
-<b>goals TEXT</b>: short, plain text description of the student's goals.<br>
-<b>honor_code TINYINT</b>: whether student agreed to the honor code.<br>
-<b>terms_of_service TINYINT</b>: whether student agreed to the terms
-of service.<br>
-<b>course_id TEXT</b>: computer readable identifier of course that the
-student signs up for.<br>
-<b>enrollment_action TINYTEXT</b>: ???<br>
-<b>email TEXT</b>: student's email address<br>
-<b>receive_emails TINYTEXT</b> whether or not student wishes to
-receive email.<br>
-
-
-
+If you query the database directly, the following functions might
+prove useful:
+<ul>
+  <li>earliestLog(): the earliest OpenEdx event log load date/time</li>
+  <li>latestLog(): the most recent OpenEdx event log load date/time</li>
+  <li>idAnon2Int(): convert from hash values used in
+        anon_screen_name columns to integers used in other platform tables</li>
+  <li>idInt2Anon(): convert from integers used in other platform
+        tables to hash values used in anon_screen_name columns</li> 
+</ul>
 
 <h2 id="appC">Appendix C: How to Set up an SSH Tunnel</h2>
 An ssh tunnel is a connection between two computers that encrypts the
