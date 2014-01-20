@@ -1102,13 +1102,15 @@ fields. Those descriptions are authoritative.
 If you query the database directly, the following functions might
 prove useful:
 <ul>
-  <li>earliestLog(): the earliest OpenEdx event log load date/time</li>
-  <li>latestLog(): the most recent OpenEdx event log load date/time</li>
-  <li>idAnon2Int(): convert from hash values used in
+  <li><b>earliestLog()</b>: the earliest OpenEdx event log load date/time</li>
+  <li><b>latestLog()</b>: the most recent OpenEdx event log load date/time</li>
+  <li><b>idAnon2Int()</b>: convert from hash values used in
         anon_screen_name columns to integers used in other platform tables</li>
-  <li>idInt2Anon(): convert from integers used in other platform
+  <li><b>idInt2Anon()</b>: convert from integers used in other platform
         tables to hash values used in anon_screen_name columns</li> 
 </ul>
+The functions are used within SELECT statements, like: SELECT earliestLog();
+
 
 <h2 id="appC">Appendix C: How to Set up an SSH Tunnel</h2>
 An ssh tunnel is a connection between two computers that encrypts the
