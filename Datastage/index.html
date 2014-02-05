@@ -7,6 +7,12 @@
       {
       background-color:#b0c4de;
       }
+      #spanhand
+      {
+      font-style: bold;
+      font-size: 150%;
+      display: inline-block;
+      }
     </style>
 
     <script LANGUAGE="JavaScript">
@@ -40,7 +46,7 @@
   <li><a href="#pickUp">Picking up data and visualizations prepared
   by staff or friends</a></li>
   <li><a href="#appA">List of available data sets</a></li>
-  <li><a href="#appB">Explanation of OpenEdx data fields</a></li>
+  <li><a href="#appB"><span id="spanhand">Explanation of OpenEdx data fields</span></a>&#8592;Good section to check out</li>
   <li><a href="#appC">How to build an ssh tunnel</a></li>
   <li><a href="https://docs.google.com/document/d/1WlWkaFkpzt9i3zGVqGYAnxK_wdklUncOnh4A0T5yeJs/edit?pli=1">Example queries</a></li>
   <li><a href="http://www.tableausoftware.com/public/gallery">Gallery
@@ -86,16 +92,25 @@ increasing power (and sometimes associated complexity).
 
 Even though we do not keep highly sensitive information on this
 server, we do need to protect the data to some degree from malicious
-intrusion. The precise procedure is being worked out. But the result
-will be a user name, and either one, or two passwords for you. One
-password if you are only to access data that does not reveal the
-identity of the student that the data talks about. If you are
-permitted to access more sensitive information, then you will receive
-a second password. <a href="#appB">Appendix B</a> explains the
-technical background of these two cases.
-
-In the following we assume that you have the necessary items in hand.
-
+intrusion. If you are interested in studying the data, please fill out
+<a href="http://vpol.stanford.edu/research">our request form</a>.
+<p>
+While the form accommodates requests for data with personally
+identifiable information, we can only provide such access in special
+cases. The data from which personalized information has been removed
+is quite rich. Please at least try to work with that data until you
+have a firm research plan in mind.
+<p>
+If you are the instructor of a class, and you need the data to improve
+future runs of your course, the personally identifiable data is more
+freely available than if the data is used for research.
+<p>
+Consider taking the non-medical human subjects research certification
+class
+(<a href="https://humansubjects.stanford.edu/new/resources/training/citi.html">
+    through Stanford</a>
+or <a href="https://www.citiprogram.org/">through CITI</a>, or some
+other institution).
 
 <h2>If We Anticipated your Question</h2>
 
@@ -104,9 +119,9 @@ albeit for a different context. Such a context might be a particular
 class for which the question was originally asked, or a particular
 problem set. For cases like this
 our <a href="http://mono.stanford.edu:8000">AnswerServer</a> will
-eventually help. It is under construction. This server differs from a
-typical FAQ list in that you are able to adjust the question to your
-context. We will be growing the coverage of that page as we go
+eventually help. It is <b>under construction</b>. This server differs
+from a typical FAQ list in that you are able to adjust the question to
+your context. We will be growing the coverage of that page as we go
 along. If you have an idea for a useful one-liner question, please
 send email to <script LANGUAGE="JavaScript">showEmailAddr()</script>.
 
@@ -770,6 +785,20 @@ contains all the events: <i>EventXtract</i>:
 </table>
 <p>
 
+Here are a couple of example rows, with most of the video related
+columns skipped. Those are more easily accessed using the
+VideoInteraction table (see below):<br>
+
+<b>EventXtract Example Rows:</b><br>
+<pre>
++------------------------------------------+---------------+----------------+---------------------+---------------------------------------------+-----------------------+---------+------------+-|
+| anon_screen_name | event_type    | ip             | time                | course_display_name   | resource_display_name | success | video_code |... more video cols... | goto_from | goto_dest |
++------------------------------------------+---------------+----------------+---------------------+---------------------------------------------+-----------------------+---------+------------+--
+| 3fc...           | book          | 171.64.197.42  | 2013-11-10 06:43:10 | Engineering/EE264/DSP |                       |         |            |                       |           |           |
+| 6e9...           | problem_check | 222.228.217.74 | 2013-11-10 06:43:10 | Engineering/Solar/2013| I-V curve             |         |            |                       |           |           |
++------------------------------------------+---------------+----------------+---------------------+---------------------------------------------+-----------------------+---------+------------+--
+</pre>
+<p>
 <!--
 EventXtract AS
    SELECT anon_screen_name,
@@ -864,6 +893,20 @@ both tables.
     <td class="tg-031e">Teaching sequence change: destination</td>
   </tr>
 </table>
+<p>
+Here again some example rows:<br>
+
+<b>VideoInteraction Example Rows:</b><br>
+<pre>
++------------------------------------------+---------------+----------------+---------------------+---------------------------------------------+-----------------------+---------+------------+----------------------------------------------|
+| event_type  | resource_display_name | video_current_time | video_speed | video_new_speed | video_old_speed | video_new_time | video_old_time | video_seek_type | video_code  | time                | course_display_name | anon_screen_name |
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| play_video  | Video 7.3.2: Hydrogen | 1244.047           | None        |                 |                 |                |                |                 | ZO0_R5VAoG4 | 2013-11-10 06:43:12 | Eng/EE-222/ME_I     | ef04...          |
+| pause_video | Video 7.3.2: Hydrogen | 1217.389976        | None        |                 |                 |                |                |                 | ZO0_R5VAoG4 | 2013-11-10 06:43:42 | Eng/EE-222/ME_I     | 84fa...          |
+| play_video  | Video 7.2.2: Oxygen   | 101.046621         | None        |                 |                 |                |                |                 | 6Tnr8OL-9So | 2013-11-10 06:43:43 | Eng/EE-222/ME_I     | 8998...          |
++-------------+------------------------------------------------+--------------------+-------------+-----------------+-----------------+----------------+----------------+-----------------+-------------+---------------------+----------------
+</pre>
+<p>
 
 <!--
 CREATE VIEW VideoInteraction AS
@@ -966,6 +1009,17 @@ answers the student provided.
   </tr>
 </table>
 <p>
+<b>ActivityGrade Example Rows:</b><br>
+<pre>
++------------------------------------------+---------------+----------------+---------------------+---------------------------------------------+-----------------------+---------+------------+------|
+| course_display_name | grade | max_grade | percent_grade | parts_correctness | wrong_answers     | numAttempts | first_submit | last_submit | module_type | resource_display_name | anon_screen_name |
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|Medicine/101/Stats   |     2 |         2 |           100 | ++                |                   |           2 | 2013-05-13 12:42:40 | 2013-05-13 12:50:52 | problem     | Quiz   | 55e90...         |
+|Medicine/101/Stats   |     0 |         2 |             0 | --                | choice_0,choice_4 |           1 | 2013-05-13 13:23:57 | 2013-05-13 13:32:33 | problem     | Quiz   | 95d8b...         |
++-------------+------------------------------------------------+--------------------+-------------+-----------------+-----------------+----------------+----------------+-----------------+------------
+</pre>
+
+
 <!-- CREATE TABLE IF NOT EXISTS Edx.ActivityGrade (
     activity_grade_id int(11) PRIMARY KEY,
     student_id int(11) NOT NULL,
