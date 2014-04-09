@@ -690,24 +690,41 @@ Each entry in a tracking log contains information about one small
 interaction that one student undertook with the learning
 platform. Examples are the submission of a problem solution, a video
 control action, like starting a video, or the initial creation of an
-account. The logs were designed to hold every piece of information
-that might need to be captured in the future. Not all of the log
-fields are currently in use. Of the many columns in the relational
-tables only some therefore need to be considered at this point. 
+account. <b>Note:</b>the event collection process of the OpenEdX
+platform is not perfect yet. Events do get lost on the way. The EdX
+consortium is working on this issue. But meanwhile you need to
+consider computations based on track logs as lower bounds.
 <p>
-During export we partition the tables into groups that correspond to
-the analysis purposes for which they are intended. The <b>Basic
-    Tables</b> are meant for everyday use. They comprise:
+<b>Beware 9c1185a5c5e9fc54612808977ee8f548b2258d31</b>: One event
+track failure is that some screen names show up as empty strings. When
+we anonymize these empty screen names, they all come to look like the
+same anonymized person, the above ugly string. When we export tables
+for you, we filter these duds out. But if you work on the database
+tables themselves, you need to take of it yourself.
+<p>
+The logs were designed to hold every piece of information that might
+need to be captured now or in the future. Not all of the log fields
+are currently in use. Of the many columns in the relational tables
+only some therefore need to be considered at this point. We therefore
+created some tables that allow you to focus.
+<p>
 <ul>
   <li>EventXtract</li>
   <li>VideoInteraction and</li>
   <li>ActivityGrade</li>
 </ul>
+We call these the <i>basic</i> tables.  During export we partition the
+tables into groups that correspond to the analysis purposes for which
+they are intended. The <b>Basic Tables</b> are meant for everyday
+use. Those tables exist in the database on Datastage, and we can
+export extracts of the three tables for individual classes as well.
 <p>
 Export table group <b>Engagement</b> are tables that approximate how
 much time course participants spent interacting with a course on their
-computer. We will add more table groups as we go along. We describe
-the tables now, group by group.
+computer. These tables are only available as per-course exports. They
+do not exist in the database, but are computed when we export.  We
+will add more table groups as we go along. We describe the tables now,
+group by group.
 
 <h3>Basic Export Tables</h3>
 
@@ -954,7 +971,9 @@ answers the student provided.
 <p>
 <b>Note:</b>the ActivityGrade table is not constructed from EdX track
 event logs. Instead, this table is a composited from information in
-the platform table courseware_studentmodule.
+the platform table courseware_studentmodule. In particular the
+infamous JSON encoded <i>state</i> field in that table is parsed and
+its JSON values are made accessible as columns in ActivityGrade.
 <p>
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
@@ -999,8 +1018,11 @@ the platform table courseware_studentmodule.
     <td class="tg-031e">If any assignment parts were answered incorrectly: the wrong answers</td>
   </tr>
   <tr class="tg-even">
-    <td class="tg-031e">numAttempts</td>
-    <td class="tg-031e">Total number of student's attempt at this assignment</td>
+    <td class="tg-031e">num_attempts</td>
+    <td class="tg-031e">Total number of participant's attempts at this
+    assignment at the time the event is received. Note: each attempt
+    generates an event, only the last attempt has the correct
+    number. The number -1 stands for 'not applicable.' </td>
   </tr>
   <tr>
     <td class="tg-031e">first_submit</td>
