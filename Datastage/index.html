@@ -695,15 +695,24 @@ that might need to be captured in the future. Not all of the log
 fields are currently in use. Of the many columns in the relational
 tables only some therefore need to be considered at this point. 
 <p>
-For everyday use, the following tables are recommended:
+During export we partition the tables into groups that correspond to
+the analysis purposes for which they are intended. The <b>Basic
+    Tables</b> are meant for everyday use. They comprise:
 <ul>
   <li>EventXtract</li>
   <li>VideoInteraction and</li>
   <li>ActivityGrade</li>
 </ul>
+<p>
+Export table group <b>Engagement</b> are tables that approximate how
+much time course participants spent interacting with a course on their
+computer. We will add more table groups as we go along. We describe
+the tables now, group by group.
 
-We describe these tables now. The first is the main table, which
-contains all the events: <i>EventXtract</i>:
+<h3>Basic Export Tables</h3>
+
+The first of the basic export tables is the main table, which contains
+all the events: <i>EventXtract</i>:
 <p>
 <style type="text/css">
 .tg  {margin-left: auto; margin-right: auto}
@@ -943,6 +952,10 @@ the solution was correct, in some parts, or in its entirety. If only
 parts were correct, the table shows which parts, and which incorrect
 answers the student provided.
 <p>
+<b>Note:</b>the ActivityGrade table is not constructed from EdX track
+event logs. Instead, this table is a composited from information in
+the platform table courseware_studentmodule.
+<p>
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 8px;border-style:solid;border-width:1px;}
@@ -1040,7 +1053,157 @@ answers the student provided.
     );
 -->
 
+<h3>Engagement Export Tables</h3>
 
+The first table in this group is usually large, because it lists
+each <i>session</i> of each participant in a class. As session is
+defined as a series of actions a participant undertook on the computer
+while interacting with the course such that:
+<ol>
+  <li>The actions were detectable by the platform software, i.e. the
+      actions triggered a logging event.</li>
+  <li>No two actions were more than 30 minutes apart.</li>
+</ol>
+When more than 30 minutes elapse between two events, the second event
+is considered part of a subsequent session. Since the last event's
+duration is not delimited by a follow-on action in the same session,
+the last event is counted as 15 minutes if the event was a video
+action, or as 5 minutes otherwise.
+<p>
+Note that this accounting of time engagement is quite approximate, for
+example because participants might have been reading course related
+materials for an hour without generating a platform event. No event:
+no accounting for that time.
+<p>
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.tg .tg-s6z2{text-align:center
+</style>
+<table class="tg">
+  <tr>
+    <th class="tg-s6z2" colspan="2">Engagement_AllData</th>
+  </tr>
+  <tr>
+    <td class="tg-031e">Platform</td>
+    <td class="tg-031e">Platform where course ran<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Course</td>
+    <td class="tg-031e">Name of course<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">anon_screen_name</td>
+    <td class="tg-031e">Hashed name of participant<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Date</td>
+    <td class="tg-031e">Date when the row's participant session occurred<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Time</td>
+    <td class="tg-031e">Time when the row's participant session started<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">SessionLength (min)</td>
+    <td class="tg-031e">Length of session in minutes</td>
+  </tr>
+</table>
+<p>
+A few example lines from an engagement_allData table:
+<center><img src="figs/engagement_alldata.png"/></center>
+<p>
+
+The engagement_weeklyEffort table lists the sum of session lengths for
+each student for each week.
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.tg .tg-s6z2{text-align:center}
+</style>
+<table class="tg">
+  <tr>
+    <th class="tg-s6z2" colspan="2">Engagement_weeklyEffort</th>
+  </tr>
+  <tr>
+    <td class="tg-031e">Platform</td>
+    <td class="tg-031e">Platform where course ran<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Course</td>
+    <td class="tg-031e">Name of course<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">anon_screen_name</td>
+    <td class="tg-031e">Hashed name of participant<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Week</td>
+    <td class="tg-031e">Running week of the course<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Effort (min)<br></td>
+    <td class="tg-031e">Number of minutes expended by the row's participant during the row's week<br></td>
+  </tr>
+</table>
+<p>
+A typical row in engagement_weeklyEffort looks like this:
+<center><img src="figs/engagement_weeklyEffort.png"/></center>
+
+<p>
+The final table in the engagement group is a single row for each
+course. The row summarizes the efforts across all weeks in one
+course. If a single course is being exported, then the table will
+contain only one line. 
+<p>
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.tg .tg-s6z2{text-align:center}
+</style>
+<table class="tg">
+  <tr>
+    <th class="tg-s6z2" colspan="2">Engagement_summary</th>
+  </tr>
+  <tr>
+    <td class="tg-031e">Platform</td>
+    <td class="tg-031e">Platform where course ran<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Course</td>
+    <td class="tg-031e">Name of course<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">TotalStudentSessions</td>
+    <td class="tg-031e">Total number of sessions by all students in the course<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">TotalEffortAllStudents<br></td>
+    <td class="tg-031e">Sum of minutes from all students' sessions in the course<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">MedPerWeekOneToTwenty</td>
+    <td class="tg-031e">The number of weeks in which a median of 1 to 20 minutes of time engagement,was observed, counting each student, each week.</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">MedPerWeekTwentyoneToSixty</td>
+    <td class="tg-031e">The number of weeks in which a median of 21min to 1hr of time engagement,was observed, counting each student, each week.</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">MedPerWeekGreaterSixty</td>
+    <td class="tg-031e">Median weekly number of sessions lasting longer than one hour, averaged over all weeks<br></td>
+  </tr>
+</table>
+<p>
+A typical row in engagement_summary looks like this:
+<center><img src="figs/engagement_summary.png"/></center>
+
+<p>
+<hr>
+<p>
 The following table is only available
 by <a href="#accessProcedure">special arrangement</a>
 
