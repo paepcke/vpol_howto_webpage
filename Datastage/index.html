@@ -1191,6 +1191,126 @@ its JSON values are made accessible as columns in ActivityGrade.
     anon_screen_name varchar(40) NOT NULL DEFAULT ''
     );
 -->
+<p>
+Each <i>Forum post</i> is contained in one row: 
+<p>
+<div align="center">
+<style>
+    .data-table {
+        border-collapse: collapse;
+    }
+    .border-top {
+        border-top: 1px solid #000;
+    }
+    .border-bottom {
+        border-bottom: 1px solid #000;
+    }
+    .border-left {
+        border-left: 1px solid #000;
+    }
+    .border-right {
+        border-right: 1px solid #000;
+    }
+</style>
+
+
+<table class="data-table">
+    <tr>
+        <th colspan="2" class="border-top border-bottom border-left border-right">OpenEdX Forum Table</th>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">anon_screen_name</td>
+        <td class="border-bottom border-right">anonymized participant ID (redacted unless table is relatable)</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">type</td>
+        <td class="border-bottom border-right">type of post: currently Comment or CommentThread</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">anonymous</td>
+        <td class="border-bottom border-right">whether post was submitted anonymously</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">anonymous_to_peers</td>
+        <td class="border-bottom border-right">anonymous to peers</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">at_position_list</td>
+        <td class="border-bottom border-right">apparently unused</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">user_int_id</td>
+        <td class="border-bottom border-right">anonymized user ID; different from anon_screen_name</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">body</td>
+        <td class="border-bottom border-right">anonymized body of the post. Redacted: emails, phone numbers, zip codes, name of poster</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">course_display_name</td>
+        <td class="border-bottom border-right">name of course with which the entry is associated</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">created_at</td>
+        <td class="border-bottom border-right">date of creation</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">votes</td>
+        <td class="border-bottom border-right">original JSON that summarizes votes. It is recommended to instead use the broken out columns below</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">count</td>
+        <td class="border-bottom border-right">total number of votes: up or down</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">down_count</td>
+        <td class="border-bottom border-right">number of down votes</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">up_count</td>
+        <td class="border-bottom border-right">number of up votes</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">up</td>
+        <td class="border-bottom border-right">list of individual up votes</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">down</td>
+        <td class="border-bottom border-right">list of individual down votes</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">comment_thread_id</td>
+        <td class="border-bottom border-right">ID of thread</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">parent_id</td>
+        <td class="border-bottom border-right">ID of parent</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">parent_ids</td>
+        <td class="border-bottom border-right">list of parent IDs</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">sk</td>
+        <td class="border-bottom border-right">another, not understood key</td>
+    </tr>
+</table>
+</div>
+
+<p>
+<b>EdxForum Example Rows:</b><br>
+
+<pre>
++---------------------------+---------------+-----------+--------------------+-------------+---------------------------------------------------------------------------------------+------------------------------
+| anon_screen_name          | type          | anonymous | anonymous_to_peers | user_int_id | body                   | course_display_name  | created_at          |... | count | down_count | up_count | up        |...
++---------------------------+---------------+-----------+--------------------+-------------+-------------------------------------------------------------------------------------------------------------+--------
+| anon_screen_name_redacted | CommentThread | False     | False              |       40009 | If R is optional ...?  | Medicine/HRP258/...  | 2013-06-11 16:59:30 |... |     1 |          0 |        1 | ['28005'] |...
+| anon_screen_name_redacted | Comment       | False     | False              |       28461 | Call me: &lt;phoneRedact&gt; | Medicine/HRP258/...  | 2013-06-11 17:39:24 |... |     0 |          0 |        0 | []        |...
+| anon_screen_name_redacted | Comment       | False     | False              |       28461 | I'm &lt;nameRedact&gt;...    | Medicine/HRP258/...  | 2013-06-11 17:39:45 |... |     0 |          0 |        0 | []        |...
++---------------------------+---------------+-----------+--------------------+-------------+---------------------------------------------------------------------------------------+------------------------------
+</pre>
+
+
 
 <h3>Engagement Export Tables</h3>
 
