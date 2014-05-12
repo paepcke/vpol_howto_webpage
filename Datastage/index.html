@@ -1037,6 +1037,10 @@ both tables.
     <td class="tg-031e">anon_screen_name</td>
     <td class="tg-031e">Teaching sequence change: destination</td>
   </tr>
+  <tr>
+    <td class="tg-031e">video_id</td>
+    <td class="tg-031e">a unique OpenEdX id for this video</td>
+  </tr>
 </table>
 <p>
 Here again some example rows:<br>
@@ -1044,7 +1048,10 @@ Here again some example rows:<br>
 <b>VideoInteraction Example Rows:</b><br>
 <pre>
 +------------------------------------------+---------------+----------------+---------------------+---------------------------------------------+-----------------------+---------+------------+----------------------------------------------|
-| event_type  | resource_display_name | video_current_time | video_speed | video_new_speed | video_old_speed | video_new_time | video_old_time | video_seek_type | video_code  | time                | course_display_name | anon_screen_name |
+| event_type  | resource_display_name | video_current_time |
+video_speed | video_new_speed | video_old_speed | video_new_time |
+video_old_time | video_seek_type | video_code  | time                |
+course_display_name | anon_screen_name | video_id
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | play_video  | Video 7.3.2: Hydrogen | 1244.047           | None        |                 |                 |                |                |                 | ZO0_R5VAoG4 | 2013-11-10 06:43:12 | Eng/EE-222/ME_I     | ef04...          |
 | pause_video | Video 7.3.2: Hydrogen | 1217.389976        | None        |                 |                 |                |                |                 | ZO0_R5VAoG4 | 2013-11-10 06:43:42 | Eng/EE-222/ME_I     | 84fa...          |
