@@ -13,6 +13,7 @@
       font-size: 150%;
       display: inline-block;
       }
+
     </style>
 
     <script LANGUAGE="JavaScript">
@@ -58,8 +59,8 @@
 
 The Vice Provost Office for Online Learning facilitates the teaching
 of online classes. The instruction delivery platforms are instrumented
-to collect a variety of data around students' interaction with the
-study material. Examples are students manipulating video players as
+to collect a variety of data around participants' interaction with the
+study material. Examples are participants manipulating video players as
 they view portions of a class, solution submissions to problem sets,
 uses of the online forum available for some classes, peer grading
 activities, and some demographic data. The type of data that is
@@ -143,14 +144,12 @@ missing data.
 <ul>
  <li> <b>ActivityGrade</b>: Assignment grades; includes right/wrong for each
    problem part, the learners' solution choice for each answer pard,
-   and the first and last solution submission times. Updated nightly,
-   except weekends. Constructed from platform table
+   and the first and last solution submission times. Constructed from platform table
    courseware_studentmodule.</li>
 
  <li> <b>Performance</b>: Daily cumulative assignment performance per
    learner. This is the average grade over all assignments up to the
-   day before the query. A view onto ActivityGrade. Updated nightly,
-   except weekends.</li>
+   day before the query. A view onto ActivityGrade. </li>
 
  <li> <b>FinalGrade</b>: 'Raw' final grades. Raw in that they do not
    take into account instructor defined weightings. This is an
@@ -158,7 +157,7 @@ missing data.
    below). FinalGrade differs from the Performance table in that it
    reflects the platform's current grade. That grade might reflect
    work other than the assignments that are captured in the
-   ActivityGrade table. Updated nightly, except weekends.</li>
+   ActivityGrade table.</li>
    
  <li> <b>UserCountry</b>: country of origin by IP address. Each row is a tuple
    consisting of one anonymous user id, the two-letter country code,
@@ -171,14 +170,14 @@ missing data.
    2013. The entries are in relational form. Three versions can be
    generated: without anonymization, anonymized with hashed user ids
    different from the hashes used in other tables, and anonymized
-   using the same hashes. Updated nightly, except weekends.</li>
+   using the same hashes.</li>
 
  <li> <b>VideoInteraction</b>: an excerpt from tracking logs, focusing on
-   participants' interactions with video. Updated on weekends.</li>
+   participants' interactions with video.</li>
 
  <li> <b>EventXtract</b>: A much slimmed view of the OpenEdX tracking log
    events. The view only includes fields that are currently in use by
-   the platform. Updated on weekends.</li>
+   the platform. </li>
 </ul>
    
 <h3>Computed tables</h3>
@@ -186,7 +185,7 @@ missing data.
 <ul>
  <li> <b>Time-on-task</b>: estimate for how long participants worked online on
    their courses. Computed from tracking log events, and partitioned
-   into 30 minute sessions. Available: every session for every student
+   into 30 minute sessions. Available: every session for every participant
    and course, weekly aggregates of the sessions, and course level
    aggregates. Session length for the computations can be customized
    on request, but this is a manual process. Part of the canned table
@@ -213,23 +212,13 @@ application with demonstrated need:
 
 <ul>
  <li> UserGrade: Raw grades as recorded by the platform. An amalgam of
-   auth_user and certificates_generatedcertificate. Updated nightly,
-   except weekends.</li>
+   auth_user and certificates_generatedcertificate.</li>
 
- <li> Tables mirrored from the Stanford OpenEdX platform. Currently:
-   <ul>
-      <li>auth_user</li>
-      <li>certificates_generatedcertificate</li>
-      <li>courseware_studentmodule</li>
-      <li>courseware_studentmodulehistory</li>
-   </ul>
+ <li> A number of <a href="#mirrors">tables are mirrored</a> from the Stanford OpenEdX platform.
  </li>
  
    Can be extended to more. Updated nightly, except weekends.
 </ul>
-
-
-
 
 <!-- <h2>If We Anticipated your Question</h2> -->
 
@@ -432,369 +421,26 @@ file</i>
 
 <h2 id="appA">Appendix A: List of Available Databases</h2>
 
-<h3>Course-to-Go Hosted Databases</h3>
+<h3>Courses on Platforms OpenEdX Operated at Stanford</h3>
 
-c2g-db_winter_2013_forum</br>
-c2g-networking_fall2012_forum</br>
-c2g-solar_fall2012_forum</br>
-</br>
-<h3>Coursera Hosted Databases</h3>
-</br>
-coursera-20130421-2305-12feb-gametheory_anonymized_forum</br>
-coursera-20130421-2305-12feb-gametheory_anonymized_general</br>
-coursera-20130421-2305-12feb-gametheory_hash_mapping</br>
-coursera-20130421-2305-12feb-gametheory_unanonymizable</br>
-coursera-20130421-2305-12jan-algo1_anonymized_forum</br>
-coursera-20130421-2305-12jan-algo1_anonymized_general</br>
-coursera-20130421-2305-12jan-algo1_hash_mapping</br>
-coursera-20130421-2305-12jan-crypto_anonymized_forum</br>
-coursera-20130421-2305-12jan-crypto_anonymized_general</br>
-coursera-20130421-2305-12jan-crypto_hash_mapping</br>
-coursera-20130421-2305-12jan-pgm_anonymized_forum</br>
-coursera-20130421-2305-12jan-pgm_anonymized_general</br>
-coursera-20130421-2305-12jan-pgm_hash_mapping</br>
-coursera-20130421-2305-12jan-pgm_unanonymizable</br>
-coursera-20130422-0245-12jan-ml_anonymized_forum</br>
-coursera-20130422-0245-12jan-ml_anonymized_general</br>
-coursera-20130422-0245-12jan-ml_hash_mapping</br>
-coursera-20130422-0245-12jan-ml_unanonymizable</br>
-coursera-20130422-0337-12feb-cs101_anonymized_forum</br>
-coursera-20130422-0337-12feb-cs101_anonymized_general</br>
-coursera-20130422-0337-12feb-cs101_hash_mapping</br>
-coursera-20130422-0459-12mar-automata_anonymized_forum</br>
-coursera-20130422-0459-12mar-automata_anonymized_general</br>
-coursera-20130422-0459-12mar-automata_hash_mapping</br>
-coursera-20130422-0459-12mar-automata_unanonymizable</br>
-coursera-20130422-0522-12mar-intrologic_anonymized_forum</br>
-coursera-20130422-0522-12mar-intrologic_anonymized_general</br>
-coursera-20130422-0522-12mar-intrologic_hash_mapping</br>
-coursera-20130422-0530-12apr-compilers_anonymized_forum</br>
-coursera-20130422-0530-12apr-compilers_anonymized_general</br>
-coursera-20130422-0530-12apr-compilers_hash_mapping</br>
-coursera-20130422-0530-12apr-compilers_unanonymizable</br>
-coursera-20130422-0632-12jan-hci_anonymized_forum</br>
-coursera-20130422-0632-12jan-hci_anonymized_general</br>
-coursera-20130422-0632-12jan-hci_hash_mapping</br>
-coursera-20130422-0632-12jan-hci_unanonymizable</br>
-coursera-20130422-0720-12-002-crypto_anonymized_forum</br>
-coursera-20130422-0720-12-002-crypto_anonymized_general</br>
-coursera-20130422-0720-12-002-crypto_hash_mapping</br>
-coursera-20130422-0809-12-002-algo_anonymized_forum</br>
-coursera-20130422-0809-12-002-algo_anonymized_general</br>
-coursera-20130422-0809-12-002-algo_hash_mapping</br>
-coursera-20130422-0919-12-002-ml_anonymized_forum</br>
-coursera-20130422-0919-12-002-ml_anonymized_general</br>
-coursera-20130422-0919-12-002-ml_hash_mapping</br>
-coursera-20130422-0919-12-002-ml_unanonymizable</br>
-coursera-20130422-0936-002-crypto_anonymized_forum</br>
-coursera-20130422-0936-002-crypto_anonymized_general</br>
-coursera-20130422-0936-002-crypto_hash_mapping</br>
-coursera-20130422-0936-002-crypto_unanonymizable</br>
-coursera-20130422-1039-005-crypto_anonymized_forum</br>
-coursera-20130422-1039-005-crypto_anonymized_general</br>
-coursera-20130422-1039-005-crypto_hash_mapping</br>
-coursera-20130422-1039-005-crypto_unanonymizable</br>
-coursera-20130422-1151-12-001-algo2_anonymized_forum</br>
-coursera-20130422-1151-12-001-algo2_anonymized_general</br>
-coursera-20130422-1151-12-001-algo2_hash_mapping</br>
-coursera-20130422-1204-12-002-gametheory_anonymized_forum</br>
-coursera-20130422-1204-12-002-gametheory_anonymized_general</br>
-coursera-20130422-1204-12-002-gametheory_hash_mapping</br>
-coursera-20130422-1206-12-003-algo_anonymized_forum</br>
-coursera-20130422-1206-12-003-algo_anonymized_general</br>
-coursera-20130422-1206-12-003-algo_hash_mapping</br>
-coursera-20130422-2135-12-001-organalysis_anonymized_forum</br>
-coursera-20130422-2135-12-001-organalysis_anonymized_general</br>
-coursera-20130422-2135-12-001-organalysis_hash_mapping</br>
-coursera-20130422-2135-12-001-organalysis_unanonymizable</br>
-coursera-20130422-2135-12-selfservice-compilers_anonymized_forum</br>
-coursera-20130422-2135-12-selfservice-compilers_hash_mapping</br>
-coursera-20130422-2135-12-selfservice-cs101_anonymized_forum</br>
-coursera-20130422-2135-12-selfservice-cs101_anonymized_general</br>
-coursera-20130422-2135-12-selfservice-cs101_hash_mapping</br>
-coursera-20130422-selfservice-compilers_anon_gen</br>
-coursera-20130430-2127-12-001-worldmusic_anonymized_forum</br>
-coursera-20130430-2127-12-001-worldmusic_anonymized_general</br>
-coursera-20130430-2127-12-001-worldmusic_hash_mapping</br>
-coursera-20130430-2127-12-001-worldmusic_unanonymizable</br>
-coursera-20130430-2128-12-001-design_anonymized_forum</br>
-coursera-20130430-2128-12-001-design_anonymized_general</br>
-coursera-20130430-2128-12-001-design_hash_mapping</br>
-coursera-20130430-2128-12-001-design_unanonymizable</br>
-coursera-20130430-2129-12-001-gamification_anonymized_forum</br>
-coursera-20130430-2129-12-001-gamification_anonymized_general</br>
-coursera-20130430-2129-12-001-gamification_hash_mapping</br>
-coursera-20130430-2129-12-001-genomescience_anonymized_forum</br>
-coursera-20130430-2129-12-001-genomescience_anonymized_general</br>
-coursera-20130430-2129-12-001-genomescience_hash_mapping</br>
-coursera-20130430-2129-12-001-genomescience_unanonymizable</br>
-coursera-20130430-2148-12-001-operations_anonymized_forum</br>
-coursera-20130430-2148-12-001-operations_anonymized_general</br>
-coursera-20130430-2148-12-001-operations_hash_mapping</br>
-coursera-20130430-2148-12-001-operations_unanonymizable</br>
-coursera-20130506-1717-compilers-003_anonymized_forum</br>
-coursera-20130506-1717-compilers-003_anonymized_general</br>
-coursera-20130506-1717-compilers-003_hash_mapping</br>
-coursera-20130506-1717-compilers-003_unanonymizable</br>
-coursera-20130531-1829-12-001-maththink_anonymized_forum</br>
-coursera-20130531-1829-12-001-maththink_anonymized_general</br>
-coursera-20130531-1829-12-001-maththink_hash_mapping</br>
-coursera-20130531-1829-12-001-maththink_unanonymizable</br>
-coursera-20130701-1010-childnutrition-001_anonymized_forum</br>
-coursera-20130701-1010-childnutrition-001_anonymized_general</br>
-coursera-20130701-1010-childnutrition-001_hash_mapping</br>
-coursera-20130701-1010-childnutrition-001_unanonymizable</br>
-coursera-20130701-1010-crypto-006_anonymized_forum</br>
-coursera-20130701-1010-crypto-006_anonymized_general</br>
-coursera-20130701-1010-crypto-006_hash_mapping</br>
-coursera-20130701-1010-crypto-006_unanonymizable</br>
-coursera-20130701-1010-democraticdev-001_anonymized_forum</br>
-coursera-20130701-1010-democraticdev-001_anonymized_general</br>
-coursera-20130701-1010-democraticdev-001_hash_mapping</br>
-coursera-20130701-1010-democraticdev-001_unanonymizable</br>
-coursera-20130701-1010-einstein-001_anonymized_forum</br>
-coursera-20130701-1010-einstein-001_anonymized_general</br>
-coursera-20130701-1010-einstein-001_hash_mapping</br>
-coursera-20130701-1010-einstein-001_unanonymizable</br>
-coursera-20130701-1010-hci-003_anonymized_forum</br>
-coursera-20130701-1010-hci-003_anonymized_general</br>
-coursera-20130701-1010-hci-003_hash_mapping</br>
-coursera-20130701-1010-hci-003_unanonymizable</br>
-coursera-20130701-1103-12-001-maththink_anonymized_forum</br>
-coursera-20130701-1103-12-001-maththink_anonymized_general</br>
-coursera-20130701-1103-12-001-maththink_hash_mapping</br>
-coursera-20130701-1103-12-001-maththink_unanonymizable</br>
-coursera-20130701-1114-pgm-003_anonymized_forum</br>
-coursera-20130701-1114-pgm-003_anonymized_general</br>
-coursera-20130701-1114-pgm-003_hash_mapping</br>
-coursera-20130701-1114-pgm-003_unanonymizable</br>
-coursera-20130701-1234-startup-001_anonymized_forum</br>
-coursera-20130701-1234-startup-001_anonymized_general</br>
-coursera-20130701-1234-startup-001_hash_mapping</br>
-coursera-20130701-1234-startup-001_unanonymizable</br>
-coursera-20130701-1256-intrologic-003_anonymized_forum</br>
-coursera-20130701-1256-intrologic-003_anonymized_general</br>
-coursera-20130701-1256-intrologic-003_hash_mapping</br>
-coursera-20130701-1256-intrologic-003_unanonymizable</br>
-coursera-20130701-1410-compilers-003_anonymized_forum</br>
-coursera-20130701-1410-compilers-003_anonymized_general</br>
-coursera-20130701-1410-compilers-003_hash_mapping</br>
-coursera-20130701-1410-compilers-003_unanonymizable</br>
-coursera-20130701-1426-12-002-compilers_anonymized_forum</br>
-coursera-20130701-1426-12-002-compilers_anonymized_general</br>
-coursera-20130701-1426-12-002-compilers_hash_mapping</br>
-coursera-20130701-1426-12-002-compilers_unanonymizable</br>
-coursera-20130701-1434-12-002-intrologic_anonymized_forum</br>
-coursera-20130701-1434-12-002-intrologic_anonymized_general</br>
-coursera-20130701-1434-12-002-intrologic_hash_mapping</br>
-coursera-20130701-1518-12-002-hci_anonymized_forum</br>
-coursera-20130701-1518-12-002-hci_anonymized_general</br>
-coursera-20130701-1518-12-002-hci_hash_mapping</br>
-coursera-20130701-1518-12-002-hci_unanonymizable</br>
-coursera-20130701-1546-12-003-crypto_anonymized_forum</br>
-coursera-20130701-1546-12-003-crypto_anonymized_general</br>
-coursera-20130701-1546-12-003-crypto_hash_mapping</br>
-coursera-20130701-1547-001-sustainableag_anonymized_forum</br>
-coursera-20130701-1547-001-sustainableag_anonymized_general</br>
-coursera-20130701-1547-001-sustainableag_hash_mapping</br>
-coursera-20130701-1547-001-sustainableag_unanonymizable</br>
-coursera-20130701-1601-12-002-pgm_anonymized_forum</br>
-coursera-20130701-1601-12-002-pgm_anonymized_general</br>
-coursera-20130701-1601-12-002-pgm_hash_mapping</br>
-coursera-20130701-1601-12-002-pgm_unanonymizable</br>
-coursera-20130701-1658-12-001-sciwrite_anonymized_forum</br>
-coursera-20130701-1658-12-001-sciwrite_anonymized_general</br>
-coursera-20130701-1658-12-001-sciwrite_hash_mapping</br>
-coursera-20130701-1658-12-001-sciwrite_unanonymizable</br>
-coursera-20130701-2048-maththink-002_anonymized_forum</br>
-coursera-20130701-2048-maththink-002_anonymized_general</br>
-coursera-20130701-2048-maththink-002_hash_mapping</br>
-coursera-20130701-2048-maththink-002_unanonymizable</br>
-coursera-20130924-1740-crypto-007_anonymized_forum</br>
-coursera-20130924-1740-crypto-007_anonymized_general</br>
-coursera-20130924-1740-crypto-007_hash_mapping</br>
-coursera-20130924-1740-crypto-007_unanonymizable</br>
-coursera-20131002-0701-ml-003_anonymized_forum</br>
-coursera-20131002-0701-ml-003_anonymized_general</br>
-coursera-20131002-0701-ml-003_hash_mapping</br>
-coursera-20131002-0701-ml-003_unanonymizable</br>
-coursera-demog-algo</br>
-coursera-demog-algo2-002</br>
-coursera-demog-algo2-2012-001</br>
-coursera-demog-algo-003</br>
-coursera-demog-algo-004</br>
-coursera-demog-algo-2012-002</br>
-coursera-demog-antimicrobial-001</br>
-coursera-demog-antimicrobial-002</br>
-coursera-demog-antimicrobial-003</br>
-coursera-demog-antimicrobial-004</br>
-coursera-demog-automata</br>
-coursera-demog-automata-002</br>
-coursera-demog-childnutrition-001</br>
-coursera-demog-clinicaltrials-001</br>
-coursera-demog-compilers</br>
-coursera-demog-compilers-003</br>
-coursera-demog-compilers-2012-002</br>
-coursera-demog-compilers-selfservice</br>
-coursera-demog-computervision-001</br>
-coursera-demog-crypto</br>
-coursera-demog-crypto2-2013-001</br>
-coursera-demog-crypto-004</br>
-coursera-demog-crypto-005</br>
-coursera-demog-crypto-006</br>
-coursera-demog-crypto-007</br>
-coursera-demog-crypto-2012-002</br>
-coursera-demog-crypto-2012-003</br>
-coursera-demog-cs101</br>
-coursera-demog-cs101-002</br>
-coursera-demog-cs101-selfservice</br>
-coursera-demog-db</br>
-coursera-demog-democraticdev-001</br>
-coursera-demog-democraticdev-002</br>
-coursera-demog-dgplay-001</br>
-coursera-demog-emscardiology-001</br>
-coursera-demog-environphys-001</br>
-coursera-demog-environphys-002</br>
-coursera-demog-gametheory</br>
-coursera-demog-gametheory-003</br>
-coursera-demog-gametheory-2012-002</br>
-coursera-demog-ggp-001</br>
-coursera-demog-hci</br>
-coursera-demog-hci-003</br>
-coursera-demog-hci-2012-002</br>
-coursera-demog-intrologic</br>
-coursera-demog-intrologic-003</br>
-coursera-demog-intrologic-004</br>
-coursera-demog-intrologic-2012-002</br>
-coursera-demog-maththink-002</br>
-coursera-demog-maththink-003</br>
-coursera-demog-maththink-2012-001</br>
-coursera-demog-ml</br>
-coursera-demog-ml-003</br>
-coursera-demog-ml-2012-002</br>
-coursera-demog-nlp</br>
-coursera-demog-nlp-002</br>
-coursera-demog-organalysis-002</br>
-coursera-demog-organalysis-2012-001</br>
-coursera-demog-palliativemed-001</br>
-coursera-demog-pgm</br>
-coursera-demog-pgm-003</br>
-coursera-demog-pgm-2012-002</br>
-coursera-demog-sciwrite-2012-001</br>
-coursera-demog-security</br>
-coursera-demog-startup-001</br>
-coursera-demog-startup-002</br>
-coursera-demog-vidmooc-001</br>
-coursera_2012_cs101_anonymized_general</br>
-coursera_2012_cs101_hash_mapping</br>
-coursera_2012_cs101_pii</br>
-coursera_2012_db_anonymized_general</br>
-coursera_2012_db_hash_mapping</br>
-coursera_2012_db_pii</br>
-coursera_2012_hci_anonymized_forum</br>
-coursera_2012_hci_anonymized_general</br>
-coursera_2012_hci_hash_mapping</br>
-coursera_2012_hci_pii</br>
-coursera_2012_hci_unanonymizable</br>
-coursera_2012_logic_anonymized_forum</br>
-coursera_2012_logic_anonymized_general</br>
-coursera_2012_logic_hash_mapping</br>
-coursera_2012_logic_pii</br>
-coursera_2012_maththink_anonymized_forum</br>
-coursera_2012_maththink_anonymized_general</br>
-coursera_2012_maththink_hash_mapping</br>
-coursera_2012_maththink_pii</br>
-coursera_2012_maththink_unanonymizable</br>
-coursera_2012_ml_anonymized_forum</br>
-coursera_2012_ml_anonymized_general</br>
-coursera_2012_ml_hash_mapping</br>
-coursera_2012_ml_pii</br>
-coursera_2012_ml_unanonymizable</br>
-coursera_2012_pgm_anonymized_forum</br>
-coursera_2012_pgm_anonymized_general</br>
-coursera_2012_pgm_hash_mapping</br>
-coursera_2012_pgm_pii</br>
-coursera_2012_pgm_unanonymizable</br>
-coursera_2012_sciwri_anonymized_forum</br>
-coursera_2012_sciwri_anonymized_general</br>
-coursera_2012_sciwri_hash_mapping</br>
-coursera_2012_sciwri_pii</br>
-coursera_2012_sciwri_unanonymizable</br>
-coursera_eventing_001-sustainableag</br>
-coursera_eventing_002-crypto</br>
-coursera_eventing_005-crypto</br>
-coursera_eventing_12-001-algo2</br>
-coursera_eventing_12-001-maththink</br>
-coursera_eventing_12-001-organalysis</br>
-coursera_eventing_12-001-sciwrite</br>
-coursera_eventing_12-002-algo</br>
-coursera_eventing_12-002-compilers</br>
-coursera_eventing_12-002-crypto</br>
-coursera_eventing_12-002-gametheory</br>
-coursera_eventing_12-002-hci</br>
-coursera_eventing_12-002-intrologic</br>
-coursera_eventing_12-002-ml</br>
-coursera_eventing_12-002-pgm</br>
-coursera_eventing_12-003-algo</br>
-coursera_eventing_12-003-crypto</br>
-coursera_eventing_Machine Learning (ml-003)_clickstream_export</br>
-coursera_eventing_childnutrition-001</br>
-coursera_eventing_compilers-003</br>
-coursera_eventing_crypto-006</br>
-coursera_eventing_democraticdev-001</br>
-coursera_eventing_einstein-001</br>
-coursera_eventing_intrologic-003</br>
-coursera_eventing_maththink-002</br>
-coursera_eventing_pgm-003</br>
-coursera_eventing_startup-001</br>
-</br>
-<h3>OpenEdx Hosted</h3>
-Edx</br>
-ExPrivate</br>
-</br>
-<h3>NovoEd Hosted Databases</h3>
-</br>
-novoed-crs_23_ACrashCourseonCreativity</br>
-novoed-crs_24_TechnologyEntrepreneurshipPart1</br>
-novoed-crs_25_Finance</br>
-novoed-crs_29_OrganizationalBehavior</br>
-novoed-crs_30_HippocratesChallenge</br>
-novoed-crs_46_DesignThinkingActionLab</br>
-novoed-crs_ACrashCourseonCreativity</br>
-novoed-crs_AdvancedEntrepreneurship</br>
-novoed-crs_BusinessManagementforEEandCSStudents</br>
-novoed-crs_DesigningaNewLearningEnvironment</br>
-novoed-crs_EntrepreneurshipinEnvironmentalEngineering</br>
-novoed-crs_Finance</br>
-novoed-crs_GraphPartitioningandExpanders</br>
-novoed-crs_MobileHealthWithoutBorders</br>
-novoed-crs_OrganizationalBehavior</br>
-novoed-crs_StartupBoards</br>
-novoed-crs_SustainableProductDevelopment</br>
-novoed-crs_Technology_Entrepreneurship</br>
-novoed-crs_email_23_ACrashCourseonCreativity</br>
-novoed-crs_email_24_TechnologyEntrepreneurshipPart1</br>
-novoed-crs_email_25_Finance</br>
-novoed-crs_email_29_OrganizationalBehavior</br>
-novoed-crs_email_30_HippocratesChallenge</br>
-novoed-crs_email_46_DesignThinkingActionLab</br>
-novoed-crs_email_ACrashCourseonCreativity</br>
-novoed-crs_email_AdvancedEntrepreneurship</br>
-novoed-crs_email_BusinessManagementforEEandCSStudents</br>
-novoed-crs_email_DesigningaNewLearningEnvironment</br>
-novoed-crs_email_EntrepreneurshipinEnvironmentalEngineering</br>
-novoed-crs_email_Finance</br>
-novoed-crs_email_GraphPartitioningandExpanders</br>
-novoed-crs_email_MobileHealthWithoutBorders</br>
-novoed-crs_email_OrganizationalBehavior</br>
-novoed-crs_email_StartupBoards</br>
-novoed-crs_email_SustainableProductDevelopment</br>
-novoed-crs_email_Technology_Entrepreneurship</br>
-vl_2013_boards</br>
-vl_2013_creativity</br>
-vl_2013_education</br>
-vl_2013_finance</br>
-vl_2013_venture</br>
+Data from Stanford courses offered via the OpenEdx platform software
+by Stanford includes the above mentioned <i>events</i>, which document
+how participants interacted with the platform. Forum posts are
+available as well. All data has personally identifiable information
+removed. For <a href="#appB">details of each table</a>, see below.
+
+
+<h3>Courses on Platforms Coursera and NovoEd</h3>
+For a list of Coursera courses as of May 18, 2014, see the
+<a href="datastageDbsMay18_2014.html#coursera">Coursera list</a>.
+For NovoEd, see
+the <a href="datastageDbsMay18_2014.html#novoed">NovoEd list</a>. 
+<p>
+Coursera <a href="https://spark-public.s3.amazonaws.com/mooc/20130414_data_exports.pdf">export
+  format information</a> is a useful resource. However, the data is
+only available via the <a href="#accessProcedure">access
+  procedure</a>. 
+
 
 <h2 id="appB">Appendix B: Explanation of OpenEdx data fields</h2>
 
@@ -804,7 +450,7 @@ translation was constructed based on tracking logs of Stanford's
 OpenEdx classes.
 <p>
 Each entry in a tracking log contains information about one small
-interaction that one student undertook with the learning
+interaction that one participant undertook with the learning
 platform. Examples are the submission of a problem solution, a video
 control action, like starting a video, or the initial creation of an
 account. <b>Note:</b>the event collection process of the OpenEdX
@@ -840,13 +486,23 @@ Export table group <b>Engagement</b> are tables that approximate how
 much time course participants spent interacting with a course on their
 computer. These tables are only available as per-course exports. They
 do not exist in the database, but are computed when we export.  We
-will add more table groups as we go along. We describe the tables now,
+will add more table groups as we go along. 
+<p>
+Other tables of interests are <b>Demographics</b>, which provides
+basic, anonymized info about each participant, and <b>EdxForum</b> the
+Forum posts, upvotes, downvotes for all courses.
+
+We describe the tables now,
 group by group.
 
 <h3>Basic Export Tables</h3>
 
 The first of the basic export tables is the main table, which contains
-all the events: <i>EventXtract</i>:
+all the events: <i>EventXtract</i>. NOTE: the <i>event_type</i> field
+is the key to interpreting the remaining columns. Please see the 
+<a href="http://edx.readthedocs.org/en/latest/">OpenEdx
+Tracking Log documentation</a> of the original JSON formatted
+fields. Those descriptions are authoritative.
 <p>
 <style type="text/css">
 .tg  {margin-left: auto; margin-right: auto}
@@ -861,15 +517,18 @@ all the events: <i>EventXtract</i>:
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">anon_screen_name</td>
-    <td class="tg-031e">Anonymized student identifier</td>
+    <td class="tg-031e">Anonymized participant identifier</td>
   </tr>
   <tr>
     <td class="tg-031e">event_type</td>
-    <td class="tg-031e">Type of action the student took</td>
+    <td class="tg-031e">Type of action the participant took
+                        See <a href="http://edx.readthedocs.org/en/latest/">OpenEdx
+                        Tracking Log documentation</a>
+  </td>
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">ip (<it>withheld from exports)</it></td>
-    <td class="tg-031e">Student's IP address while performing the action</td>
+    <td class="tg-031e">Participant's IP address while performing the action</td>
   </tr>
   <tr>
     <td class="tg-031e">time</td>
@@ -885,11 +544,17 @@ all the events: <i>EventXtract</i>:
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">success</td>
-    <td class="tg-031e">Whether the student succeeded, or not (context dependent)</td>
+    <td class="tg-031e">Whether the participant succeeded, or not (context dependent)</td>
   </tr>
   <tr>
     <td class="tg-031e">video_code</td>
-    <td class="tg-031e">Machine name of video, (video actions only)</td>
+    <td class="tg-031e">Machine name of video, (video actions only)<br>
+                        For YouTube videos this column allows you<br>
+                        to find the video itself. For example,<br>
+                        if this column contains '6Tnr8OL-9So' <br>
+                        you can google that code, and will find<br>
+                        the video.
+    </td>
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">video_current_time</td>
@@ -969,7 +634,11 @@ EventXtract AS
 If your focus is video behavior analysis, then the VideoInteraction
 table is the easiest to use. It just extracts the video events from
 the EventXtract table; the video related information is the same in
-both tables. 
+both tables.
+<p>
+Note that participants can download videos, and subsequently use their
+own, local player. The platform software will not 'see' such local
+activities, so this table can underestimate video activity frequency.
 <p>
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
@@ -983,7 +652,7 @@ both tables.
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">event_type</td>
-    <td class="tg-031e">Type of video action the student took</td>
+    <td class="tg-031e">Type of video action the participant took</td>
   </tr>
   <tr>
     <td class="tg-031e">resource_display_name</td>
@@ -1019,7 +688,13 @@ both tables.
   </tr>
   <tr>
     <td class="tg-031e">video_code</td>
-    <td class="tg-031e">Machine code name for video</td>
+    <td class="tg-031e">Machine code name for video.<br>
+                        For YouTube videos this column allows you<br>
+                        to find the video itself. For example,<br>
+                        if this column contains '6Tnr8OL-9So' <br>
+                        you can google that code, and will find<br>
+                        the video.
+  </td>
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">time</td>
@@ -1086,12 +761,12 @@ WHERE  CHAR_LENGTH(video_code) > 0 OR
        CHAR_LENGTH(video_old_speed) > 0
 -->
 <p>
-The ActivityGrade table holds events that concern homework
+The <b>ActivityGrade</b> table holds events that concern homework
 assignments. Each row in the table is one solution submission, or
-inspection of one assignment by one student. The rows inform whether
+inspection of one assignment by one participant. The rows inform whether
 the solution was correct, in some parts, or in its entirety. If only
 parts were correct, the table shows which parts, and which incorrect
-answers the student provided.
+answers the participant provided.
 <p>
 <b>Note:</b>the ActivityGrade table is not constructed from EdX track
 event logs. Instead, this table is a composited from information in
@@ -1115,7 +790,7 @@ its JSON values are made accessible as columns in ActivityGrade.
   </tr>
   <tr>
     <td class="tg-031e">student_id</td>
-    <td class="tg-031e">A numeric identifier used for students in various other platform tables.</td>
+    <td class="tg-031e">A numeric identifier used for participants in various other platform tables.</td>
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">course_display_name</td>
@@ -1123,7 +798,12 @@ its JSON values are made accessible as columns in ActivityGrade.
   </tr>
   <tr>
     <td class="tg-031e">grade</td>
-    <td class="tg-031e">The grade the student received for this assignment</td>
+    <td class="tg-031e">The grade the participant received for this
+                        assignment.<br>
+                        <img src="figs/expert.png" width="2%"> This
+                        quantity originates from a JOIN between
+                        auth_user and certificates_generatedcertificate.
+  </td>
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">max_grade</td>
@@ -1143,18 +823,21 @@ its JSON values are made accessible as columns in ActivityGrade.
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">num_attempts</td>
-    <td class="tg-031e">Total number of participant's attempts at this
-    assignment at the time the event is received. Note: each attempt
-    generates an event, only the last attempt has the correct
-    number. The number -1 stands for 'not applicable.' </td>
+    <td class="tg-031e">Total number of participant's attempts at this<br>
+                       assignment at the time the event is
+                       received. <br>
+                       Note: each attempt generates an event, <br>
+                       only the last attempt has the correct number. <br>
+                       The number -1 stands for 'not applicable.' 
+  </td>
   </tr>
   <tr>
     <td class="tg-031e">first_submit</td>
-    <td class="tg-031e">Date and time the student first submitted the assignment solution</td>
+    <td class="tg-031e">Date and time the participant first submitted the assignment solution</td>
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">last_submit</td>
-    <td class="tg-031e">Most recent date and time the student submitted the assignment solution</td>
+    <td class="tg-031e">Most recent date and time the participant submitted the assignment solution</td>
   </tr>
   <tr>
     <td class="tg-031e">module_type</td>
@@ -1166,11 +849,13 @@ its JSON values are made accessible as columns in ActivityGrade.
   </tr>
   <tr>
     <td class="tg-031e">anon_screen_name</td>
-    <td class="tg-031e">Student's anonymized name</td>
+    <td class="tg-031e">Participant's anonymized name</td>
   </tr>
 </table>
+</pre>
 <p>
 <b>ActivityGrade Example Rows:</b><br>
+<p>
 <pre>
 +------------------------------------------+---------------+----------------+---------------------+---------------------------------------------+-----------------------+---------+------------+------|
 | course_display_name | grade | max_grade | percent_grade | parts_correctness | wrong_answers     | numAttempts | first_submit | last_submit | module_type | resource_display_name | anon_screen_name |
@@ -1180,26 +865,90 @@ its JSON values are made accessible as columns in ActivityGrade.
 +-------------+------------------------------------------------+--------------------+-------------+-----------------+-----------------+----------------+----------------+-----------------+------------
 </pre>
 
-
-<!-- CREATE TABLE IF NOT EXISTS Edx.ActivityGrade (
-    activity_grade_id int(11) PRIMARY KEY,
-    student_id int(11) NOT NULL,
-    course_display_name varchar(255) NOT NULL,
-    grade double,
-    max_grade double,
-    percent_grade double,
-    parts_correctness varchar(50),
-    wrong_answers varchar(255),
-    numAttempts int,
-    first_submit datetime,
-    last_submit datetime,
-    module_type varchar(32) NOT NULL,
-    resource_display_name varchar(255) NOT NULL DEFAULT '',
-    anon_screen_name varchar(40) NOT NULL DEFAULT ''
-    );
--->
+The <b>Demographics</b> view contains anonymized demographic data
+on participants.
 <p>
-Each <i>Forum post</i> is contained in one row: 
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 8px;border-style:solid;border-width:1px;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;}
+.tg .tg-s6z2{text-align:center}
+</style>
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">Demographics</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">anon_screen_name</td>
+    <td class="tg-031e">Participant's anonymized name</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">gender</td>
+    <td class="tg-031e">Single letter: 'm' or 'f'. Blank if not provided.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">year_of_birth</td>
+    <td class="tg-031e">Year of participant's birth, if
+    provided. Else NULL</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">curr_age</td>
+    <td class="tg-031e">Current age, computed on the fly from the year
+       when the row producing SELECT is issued, and year_of_birth.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">level_of_education</td>
+    <td class="tg-031e">One of: Doctorate, Masters or professional
+                        degree, Bachelors, Associates, Secondary/High
+                        School, Junior secondary/junior high/middle
+                        School, Elementary/Primary School, None,
+                        Other, User withheld, Signup before level
+                        collected.</td> 
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">country_three_letters</td>
+    <td class="tg-031e">Official three-letter code of country. If
+                        participant interacted with a course from 
+                        multiple Internet addresses, Demographics
+                        will contain one entry for each distinct
+                        address, even if the countries are the same.
+  </td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">country_name</td>
+    <td class="tg-031e">Full name of country. See
+                        country_three_letters for explanation of 
+                        multiple entries.
+  </td>
+  </tr>
+</table>
+</pre>
+</div>
+<p>
+If participant interacted with a course from multiple Internet
+addresses, Demographics will contain one entry for each distinct
+address, even if the address' countries are the same. It is therefore
+wise to use DISTINCT when querying:
+
+<pre>
+mysql> SELECT DISTINCT Demographics.*, FinalGrade.grade  
+       FROM Demographics, FinalGrade 
+       WHERE Demographics.anon_screen_name = FinalGrade.anon_screen_name  
+        AND  FinalGrade.course_id = 'Engineering/Solar/Fall2013' 
+       LIMIT 4;
++------------------------------------------+--------+---------------+----------+--------------------+-----------------------+---------------+-------+
+| anon_screen_name                         | gender | year_of_birth | curr_age | level_of_education | country_three_letters | country_name  | grade |
++------------------------------------------+--------+---------------+----------+--------------------+-----------------------+---------------+-------+
+| 18070a6cbf7c75ea6b6a53cf08d875e50a4dc1fb | m      |          1989 |       25 | User withheld      | BGR                   | Bulgaria      |     0 |
+| f42a592a30690dc43bdd3d0ece1019c79b88c8ac | m      |          1987 |       27 | Bachelors          | USA                   | United States |     0 |
+| 20bd8681086b0ddb994e1fec2d0de110f55bc1da | m      |          1990 |       24 | Bachelors          | USA                   | United States |     0 |
+| 610467062fa05ff271198cfcc689febe856f48e7 |        |          NULL |     NULL | User withheld      | FRA                   | France        |     0 |
++------------------------------------------+--------+---------------+----------+--------------------+-----------------------+---------------+-------+
+</pre>
+
+
+<p>
+Each <b>Forum post</b> is contained in one row: 
 <p>
 <div align="center">
 <style>
@@ -1333,8 +1082,9 @@ while interacting with the course such that:
 When more than 30 minutes elapse between two events, the second event
 is considered part of a subsequent session. Since the last event's
 duration is not delimited by a follow-on action in the same session,
-the last event is counted as 15 minutes if the event was a video
-action, or as 5 minutes otherwise.
+the last event is counted as 5 minutes. Session length, and estimated
+durations of the last event in a session can be adjusted in the
+engagement computation program.
 <p>
 Note that this accounting of time engagement is quite approximate, for
 example because participants might have been reading course related
@@ -1382,7 +1132,7 @@ A few example lines from an engagement_allData table:
 <p>
 
 The engagement_weeklyEffort table lists the sum of session lengths for
-each student for each week.
+each participant for each week.
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
@@ -1444,19 +1194,19 @@ contain only one line.
   </tr>
   <tr>
     <td class="tg-031e">TotalStudentSessions</td>
-    <td class="tg-031e">Total number of sessions by all students in the course<br></td>
+    <td class="tg-031e">Total number of sessions by all participants in the course<br></td>
   </tr>
   <tr>
     <td class="tg-031e">TotalEffortAllStudents<br></td>
-    <td class="tg-031e">Sum of minutes from all students' sessions in the course<br></td>
+    <td class="tg-031e">Sum of minutes from all participants' sessions in the course<br></td>
   </tr>
   <tr>
     <td class="tg-031e">MedPerWeekOneToTwenty</td>
-    <td class="tg-031e">The number of weeks in which a median of 1 to 20 minutes of time engagement,was observed, counting each student, each week.</td>
+    <td class="tg-031e">The number of weeks in which a median of 1 to 20 minutes of time engagement,was observed, counting each participant, each week.</td>
   </tr>
   <tr>
     <td class="tg-031e">MedPerWeekTwentyoneToSixty</td>
-    <td class="tg-031e">The number of weeks in which a median of 21min to 1hr of time engagement,was observed, counting each student, each week.</td>
+    <td class="tg-031e">The number of weeks in which a median of 21min to 1hr of time engagement,was observed, counting each participant, each week.</td>
   </tr>
   <tr>
     <td class="tg-031e">MedPerWeekGreaterSixty</td>
@@ -1470,7 +1220,7 @@ A typical row in engagement_summary looks like this:
 <p>
 <hr>
 <p>
-The following table is only available
+The following tables are only available.
 by <a href="#accessProcedure">special arrangement</a>
 
 <style type="text/css">
@@ -1481,106 +1231,73 @@ by <a href="#accessProcedure">special arrangement</a>
 </style>
 <table class="tg">
   <tr>
-    <th colspan="2" class="tg-s6z2">Account</th>
-  </tr>
-  <tr class="tg-even">
-    <td class="tg-031e">account_id</td>
-    <td class="tg-031e">A unique identifier for this row</td>
-  </tr>
-  <tr>
-    <td class="tg-031e">screen_name</td>
-    <td class="tg-031e">Student's choice of name for him/herself on the online learning platform</td>
+    <th colspan="2" class="tg-s6z2">UserGrade</th>
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">name</td>
-    <td class="tg-031e">Student's given name</td>
+    <td class="tg-031e">Participant's self reported name</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">screen_name</td>
+    <td class="tg-031e">Participant's choice of name for him/herself on the online learning platform</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">grade</td>
+    <td class="tg-031e">Currently known
+      grade.<br> (<img src="figs/expert.png" width="2%">
+                        The information comes
+                        from platform tables auth_user and
+                        certificates_generatedcertificate.)
+    </td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">course_id</td>
+    <td class="tg-031e">Name of course in format foo/bar/fum</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">distinction</td>
+    <td class="tg-031e">0 or 1</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">status</td>
+    <td class="tg-031e">downloadable, generating, notpassing, or unavailable</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">user_int_id</td>
+    <td class="tg-031e">Integer identifier for participant as used in
+                        platform native
+                        tables.<br> (<img src="figs/expert.png"
+                        width="2%">This is the same value as the
+                        student_id column in courseware_studentmodule.)
+   </td> 
   </tr>
   <tr>
     <td class="tg-031e">anon_screen_name</td>
-    <td class="tg-031e">Anonymization code used for this student.</td>
-  </tr>
-  <tr class="tg-even">
-    <td class="tg-031e">mailing_address</td>
-    <td class="tg-031e">Surface mail address (optionally provided)</td>
-  </tr>
-  <tr>
-    <td class="tg-031e">zipcode</td>
-    <td class="tg-031e">Zipcode if US address (optionally provided)</td>
-  </tr>
-  <tr class="tg-even">
-    <td class="tg-031e">country</td>
-    <td class="tg-031e">Country of origin (optionally provided)</td>
-  </tr>
-  <tr>
-    <td class="tg-031e">gender</td>
-    <td class="tg-031e">Student gender</td>
-  </tr>
-  <tr class="tg-even">
-    <td class="tg-031e">year_of_birth</td>
-    <td class="tg-031e">Student's birth year (optionally provided)</td>
-  </tr>
-  <tr>
-    <td class="tg-031e">level_of_education</td>
-    <td class="tg-031e">Level of prior formal education</td>
-  </tr>
-  <tr class="tg-even">
-    <td class="tg-031e">goals</td>
-    <td class="tg-031e">Short statement of goals for taking this class</td>
-  </tr>
-  <tr>
-    <td class="tg-031e">honor_code</td>
-    <td class="tg-031e">Student agreed to honor code</td>
-  </tr>
-  <tr class="tg-even">
-    <td class="tg-031e">terms_of_service</td>
-    <td class="tg-031e">Student agreed to terms of service</td>
-  </tr>
-  <tr>
-    <td class="tg-031e">course_id</td>
-    <td class="tg-031e">Course for which student is signing up</td>
-  </tr>
-  <tr class="tg-even">
-    <td class="tg-031e">enrollment_action</td>
-    <td class="tg-031e">not used</td>
-  </tr>
-  <tr>
-    <td class="tg-031e">email</td>
-    <td class="tg-031e">Student email address</td>
-  </tr>
-  <tr class="tg-even">
-    <td class="tg-031e">receive_emails</td>
-    <td class="tg-031e"></td>
+    <td class="tg-031e">Anonymization code used for this
+                        participant. Since this table contains both<br>
+                        the integer ID used on platform tables, and<br>
+                        the 40 byte id used elsewhere on datastage,<br>
+                        this table is used for translation. See<br>
+                        stored functions idInt2Anon() and
+                        idAnon2Int().)
+    </td>
   </tr>
 </table>
 <p>
 
+<h3 id="mirrors">Platform tables mirrored on Datastage</h3> 
 
-<!--CREATE TABLE IF NOT EXISTS Account (
-    account_id VARCHAR(40) NOT NULL PRIMARY KEY,
-    screen_name TEXT NOT NULL,
-    name TEXT NOT NULL,
-    anon_screen_name TEXT NOT NULL,
-    mailing_address TEXT NOT NULL,
-    zipcode VARCHAR(255) NOT NULL,
-    country VARCHAR(255) NOT NULL,
-    gender VARCHAR(255) NOT NULL,
-    year_of_birth TINYINT NOT NULL,
-    level_of_education VARCHAR(255) NOT NULL,
-    goals TEXT NOT NULL,
-    honor_code TINYINT NOT NULL,
-    terms_of_service TINYINT NOT NULL,
-    course_id TEXT NOT NULL,
-    enrollment_action VARCHAR(255) NOT NULL,
-    email TEXT NOT NULL,
-    receive_emails VARCHAR(255) NOT NULL
--->
-
-
-Please also see
-the 
-<a href="http://edx.readthedocs.org/en/latest/">OpenEdx
-Tracking Log documentation</a> of the original JSON formatted
-fields. Those descriptions are authoritative.
+This list may change. To add additional tables, see 
+script json_to_relation/scripts/cronRefreshEdxprod.sh.
+<ul>
+<li>auth_user</li>
+<li>auth_userprofile</li>
+<li>certificates_generatedcertificate</li>
+<li>courseware_studentmodule</li>
+<li>courseware_studentmodulehistory</li>
+<li>external_auth_externalauthmap</li>
+<li>student_anonymoususerid</li>
+</ul>
 <p>
 <h3>Useful MySQL Functions</h3>
 
@@ -1593,6 +1310,8 @@ prove useful:
         anon_screen_name columns to integers used in other platform tables</li>
   <li><b>idInt2Anon()</b>: convert from integers used in other platform
         tables to hash values used in anon_screen_name columns</li> 
+  <li><b>idAnon2Ext()</b>: convert from Datastage's 40 byte
+        participant ID to the id used by Piazza and Qualtrix.</li>
 </ul>
 The functions are used within SELECT statements, like: SELECT earliestLog();
 
