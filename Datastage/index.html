@@ -66,10 +66,10 @@ uses of the online forum available for some classes, peer grading
 activities, and some demographic data. The type of data that is
 collected depends on the delivery platform used for a particular
 class.
-
+<p>
 VPOL makes some of this data available for research on learning
 processes, and for explorations into improving instruction.
-
+<p>
 All data that VPOL shares is available on machine
 <i>datastage.stanford.edu</i>. You have multiple methods of using this data:
 We provide self service answers to frequent questions, customizable to
@@ -79,7 +79,7 @@ R, SPSS, and Excel can connect directly to our databases. Similarly,
 visualization tools are available that allow you to create static, or
 interactive charts of data directly from our sources. We explain these
 access methods here, or point to relevant instructions on the Web.
-
+<p>
 Additionally, we run
 a <a href="http://www.tableausoftware.com/products/server">Tableau Server</a>
 to which you can publish visualizations you create with the Tableau
@@ -233,13 +233,75 @@ application with demonstrated need:
 <!-- along. If you have an idea for a useful one-liner question, please -->
 <!-- send email to <script LANGUAGE="JavaScript">showEmailAddr()</script>. -->
 
+<h2>Browsing and Querying the Data</h2>
+
+A number of applications are available for browsing data stored in
+MySQL databases, the type in which VPOL data resides.  Some
+applications
+are <a href="http://sixrevisions.com/tools/applications_mysql_databases/">discussed</a>
+on the
+Web. <a href="http://download.cnet.com/Froq/3000-2065_4-189145.html">Froq</a>
+and <a href="http://www.sequelpro.com/">SequelPro</a> are available
+for the Mac. One cross platform tool
+is <a href="http://razorsql.com/">RazorSQL</a>. It works on Mac,
+Linux, and Windows. All these tools list available tables, allow some
+browsing over the tables, and allow one to enter queries whose results
+appear in the interface. Connecting RazorSQL is explained below; the
+other tools work through similar procedures.
+
+<h3 id="razorSQL">RazorSQL</h3>
+
+The application <i>RazorSQL</i>, which works under Mac, Windows, and
+Linux, can create either a tunneled or a direct connection to
+MySQL. For details on the difference, please
+see <a href="#appB">Appendix B</a>. You begin the connection process
+by choosing:
+
+<i>File-->New Tab (no connection)</i>
+
+In the subsequent screen, you click on <i>Click to connect to a
+database</i>:
+
+</p><center><img src="figs/razorConnectStep1Web.png"/></center></p>
+
+...resulting in:
+
+</p><center><img src="figs/razorConnectStep2Web.png"/></center></p>
+
+This screen allows you to select among different connections you have
+already defined. Not having defined any, you click <i>Add Profile</i>,
+and pick <i>MySQL</i> from the resulting list of database types that
+the application knows about.
+
+</p><center><img src="figs/razorConnectStep3Web.png"/></center></p>
+
+Here is where you fill in the particulars. Leave all pre-filled fields
+alone. For <i>Profile name</i> you pick any name that reminds you
+later of what this connection is about.
+
+<i>Login</i> and <i>Password</i> are the information you received with
+your access material. For <i>Host or IP Address</i> you fill in
+datastage.stanford.edu. The <i>Port</i> is left
+blank. In the <i>Database</i> field you enter one of the databases of
+<a href="#appA">Appendix A</a>. Click <i>Connect</i>, and you
+(hopefully) see a screen other than one informing you of failure.
+
+At this point, you can continue via the RazorSQL manual and help
+pages. 
+
 <h2>Analysis Tools</h2>
 
-If you need to perform analysis over the data, Excel, R, and SPSS are
-among the tools that can access our data directly. After some setup,
-the data appears in your table. After that setup, you are in your home
-territory of the tool you are used to. This section explains how to
-accomplish this data import.
+Most researchers use one of the graphical user interface that were
+mentioned above to browse through the data, and to issue queries. They
+then save results into a comma separated values (CSV) file. Analysis
+tools like SPSS can read that data. This approach is likely the least
+complicated.
+<p>
+However, Excel, R, and SPSS are among the tools that can access data
+in MySQL servers directly. After some setup, the data appears in your
+table. After that setup, you are in your home territory of the tool
+you are used to. This section explains how to accomplish this data
+import.
 
 <h3 id="dbConn">The All-Important Database Connector</h3>
 
@@ -325,58 +387,6 @@ stuck, we can try to figure it out. If all goes well, you will now see
 something like this:
 
 </p><center><img src="figs/spssToEdxScreenshotWeb.png"/></center></p>
-
-<h2>Browsing and Querying the Data</h2>
-
-A number of applications are available for browsing data stored in
-MySQL databases, the type in which VPOL data resides.  Some
-applications
-are <a href="http://sixrevisions.com/tools/applications_mysql_databases/">discussed</a>on
-the
-Web. <a href="http://download.cnet.com/Froq/3000-2065_4-189145.html">Froq</a>
-for Mac, and <a href="http://razorsql.com/">RazorSQL</a> for Mac,
-Linux, and Windows are freeware tools used in the VPOL group.
-
-<h3 id="razorSQL">RazorSQL</h3>
-
-The application <i>RazorSQL</i>, which works under Mac, Windows, and
-Linux, can create either a tunneled or a direct connection to
-MySQL. For details on the difference, please
-see <a href="#appB">Appendix B</a>. You begin the connection process
-by choosing:
-
-<i>File-->New Tab (no connection)</i>
-
-In the subsequent screen, you click on <i>Click to connect to a
-database</i>:
-
-</p><center><img src="figs/razorConnectStep1Web.png"/></center></p>
-
-...resulting in:
-
-</p><center><img src="figs/razorConnectStep2Web.png"/></center></p>
-
-This screen allows you to select among different connections you have
-already defined. Not having defined any, you click <i>Add Profile</i>,
-and pick <i>MySQL</i> from the resulting list of database types that
-the application knows about.
-
-</p><center><img src="figs/razorConnectStep3Web.png"/></center></p>
-
-Here is where you fill in the particulars. Leave all pre-filled fields
-alone. For <i>Profile name</i> you pick any name that reminds you
-later of what this connection is about.
-
-<i>Login</i> and <i>Password</i> are the information you received with
-your access material. For <i>Host or IP Address</i> you fill in
-datastage.stanford.edu. The <i>Port</i> is left
-blank. In the <i>Database</i> field you enter one of the databases of
-<a href="#appA">Appendix A</a>. Click <i>Connect</i>, and you
-(hopefully) see a screen other than one informing you of failure.
-
-At this point, you can continue via the RazorSQL manual and help
-pages. 
-
 
 <h2 id="pickUp">Picking up data and visualizations prepared by staff
   or friends</h2>
@@ -948,7 +958,44 @@ mysql> SELECT DISTINCT Demographics.*, FinalGrade.grade
 
 
 <p>
-Each <b>Forum post</b> is contained in one row: 
+All <b>Forum post</b> entries are scrubbed of personally identifiable
+information. The following are redacted: phone numbers, zip codes,
+email addresses, and the poster's name. In each case the type of
+redacted information can be determined by the redaction text. For
+example, you will see &lt;emailRedac&gt;, &lt;zipRedac&gt;. For poster
+names you will see &lt;nameRedac_anon_screen_name_redacted&gt;. These
+replacements keep word count intact. Unfortunately, international zip
+codes are varied enough that detecting them results in many false
+positives. Some non-zip numeric information is therefore redacted for
+no good reason.
+<p>
+Here is a complication stemming from privacy protection: you will find
+the anon_screen_name column filled with the single value
+'anon_screen_name_redacted'. You can therefore not use this column to
+select by participant as you do on all the other tables. Instead, when
+selecting from the EdxForum.contents table, you need to use
+column <i>user_int_id</i>.
+<p>
+This approach works fine while working within the Forum table
+only. But the setup prevents you from relating Forum posts to other
+tables to find correlations between Forum posting and, say, grade
+outcomes.
+<p>
+The reason for this separation is a known attack onto the privacy in
+the non-Forum tables when the same participant code is used in both
+worlds. We call the fully redacted Forum table <i>non-relatable</i>.
+<p>
+To explore correlations you need a translation from
+the <i>user_int_id</i> in the Forum table to
+the <i>anon_screen_name</i> used in all other tables. To receive that
+translation, please fill out the form at
+http://vpol.stanford.edu/research. If you have access to the data at
+all, you filled this form out before. This time, please make very
+clear in the free-form text field that you already have access to the
+data, and that you just need the additional Forum translation
+information.
+<p>
+Each Forum post is contained in one row:
 <p>
 <div align="center">
 <style>
