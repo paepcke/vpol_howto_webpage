@@ -13,6 +13,13 @@
       font-size: 150%;
       display: inline-block;
       }
+      
+      /* Table header style: */
+      .tg .tg-s6z2
+      {text-align:center; 
+       font-style: bold;
+       font-size: 130%;
+      }
 
     </style>
 
@@ -505,6 +512,7 @@ Forum posts, upvotes, downvotes for all courses.
 We describe the tables now,
 group by group.
 
+<hr>
 <h3>Basic Export Tables</h3>
 
 The first of the basic export tables is the main table, which contains
@@ -519,7 +527,6 @@ fields. Those descriptions are authoritative.
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 8px;border-style:solid;border-width:1px;}
 .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;}
-.tg .tg-s6z2{text-align:center}
 </style>
 <table class="tg">
   <tr>
@@ -537,8 +544,16 @@ fields. Those descriptions are authoritative.
   </td>
   </tr>
   <tr class="tg-even">
-    <td class="tg-031e">ip (<it>withheld from exports)</it></td>
-    <td class="tg-031e">Participant's IP address while performing the action</td>
+    <td class="tg-031e">ip_country</td>
+    <td class="tg-031e">Participant's country of origin based on IP
+      address from which the action was performed. The field uses the
+      standard three-letter country code (http://countrycode.org/). If
+      country of origin is of special interest, consider table
+      UserCountry, which contains every participant's action country
+      of origin in two and three letter code, plus full name. IP addresses
+      themselves are considered personally identifiable information, but are
+      available by special request in the private table EdxPrivate.EventIp.
+      </td> 
   </tr>
   <tr>
     <td class="tg-031e">time</td>
@@ -550,7 +565,9 @@ fields. Those descriptions are authoritative.
   </tr>
   <tr>
     <td class="tg-031e">resource_display_name</td>
-    <td class="tg-031e">Name of video or assignment associated with the action </td>
+    <td class="tg-031e">Name of video, assignment, or teaching module
+        associated with the action. This information is only as good
+        as what instructors provided when constructing their course. </td>
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">success</td>
@@ -558,11 +575,11 @@ fields. Those descriptions are authoritative.
   </tr>
   <tr>
     <td class="tg-031e">video_code</td>
-    <td class="tg-031e">Machine name of video, (video actions only)<br>
-                        For YouTube videos this column allows you<br>
-                        to find the video itself. For example,<br>
-                        if this column contains '6Tnr8OL-9So' <br>
-                        you can google that code, and will find<br>
+    <td class="tg-031e">Machine name of video, (video actions only)
+                        For YouTube videos this column allows you
+                        to find the video itself. For example,
+                        if this column contains '6Tnr8OL-9So' 
+                        you can google that code, and will find
                         the video.
     </td>
   </tr>
@@ -612,10 +629,10 @@ VideoInteraction table (see below):<br>
 <b>EventXtract Example Rows:</b><br>
 <pre>
 +------------------------------------------+---------------+----------------+---------------------+---------------------------------------------+-----------------------+---------+------------+-|
-| anon_screen_name | event_type    | ip             | time                | course_display_name   | resource_display_name | success | video_code |... more video cols... | goto_from | goto_dest |
+| anon_screen_name | event_type    | ip_country            | time                | course_display_name   | resource_display_name | success | video_code |... more video cols... | goto_from | goto_dest |
 +------------------------------------------+---------------+----------------+---------------------+---------------------------------------------+-----------------------+---------+------------+--
-| 3fc...           | book          | 171.64.197.42  | 2013-11-10 06:43:10 | Engineering/EE264/DSP |                       |         |            |                       |           |           |
-| 6e9...           | problem_check | 222.228.217.74 | 2013-11-10 06:43:10 | Engineering/Solar/2013| I-V curve             |         |            |                       |           |           |
+| 3fc...           | book          | USA                   | 2013-11-10 06:43:10 | Engineering/EE264/DSP |                       |         |            |                       |           |           |
+| 6e9...           | problem_check | BEL                   | 2013-11-10 06:43:10 | Engineering/Solar/2013| I-V curve             |         |            |                       |           |           |
 +------------------------------------------+---------------+----------------+---------------------+---------------------------------------------+-----------------------+---------+------------+--
 </pre>
 <p>
@@ -641,7 +658,8 @@ EventXtract AS
   FROM Edx.EdxTrackEvent
 -->
 
-If your focus is video behavior analysis, then the VideoInteraction
+<hr>
+If your focus is video behavior analysis, then the <b>VideoInteraction</b>
 table is the easiest to use. It just extracts the video events from
 the EventXtract table; the video related information is the same in
 both tables.
@@ -654,7 +672,6 @@ activities, so this table can underestimate video activity frequency.
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 8px;border-style:solid;border-width:1px;}
 .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;}
-.tg .tg-s6z2{text-align:center}
 </style>
 <table class="tg">
   <tr>
@@ -779,7 +796,7 @@ parts were correct, the table shows which parts, and which incorrect
 answers the participant provided.
 <p>
 <b>Note:</b>the ActivityGrade table is not constructed from EdX track
-event logs. Instead, this table is a composited from information in
+event logs. Instead, this table is composited from information in
 the platform table courseware_studentmodule. In particular the
 infamous JSON encoded <i>state</i> field in that table is parsed and
 its JSON values are made accessible as columns in ActivityGrade.
@@ -788,7 +805,6 @@ its JSON values are made accessible as columns in ActivityGrade.
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 8px;border-style:solid;border-width:1px;}
 .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;}
-.tg .tg-s6z2{text-align:center}
 </style>
 <table class="tg">
   <tr>
@@ -828,8 +844,8 @@ its JSON values are made accessible as columns in ActivityGrade.
     <td class="tg-031e">Series of plus and minus chars indicating which problem parts were answered correctly</td>
   </tr>
   <tr>
-    <td class="tg-031e">wrong_answers</td>
-    <td class="tg-031e">If any assignment parts were answered incorrectly: the wrong answers</td>
+    <td class="tg-031e">answers</td>
+    <td class="tg-031e">Answers the participant provided for the assignment.</td>
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">num_attempts</td>
@@ -853,13 +869,20 @@ its JSON values are made accessible as columns in ActivityGrade.
     <td class="tg-031e">module_type</td>
     <td class="tg-031e">The teaching module type</td>
   </tr>
-  <tr class="tg-even">
-    <td class="tg-031e">resource_display_name</td>
-    <td class="tg-031e">Assignment name</td>
-  </tr>
   <tr>
     <td class="tg-031e">anon_screen_name</td>
     <td class="tg-031e">Participant's anonymized name</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">resource_display_name</td>
+    <td class="tg-031e">Assignment name. This information is only as
+    good as what instructors entered when they created the
+    assignment. The module_id (next field) is a unique, automatically
+    assigned name for the assignment. </td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">module_id</td>
+    <td class="tg-031e">Internal platform ID of the row's module.</td>
   </tr>
 </table>
 </pre>
@@ -875,14 +898,17 @@ its JSON values are made accessible as columns in ActivityGrade.
 +-------------+------------------------------------------------+--------------------+-------------+-----------------+-----------------+----------------+----------------+-----------------+------------
 </pre>
 
+<hr>
+
 The <b>Demographics</b> view contains anonymized demographic data
-on participants.
+on participants. A major consideration when using this table that
+participants provide this information voluntarily. Some do, others
+don't; some lie, others tell the truth.
 <p>
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 8px;border-style:solid;border-width:1px;}
 .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;}
-.tg .tg-s6z2{text-align:center}
 </style>
 <table class="tg">
   <tr>
@@ -956,29 +982,36 @@ mysql> SELECT DISTINCT Demographics.*, FinalGrade.grade
 +------------------------------------------+--------+---------------+----------+--------------------+-----------------------+---------------+-------+
 </pre>
 
+<hr>
 
 <p>
 All <b>Forum post</b> entries are scrubbed of personally identifiable
 information. The following are redacted: phone numbers, zip codes,
 email addresses, and the poster's name. In each case the type of
 redacted information can be determined by the redaction text. For
-example, you will see &lt;emailRedac&gt;, &lt;zipRedac&gt;. For poster
-names you will see &lt;nameRedac_anon_screen_name_redacted&gt;. These
-replacements keep word count intact. Unfortunately, international zip
-codes are varied enough that detecting them results in many false
-positives. Some non-zip numeric information is therefore redacted for
-no good reason.
+example, you will see &lt;emailRedac&gt;, or &lt;zipRedac&gt;. For
+poster names you will see
+&lt;nameRedac_anon_screen_name_redacted&gt;. These replacements keep
+word count intact. Unfortunately, international zip codes are varied
+enough that detecting them results in many false positives. Some
+non-zip numeric information is therefore redacted for no good
+reason. Conversely you may find some text that does identify someone
+in the course directly or indirectly. We do the best we can at the
+scale of information. Please be respectful if you find such a
+case. Keep the information to yourself,
+and <a href="mailto://paepcke@cs.stanford.edu">report it to us</a> so
+that we can fix the problem.
 <p>
 Here is a complication stemming from privacy protection: you will find
 the anon_screen_name column filled with the single value
 'anon_screen_name_redacted'. You can therefore not use this column to
 select by participant as you do on all the other tables. Instead, when
 selecting from the EdxForum.contents table, you need to use
-column <i>user_int_id</i>.
+column <i>forum_uid</i>.
 <p>
 This approach works fine while working within the Forum table
 only. But the setup prevents you from relating Forum posts to other
-tables to find correlations between Forum posting and, say, grade
+tables to find correlations between Forum postings and, say, grade
 outcomes.
 <p>
 The reason for this separation is a known attack onto the privacy in
@@ -986,14 +1019,31 @@ the non-Forum tables when the same participant code is used in both
 worlds. We call the fully redacted Forum table <i>non-relatable</i>.
 <p>
 To explore correlations you need a translation from
-the <i>user_int_id</i> in the Forum table to
-the <i>anon_screen_name</i> used in all other tables. To receive that
-translation, please fill out the form at
-http://vpol.stanford.edu/research. If you have access to the data at
-all, you filled this form out before. This time, please make very
-clear in the free-form text field that you already have access to the
-data, and that you just need the additional Forum translation
-information.
+the <i>forum_uid</i> in the Forum table to the <i>anon_screen_name</i>
+used in all other tables. To receive that translation,
+please <a href="http://vpol.stanford.edu/research">fill out the
+application form</a> that you filled out before to gain access to the
+data. This time, please make very clear in the free-form text field
+that you already have access to the data, and that you just need the
+additional Forum translation information.
+<p>
+Forum posts contain a number of identifiers. Here is an explanation of
+relationships between these identifies. This explanation is based on
+observation, not on documentation from the original software; the
+information may therefore be incorrect or incomplete:
+<ul>
+
+<li><b>forum_post_id:</b> identifies the post in a given row. This is
+   usually a question, but could be a comment.</li>
+<li><b>comment_thread_id:</b> matches the original
+   <i>forum_post_id</i> that started the thread in which
+   the current post is a comment or reply.</li>
+<li><b>parent_id:</b> identifies the immediate predecessor of the
+   row's post in the thread of which the post is a part.</li>
+<li><b>parent_ids:</b> provides a full chain from the
+   thread-originating post to the current comment/reply.</li>
+</ul>
+
 <p>
 Each Forum post is contained in one row:
 <p>
@@ -1022,6 +1072,12 @@ Each Forum post is contained in one row:
         <th colspan="2" class="border-top border-bottom border-left border-right">OpenEdX Forum Table</th>
     </tr>
     <tr>
+        <td class="border-bottom border-left border-right">forum_post_id</td>
+        <td class="border-bottom border-right">Identifier of this
+             row's forum post. This ID is assigned by the OpenEdx
+             Forum software.</td>
+    </tr>
+    <tr>
         <td class="border-bottom border-left border-right">anon_screen_name</td>
         <td class="border-bottom border-right">anonymized participant ID (redacted unless table is relatable)</td>
     </tr>
@@ -1042,8 +1098,10 @@ Each Forum post is contained in one row:
         <td class="border-bottom border-right">apparently unused</td>
     </tr>
     <tr>
-        <td class="border-bottom border-left border-right">user_int_id</td>
-        <td class="border-bottom border-right">anonymized user ID; different from anon_screen_name</td>
+        <td class="border-bottom border-left border-right">forum_uid</td>
+        <td class="border-bottom border-right">anonymized poster ID;
+        different from anon_screen_name. <a href="http://vpol.stanford.edu/research">Need
+        permission</a> to convert from <i>forum_uid</i> to <i>anon_screen_name</i>. </td>
     </tr>
     <tr>
         <td class="border-bottom border-left border-right">body</td>
@@ -1083,19 +1141,29 @@ Each Forum post is contained in one row:
     </tr>
     <tr>
         <td class="border-bottom border-left border-right">comment_thread_id</td>
-        <td class="border-bottom border-right">ID of thread</td>
+        <td class="border-bottom border-right">ID of thread (see above).</td>
     </tr>
     <tr>
         <td class="border-bottom border-left border-right">parent_id</td>
-        <td class="border-bottom border-right">ID of parent</td>
+        <td class="border-bottom border-right">ID of parent post (see above).</td>
     </tr>
     <tr>
         <td class="border-bottom border-left border-right">parent_ids</td>
-        <td class="border-bottom border-right">list of parent IDs</td>
+        <td class="border-bottom border-right">chain of post IDs in
+           thread (see above).</td>
     </tr>
     <tr>
         <td class="border-bottom border-left border-right">sk</td>
-        <td class="border-bottom border-right">another, not understood key</td>
+        <td class="border-bottom border-right">Used by Forum software
+        for caching</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">confusion</td>
+        <td class="border-bottom border-right"><i>Reserved</i></td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">happiness</td>
+        <td class="border-bottom border-right"><i>Reserved</i></td>
     </tr>
 </table>
 </div>
@@ -1105,7 +1173,7 @@ Each Forum post is contained in one row:
 
 <pre>
 +---------------------------+---------------+-----------+--------------------+-------------+---------------------------------------------------------------------------------------+------------------------------
-| anon_screen_name          | type          | anonymous | anonymous_to_peers | user_int_id | body                   | course_display_name  | created_at          |... | count | down_count | up_count | up        |...
+| anon_screen_name          | type          | anonymous | anonymous_to_peers | forum_uid   | body                   | course_display_name  | created_at          |... | count | down_count | up_count | up        |...
 +---------------------------+---------------+-----------+--------------------+-------------+-------------------------------------------------------------------------------------------------------------+--------
 | anon_screen_name_redacted | CommentThread | False     | False              |       40009 | If R is optional ...?  | Medicine/HRP258/...  | 2013-06-11 16:59:30 |... |     1 |          0 |        1 | ['28005'] |...
 | anon_screen_name_redacted | Comment       | False     | False              |       28461 | Call me: &lt;phoneRedact&gt; | Medicine/HRP258/...  | 2013-06-11 17:39:24 |... |     0 |          0 |        0 | []        |...
@@ -1113,12 +1181,23 @@ Each Forum post is contained in one row:
 +---------------------------+---------------+-----------+--------------------+-------------+---------------------------------------------------------------------------------------+------------------------------
 </pre>
 
-
+<hr>
 
 <h3>Engagement Export Tables</h3>
 
+Engagement data for one class consists of three tables. One lists all
+dates, times, and durations of each session by every participants in
+the class. The second lists the weekly number of minutes each
+participant spent on the course. The third shows a summary of how many
+minutes participants spent in the aggregate on the course, the total
+number of work sessions, and three counts: the number of weeks in
+which the median session length was between 1 and 20 minutes, the
+number of weeks when the median session length was 21 minutes to 1hr,
+and the count of weeks with a median session length greater than one
+hour.
+
 The first table in this group is usually large, because it lists
-each <i>session</i> of each participant in a class. As session is
+each <i>session</i> of each participant in a class. A session is
 defined as a series of actions a participant undertook on the computer
 while interacting with the course such that:
 <ol>
@@ -1129,20 +1208,25 @@ while interacting with the course such that:
 When more than 30 minutes elapse between two events, the second event
 is considered part of a subsequent session. Since the last event's
 duration is not delimited by a follow-on action in the same session,
-the last event is counted as 5 minutes. Session length, and estimated
-durations of the last event in a session can be adjusted in the
-engagement computation program.
+the last event is counted as 500 seconds (~8min), which is the median
+time duration between events in a session. The median was measured in
+the tracking log data created by a number of diverse courses. This
+engagement measure approach is used uniformly across the Stanford
+provided classes, irrespective of teaching platform.
 <p>
-Note that this accounting of time engagement is quite approximate, for
-example because participants might have been reading course related
-materials for an hour without generating a platform event. No event:
-no accounting for that time.
+Note that this accounting of time engagement is quite approximate. For
+example, participants might read course related materials for an hour
+without generating a platform event. No event: no accounting for that
+time. A similar short change occurs when participants work on a
+paper-and-pencil assignment. However, conversely, a participant might
+start a video, but immediately walk away. We would then erroneously
+add 8min to the participant's engagement tally. The two error
+conditions mitigate each other, but likely still leave a net error.
 <p>
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
 .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
-.tg .tg-s6z2{text-align:center
 </style>
 <table class="tg">
   <tr>
@@ -1184,7 +1268,6 @@ each participant for each week.
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
 .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
-.tg .tg-s6z2{text-align:center}
 </style>
 <table class="tg">
   <tr>
@@ -1225,7 +1308,6 @@ contain only one line.
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
 .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
-.tg .tg-s6z2{text-align:center}
 </style>
 <table class="tg">
   <tr>
@@ -1274,7 +1356,6 @@ by <a href="#accessProcedure">special arrangement</a>
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 8px;border-style:solid;border-width:1px;}
 .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;}
-.tg .tg-s6z2{text-align:center}
 </style>
 <table class="tg">
   <tr>
@@ -1336,6 +1417,8 @@ by <a href="#accessProcedure">special arrangement</a>
 
 This list may change. To add additional tables, see 
 script json_to_relation/scripts/cronRefreshEdxprod.sh.
+<a href="https://media.readthedocs.org/pdf/edx/latest/edx.pdf">
+Documentation for these tables</a> is provided by the Edx consortium.
 <ul>
 <li>auth_user</li>
 <li>auth_userprofile</li>
@@ -1344,12 +1427,16 @@ script json_to_relation/scripts/cronRefreshEdxprod.sh.
 <li>courseware_studentmodulehistory</li>
 <li>external_auth_externalauthmap</li>
 <li>student_anonymoususerid</li>
+<li>student_courseenrollment</li>
 </ul>
 <p>
 <h3>Useful MySQL Functions</h3>
 
 If you query the database directly, the following functions might
-prove useful:
+prove useful. Some of these are only available inside the EdxPrivate
+database, and are available
+by <a href="http://vpol.stanford.edu/research">special
+request</a>. Others are available in all OpenEdX related databases:
 <ul>
   <li><b>earliestLog()</b>: the earliest OpenEdx event log load date/time</li>
   <li><b>latestLog()</b>: the most recent OpenEdx event log load date/time</li>
@@ -1358,7 +1445,17 @@ prove useful:
   <li><b>idInt2Anon()</b>: convert from integers used in other platform
         tables to hash values used in anon_screen_name columns</li> 
   <li><b>idAnon2Ext()</b>: convert from Datastage's 40 byte
-        participant ID to the id used by Piazza and Qualtrix.</li>
+        participant ID to the external id used by Piazza and Qualtrix.</li>
+  <li><b>idExt2Anon()</b>: convert from the external user ids in
+        Piazza and Qualtrix to anon_screen_name.</li>
+  <li><b>idForum2Anon()</b>: convert from participant IDs used in the
+        Forum tables to anon_screen_name IDs used elsewhere in the
+        archive.</li>
+  <li><b>idAnon2Forum()</b>: convert from anon_screen_name to
+        participant IDs used in the Forum tables.</li>
+  <li><b>isUserEvent()</b>: given an event_type, return 1 if this
+        type of event is triggered by participant action, as opposed
+        to instructor or server activity..</li>
 </ul>
 The functions are used within SELECT statements, like: SELECT earliestLog();
 
