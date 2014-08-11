@@ -197,9 +197,9 @@ missing data.
 <h3>Canned exports</h3>
 
 <ul>
- <li> The tracking log data, video interactions, activity grade, and
-   time-on-task tables can be exported per course, and picked up over
-   the Web. Plan is to add the forum table to this set.</li>
+ <li> The tracking log data, video interactions, activity grade, forum
+      and posts, and time-on-task tables can be exported per course, and picked up over
+   the Web.</li>
 
  <li> Other interactions with the tables require access to our server,
    and knowledge of SQL.</li>
@@ -1022,6 +1022,11 @@ Each Forum post is contained in one row:
         <th colspan="2" class="border-top border-bottom border-left border-right">OpenEdX Forum Table</th>
     </tr>
     <tr>
+        <td class="border-bottom border-left border-right">forum_post_id</td>
+        <td class="border-bottom border-right">unique id for this
+              post; used in other columns of other posts to refer to this row</td>
+    </tr>
+    <tr>
         <td class="border-bottom border-left border-right">anon_screen_name</td>
         <td class="border-bottom border-right">anonymized participant ID (redacted unless table is relatable)</td>
     </tr>
@@ -1042,8 +1047,10 @@ Each Forum post is contained in one row:
         <td class="border-bottom border-right">apparently unused</td>
     </tr>
     <tr>
-        <td class="border-bottom border-left border-right">user_int_id</td>
-        <td class="border-bottom border-right">anonymized user ID; different from anon_screen_name</td>
+        <td class="border-bottom border-left border-right">forum_uid</td>
+        <td class="border-bottom border-right">anonymized user ID; different from anon_screen_name.
+            Use functions <code>idForum2Anon()/idAnon2Forum()</code> for conversion
+            between them.</td>
     </tr>
     <tr>
         <td class="border-bottom border-left border-right">body</td>
@@ -1083,7 +1090,8 @@ Each Forum post is contained in one row:
     </tr>
     <tr>
         <td class="border-bottom border-left border-right">comment_thread_id</td>
-        <td class="border-bottom border-right">ID of thread</td>
+        <td class="border-bottom border-right">ID of thread. Refers
+                  to forum_post_id of ur-post.</td>
     </tr>
     <tr>
         <td class="border-bottom border-left border-right">parent_id</td>
@@ -1095,7 +1103,17 @@ Each Forum post is contained in one row:
     </tr>
     <tr>
         <td class="border-bottom border-left border-right">sk</td>
-        <td class="border-bottom border-right">another, not understood key</td>
+        <td class="border-bottom border-right">used by forum internally.</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">confusion</td>
+        <td class="border-bottom border-right">reserved for sentiment
+              analysis results.</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">happiness</td>
+        <td class="border-bottom border-right">reserved for sentiment
+              analysis results.</td>
     </tr>
 </table>
 </div>
@@ -1104,18 +1122,52 @@ Each Forum post is contained in one row:
 <b>EdxForum Example Rows:</b><br>
 
 <pre>
-+---------------------------+---------------+-----------+--------------------+-------------+---------------------------------------------------------------------------------------+------------------------------
-| anon_screen_name          | type          | anonymous | anonymous_to_peers | user_int_id | body                   | course_display_name  | created_at          |... | count | down_count | up_count | up        |...
-+---------------------------+---------------+-----------+--------------------+-------------+-------------------------------------------------------------------------------------------------------------+--------
-| anon_screen_name_redacted | CommentThread | False     | False              |       40009 | If R is optional ...?  | Medicine/HRP258/...  | 2013-06-11 16:59:30 |... |     1 |          0 |        1 | ['28005'] |...
-| anon_screen_name_redacted | Comment       | False     | False              |       28461 | Call me: &lt;phoneRedact&gt; | Medicine/HRP258/...  | 2013-06-11 17:39:24 |... |     0 |          0 |        0 | []        |...
-| anon_screen_name_redacted | Comment       | False     | False              |       28461 | I'm &lt;nameRedact&gt;...    | Medicine/HRP258/...  | 2013-06-11 17:39:45 |... |     0 |          0 |        0 | []        |...
-+---------------------------+---------------+-----------+--------------------+-------------+---------------------------------------------------------------------------------------+------------------------------
++--------------------------+-----------------------------+---------------+-----------+--------------------+------------------+----------------------------------+
+| forum_post_id            | anon_screen_name            | type          | anonymous | anonymous_to_peers | at_position_list | forum_uid                        | ...
++--------------------------+-----------------------------+---------------+-----------+--------------------+------------------+----------------------------------+
+| 519461545924670200000001 | &lt;anon_screen_name_redacted> | CommentThread | False     | False              | []               | AD0EB4DEEB4DC139D8FDA01000EDAE3E |
+| 519461545924670200000005 | &lt;anon_screen_name_redacted> | Comment       | False     | False              | []               | 5F43341D3FDA2BBE001D8DBBB84BB3E5 | ...
+| 519461555924670200000006 | &lt;anon_screen_name_redacted> | Comment       | False     | False              | []               | 5CA0BD47154EB68991F10C7F464F3BF3 |
++--------------------------+-----------------------------+---------------+-----------+--------------------+------------------+----------------------------------+
+
+
+    +--------------------------------------------------------------------
+... | body            | course_display_name      | created_at           | ...
+    +--------------------------------------------------------------------
+    | This is a post. | Engineering/CS144/Spring | 2013-05-16 04:32:20  |  
+... | Another post    | MITx/6.002x/2012_Fall    | 2013-05-16 04:32:20  | ...
+    | Third post      | MITx/6.002x/2012_Fall    | 2013-05-16 04:32:21  |
+    +--------------------------------------------------------------------
+
+
+    +----------------------------------------------------------------------------------------------------------------------------------
+... | votes                                                                                                                           | ...
+    +----------------------------------------------------------------------------------------------------------------------------------
+    | {'count': 10, 'point': -6, 'down_count': 8, 'up': ['2', '10'], 'down': ['1', '3', '4', '5', '6', '7', '8', '9'], 'up_count': 2} |
+... | {'count': 10, 'point': 4, 'down_count': 3, 'up': ['1', '2', '5', '6', '7', '8', '9'], 'down': ['3', '4', '10'], 'up_count': 7}  | ...
+    | {'count': 10, 'point': -4, 'down_count': 7, 'up': ['6', '8', '10'], 'down': ['1', '2', '3', '4', '5', '7', '9'], 'up_count': 3} |
+    +----------------------------------------------------------------------------------------------------------------------------------
+
+    +--------------------------------------------------------------------------------+-----------------------+---------------------+-------------
+... | count | down_count | up_count | up                                  | down                                     | comment_thread_id        | ...
+    +--------------------------------------------------------------------------------------------------------------------------------------------
+    |    10 |          8 |        2 | ['2', '10']                         | ['1', '3', '4', '5', '6', '7', '8', '9'] | None                     |
+... |    10 |          3 |        7 | ['1', '2', '5', '6', '7', '8', '9'] | ['3', '4', '10']                         | 519461545924670200000001 | ...
+    |    10 |          7 |        3 | ['6', '8', '10']                    | ['1', '2', '3', '4', '5', '7', '9']      | 519461545924670200000001 |
+    +--------------------------------------------------------------------------------------------------------------------------------------------
+
+
+    +----------------------------------------------------------------------------
+... | parent_id | parent_ids | sk                       | confusion | happiness |                                                                                                                                                                                                                                                                                                                                                                                                                         
+    +----------------------------------------------------------------------------
+    | None      | None       | None                     |           |           |                                                                                                                                                                                                                                                                                                                                                                                                                         
+... | None      | []         | 519461545924670200000005 |           |           |                                                                                                                                                                                                                                                                                                                                                                                                                         
+    | None      | []         | 519461555924670200000006 |           |           |                                                                                                                                                                                                                                                                                                                                                                                                                         
+    +----------------------------------------------------------------------------
 </pre>
 
+<h3 id="engageDetail">Engagement Export Tables</h3>
 
-
-<h3>Engagement Export Tables</h3>
 
 The first table in this group is usually large, because it lists
 each <i>session</i> of each participant in a class. As session is
@@ -1146,7 +1198,7 @@ no accounting for that time.
 </style>
 <table class="tg">
   <tr>
-    <th class="tg-s6z2" colspan="2">Engagement_AllData</th>
+    <th class="tg-s6z2" colspan="2"><b>Engagement_AllData</b></th>
   </tr>
   <tr>
     <td class="tg-031e">Platform</td>
@@ -1169,8 +1221,12 @@ no accounting for that time.
     <td class="tg-031e">Time when the row's participant session started<br></td>
   </tr>
   <tr>
-    <td class="tg-031e">SessionLength (min)</td>
-    <td class="tg-031e">Length of session in minutes</td>
+    <td class="tg-031e">SessionLength (sec)</td>
+    <td class="tg-031e">Length of session in seconds</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">NumEventsInSession</td>
+    <td class="tg-031e">Number of events that comprise this row's session</td>
   </tr>
 </table>
 <p>
@@ -1188,7 +1244,7 @@ each participant for each week.
 </style>
 <table class="tg">
   <tr>
-    <th class="tg-s6z2" colspan="2">Engagement_weeklyEffort</th>
+    <th class="tg-s6z2" colspan="2"><b>Engagement_weeklyEffort</b></th>
   </tr>
   <tr>
     <td class="tg-031e">Platform</td>
@@ -1204,10 +1260,11 @@ each participant for each week.
   </tr>
   <tr>
     <td class="tg-031e">Week</td>
-    <td class="tg-031e">Running week of the course<br></td>
+    <td class="tg-031e">Running week of the course; starting with 1
+          for first week of the course.<br></td>
   </tr>
   <tr>
-    <td class="tg-031e">Effort (min)<br></td>
+    <td class="tg-031e">Effort (sec)<br></td>
     <td class="tg-031e">Number of minutes expended by the row's participant during the row's week<br></td>
   </tr>
 </table>
@@ -1229,7 +1286,7 @@ contain only one line.
 </style>
 <table class="tg">
   <tr>
-    <th class="tg-s6z2" colspan="2">Engagement_summary</th>
+    <th class="tg-s6z2" colspan="2"><b>Engagement_summary</b></th>
   </tr>
   <tr>
     <td class="tg-031e">Platform</td>
@@ -1244,12 +1301,13 @@ contain only one line.
     <td class="tg-031e">Total number of sessions by all participants in the course<br></td>
   </tr>
   <tr>
-    <td class="tg-031e">TotalEffortAllStudents<br></td>
-    <td class="tg-031e">Sum of minutes from all participants' sessions in the course<br></td>
+    <td class="tg-031e">TotalEffortAllStudents(secs)<br></td>
+    <td class="tg-031e">Sum of seconds from all participants' sessions in the course<br></td>
   </tr>
   <tr>
     <td class="tg-031e">MedPerWeekOneToTwenty</td>
-    <td class="tg-031e">The number of weeks in which a median of 1 to 20 minutes of time engagement,was observed, counting each participant, each week.</td>
+    <td class="tg-031e">The number of weeks in which a median of 1 to
+         20 minutes of time engagement, was observed, counting each participant, each week.</td>
   </tr>
   <tr>
     <td class="tg-031e">MedPerWeekTwentyoneToSixty</td>
@@ -1278,7 +1336,7 @@ by <a href="#accessProcedure">special arrangement</a>
 </style>
 <table class="tg">
   <tr>
-    <th colspan="2" class="tg-s6z2">UserGrade</th>
+    <th colspan="2" class="tg-s6z2"><b>UserGrade</b></th>
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">name</td>
@@ -1344,12 +1402,17 @@ script json_to_relation/scripts/cronRefreshEdxprod.sh.
 <li>courseware_studentmodulehistory</li>
 <li>external_auth_externalauthmap</li>
 <li>student_anonymoususerid</li>
+<li>student_courseenrollment</li>
 </ul>
 <p>
 <h3>Useful MySQL Functions</h3>
 
 If you query the database directly, the following functions might
-prove useful:
+prove useful. Some of the functions are privileged because the perform
+user id conversions that would put privacy in peril. Those functions
+can only be used with the prefix <i>EdxPrivate</i>. You'll know if
+you hit on one of these if you try to use a function, and MySQL
+complains that the function does not exist.
 <ul>
   <li><b>earliestLog()</b>: the earliest OpenEdx event log load date/time</li>
   <li><b>latestLog()</b>: the most recent OpenEdx event log load date/time</li>
@@ -1357,8 +1420,27 @@ prove useful:
         anon_screen_name columns to integers used in other platform tables</li>
   <li><b>idInt2Anon()</b>: convert from integers used in other platform
         tables to hash values used in anon_screen_name columns</li> 
-  <li><b>idAnon2Ext()</b>: convert from Datastage's 40 byte
+  <li><b>idAnon2Ext(anon, course_display_name)</b>: convert from Datastage's 40 byte
         participant ID to the id used by Piazza and Qualtrix.</li>
+  <li><b>idAnon2Exts(anon_screen_name)</b>: convert from Datastage's 40 byte
+        participant ID to <b>all</b> external IDs used by Piazza and Qualtrix.</li>
+  <li><b>idExt2Anon()</b>: convert from the id used by Piazza and
+        Qualtrix to Datastage's 40 byte participant ID</li>
+  <li><b>idInt2Forum()</b>: convert from the id used in platform code
+        to Datastage's 32 byte participant ID used for archive Forum table.</li>
+  <li><b>idForum2Anon()</b>: convert from the id used in archive Forum
+        post tables to Datastage's 40 byte participant ID</li>
+  <li><b>idForum2Int()</b>: convert from the id used in platform code
+        Datastage's 32 byte participant ID in Forum table.</li>
+  <li><b>isUserEvent()</b>: return 1 if given event_type is generated
+        by course participants, rather than instructors, or the
+        server. Similar to isEngagementEvent() below, but includes
+        events like page changes, transcript hiding and others.
+  </li>
+  <li><b>isEngagementEvent()</b>: return 1 if given event_type is generated
+        by course participants interacting with the course: 
+        video player, a homework problem, or peer grading.</li>
+
 </ul>
 The functions are used within SELECT statements, like: SELECT earliestLog();
 
