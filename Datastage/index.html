@@ -1235,11 +1235,20 @@ dates, times, and durations of each session by every participants in
 the class. The second lists the weekly number of minutes each
 participant spent on the course. The third shows a summary of how many
 minutes participants spent in the aggregate on the course, the total
-number of work sessions, and three counts: the number of weeks in
-which the median session length was between 1 and 20 minutes, the
-number of weeks when the median session length was 21 minutes to 1hr,
-and the count of weeks with a median session length greater than one
-hour.
+number of work sessions, and three counts: the number of times that
+participants' weekly median session length was between 1 and 20
+minutes, the number of times participants' weekly median session
+length was 21 minutes to 1hr, and the number of times their weekly
+median session length was greater than one hour.
+<p>
+For example, say a course with 3 learners lasts for two weeks.  The
+first week two learners had an observed median session length of 15
+minutes. One learner's median was 2hrs. The second week of the course
+one learner's median was 25 minutes, and the other two learners
+engaged for a median of 13 minutes.
+<p>
+The Median1-20 would be (2 + 2 = 4), the Median21-1hr would be 1, and
+the Median>1hr would be 1.
 <p>
 The first table in this group is usually large, because it lists
 each <i>session</i> of each participant in a class. A session is
@@ -1381,16 +1390,18 @@ contain only one line.
   </tr>
   <tr>
     <td class="tg-031e">MedPerWeekOneToTwenty</td>
-    <td class="tg-031e">The number of weeks in which a median of 1 to
-         20 minutes of time engagement, was observed, counting each participant, each week.</td>
+    <td class="tg-031e">The number of times a weekly median of 1 to
+         20 minutes of time engagement was observed, counting each participant, each week.</td>
   </tr>
   <tr>
     <td class="tg-031e">MedPerWeekTwentyoneToSixty</td>
-    <td class="tg-031e">The number of weeks in which a median of 21min to 1hr of time engagement,was observed, counting each participant, each week.</td>
+    <td class="tg-031e">The number of times a median of 21min to 1hr
+        of time engagement was observed, counting each participant, each week.</td>
   </tr>
   <tr>
     <td class="tg-031e">MedPerWeekGreaterSixty</td>
-    <td class="tg-031e">Median weekly number of sessions lasting longer than one hour, averaged over all weeks<br></td>
+    <td class="tg-031e">Median number of sessions with weekly median
+         larger than one hour.<br></td> 
   </tr>
 </table>
 <p>
@@ -1511,8 +1522,15 @@ complains that the function does not exist.
   <li><b>isUserEvent()</b>: return 1 if given event_type is generated
         by course participants, rather than instructors, or the
         server. Similar to isEngagementEvent() below, but includes
-        events like page changes, transcript hiding and others.
-  </li>
+        events like page changes, transcript hiding and others.</li>
+  <li><b>wordcount()</b>: takes a string or column name, and returns
+         the wordcount.</li>
+  <li><b>isTrueCourseName()</b>: takes a platform type course name,
+        such as Engineering/CS101/Summer2014, and returns 1 if the 
+        name denotes a real course, or just a test.</li>
+  <li><b>enrollment()</b>: takes a course name, such as
+        Engineering/CS101/Summer2014, and returns the number of its
+        enrolled students.</li>
   <li><b>isEngagementEvent()</b>: return 1 if given event_type is generated
         by course participants interacting with the course: 
         video player, a homework problem, or peer grading.</li>
