@@ -1262,20 +1262,18 @@ while interacting with the course such that:
 When more than 30 minutes elapse between two events, the second event
 is considered part of a subsequent session. Since the last event's
 duration is not delimited by a follow-on action in the same session,
-the last event is counted as 500 seconds (~8min), which is the median
-time duration between events in a session. The median was measured in
-the tracking log data created by a number of diverse courses. This
-engagement measure approach is used uniformly across the Stanford
-provided classes, irrespective of teaching platform.
+the last event is special. One might apportion no time to that last
+event. Another option is to apportion the median inter-event time
+lapse (which is 500sec). To be conservative we have settled on
+apportioning 1sec to the last event. This decision implies that
+the engagement computation underestimates the true result.
 <p>
-Note that this accounting of time engagement is quite approximate. For
+Note that this accounting of time engagement is quite approximate even
+disregarding the decision about the last event's duration. For
 example, participants might read course related materials for an hour
 without generating a platform event. No event: no accounting for that
 time. A similar short change occurs when participants work on a
-paper-and-pencil assignment. However, conversely, a participant might
-start a video, but immediately walk away. We would then erroneously
-add 8min to the participant's engagement tally. The two error
-conditions mitigate each other, but likely still leave a net error.
+paper-and-pencil assignment.
 <p>
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
