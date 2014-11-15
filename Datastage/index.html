@@ -48,16 +48,18 @@
 <!-- ****** <li><a href="http://mono.stanford.edu:8000">AnswerServer</a></li> -->
   <li><a href="#accessProcedure">Protocol for Access</a></li>
   <li><a href="#dataSummary"><span id="spanhand">Summary of Available Data</a></span></a>&#8592;Good section to check out</li>
-  <li><a href="#dbConn">Preparing your machine for connecting to
-      databases</a></li>
-  <li><a href="#excel">Connecting from Excel</a></li>
-  <li><a href="#spss">Connecting from SPSS</a></li>
-  <li><a href="#razorSQL">Connecting from RazorSQL or Froq</a></li>
-  <li><a href="#pickUp">Picking up data and visualizations prepared
-  by staff or friends</a></li>
   <li><a href="#appA">List of available data sets</a></li>
-  <li><a href="#appB"><span id="spanhand">Explanation of OpenEdx data fields</span></a>&#8592;Good section to check out</li>
-  <li><a href="#appC">How to build an ssh tunnel</a></li>
+  <li><a href="#appB"><span id="spanhand">Explanation of OpenEdX data fields</span></a>&#8592;Good section to check out</li>
+  <li><a href="#mirrors">OpenEdX platform tables mirrored on datastage</li>
+  <li><a href="#functions">Handy MySQL functions and procedures</li>
+  <li><a href="accessMechanics.html#dbConn">Preparing your machine for connecting to
+      databases</a></li>
+  <li><a href="accessMechanics.html#excel">Connecting from Excel</a></li>
+  <li><a href="accessMechanics.html#spss">Connecting from SPSS</a></li>
+  <li><a href="accessMechanics.html#razorSQL">Connecting from RazorSQL or Froq</a></li>
+  <li><a href="accessMechanics.html#pickUp">Picking up visualizations prepared
+  by staff or friends</a></li>
+  <li><a href="accessMechanics.html#sshTunnel">How to build an ssh tunnel</a></li>
   <li><a href="https://docs.google.com/document/d/1WlWkaFkpzt9i3zGVqGYAnxK_wdklUncOnh4A0T5yeJs/edit?pli=1">Example queries</a></li>
   <li><a href="http://www.tableausoftware.com/public/gallery">Gallery
   of example data visualizations</a></li>
@@ -101,8 +103,8 @@ increasing power (and sometimes associated complexity).
 <h2 id="accessProcedure">Protocols for Access</h2>
 
 Even though we do not keep highly sensitive information on this
-server, we do need to protect the data to some degree from malicious
-intrusion. If you are interested in studying the data, please fill out
+server, we do need to protect the data from malicious intrusion. If
+you are interested in studying the data, please fill out
 <a href="http://vpol.stanford.edu/research">our request form</a>.
 <p>
 While the form accommodates requests for data with personally
@@ -123,6 +125,11 @@ or <a href="https://www.citiprogram.org/">through CITI</a>, or some
 other
 institution). Then <a href="mailto:upload.IRBcert.ucf1bw6ifx@u.box.com">email
     your resulting PDF file.</a> 
+<p>
+If you publish a paper, we appreciate credit for the data, and a note
+telling us about how you used the material. Both of these steps help
+us justify the cost of data collection, and we are plain interested in
+what you find!
 
 <h2 id="dataSummary">Summary of Available Data</h2>
 Datastage holds learning research data derived from courses offered on
@@ -132,7 +139,7 @@ described <a href="https://spark-public.s3.amazonaws.com/mooc/data_exports.pdf">
 in a separate document</a>. For NovoEd format documentation you need
 to browse their tables. Here is a summary of data that is available
 for Stanford courses taught on OpenEdX. For more in-depth information
-see <a href="#appA">Appendix A</a>.
+see <a href="#appB">Explanation of OpenEdX data fields</a>.
 </p>
 Data include both raw numbers that the OpenEdX platform collects, and
 tables that result from computations over that base data.
@@ -147,8 +154,10 @@ consider data based on tracking logs a conservative
 estimate. Reportedly, Coursera tracking logs experience similar
 missing data.
 </p>
-<h3>Stored tables</h3>
+<h3>Stored tables and Associated Views</h3>
 <ul>
+ <li><b>CourseInfo</b>: Facts about courses, such as start/end dates,
+   academic year and quarter in which a course was offered.</li>
  <li> <b>ActivityGrade</b>: Assignment grades; includes right/wrong for each
    problem part, the learners' solution choice for each answer pard,
    and the first and last solution submission times. Constructed from platform table
@@ -166,6 +175,16 @@ missing data.
    work other than the assignments that are captured in the
    ActivityGrade table.</li>
    
+ <li><b>UserGrade</b>: Raw grades as recorded by the platform. An
+   amalgam of the platform tables auth_user and
+   certificates_generatedcertificate.</li>
+
+ <li><b>ABExperiment</b>: Data resulting from the use of the OpenEdX AB
+   testing facilities.</li>
+
+ <li><b>OpenAssessment</b>: Data resulting from the use of the OpenEdX
+   peer grading facilities.</li>
+
  <li> <b>UserCountry</b>: country of origin by IP address. Each row is a tuple
    consisting of one anonymous user id, the two-letter country code,
    the three-letter country code, and the spelled-out country. If a
@@ -174,18 +193,26 @@ missing data.
    from the same IP generate just one row.</li>
 
  <li> <b>EdxForum.contents</b>: Forum entries since about June
-   2013. The entries are in relational form. Three versions can be
-   generated: without anonymization, anonymized with hashed user ids
+   2013. The entries are in relational form. Two versions can be
+   generated: anonymized with hashed user ids
    different from the hashes used in other tables, and anonymized
    using the same hashes.</li>
 
  <li> <b>VideoInteraction</b>: an excerpt from tracking logs, focusing on
    participants' interactions with video.</li>
 
- <li> <b>EventXtract</b>: A much slimmed view of the OpenEdX tracking log
+ <li><b>EventXtract</b>: A much slimmed view of the OpenEdX tracking log
    events. The view only includes fields that are currently in use by
    the platform. </li>
+ <li><b>LoadInfo</b>: Information about archive updates.</li>
+ <li><b>EdxPrivate.EventIp</b>:IP addresses for each event. This table
+     is only available by special arrangement.</li>
 </ul>
+
+<b>State, InputState, Answer, and CorrectMap</b> are subsumed by the
+  tables above. If you are familiar with the OpenEdX tracking log
+  event format, you will recognize the names, and can use them
+  individually.</li>
    
 <h3>Computed tables</h3>
 
@@ -205,27 +232,17 @@ missing data.
 
 <ul>
  <li> The tracking log data, video interactions, activity grade, forum
-      and posts, and time-on-task tables can be exported per course, and picked up over
+      posts, and time-on-task tables can be exported per course, and picked up over
    the Web.</li>
 
  <li> Other interactions with the tables require access to our server,
    and knowledge of SQL.</li>
 </ul>
 
-<h3>Somewhat Sensitive Data</h3>
+<h3>Mirrored OpenEdX Platform Tables</h3>
 
-Some data is held in a private section of server; available by
-application with demonstrated need:
-
-<ul>
- <li> UserGrade: Raw grades as recorded by the platform. An amalgam of
-   auth_user and certificates_generatedcertificate.</li>
-
- <li> A number of <a href="#mirrors">tables are mirrored</a> from the Stanford OpenEdX platform.
- </li>
- 
-   Can be extended to more. Updated nightly, except weekends.
-</ul>
+A number of <a href="#mirrors">tables are mirrored</a> from the
+Stanford OpenEdX platform with delay. This collection can be extended.
 
 <!-- <h2>If We Anticipated your Question</h2> -->
 
@@ -240,231 +257,58 @@ application with demonstrated need:
 <!-- along. If you have an idea for a useful one-liner question, please -->
 <!-- send email to <script LANGUAGE="JavaScript">showEmailAddr()</script>. -->
 
-<h2>Browsing and Querying the Data</h2>
 
-A number of applications are available for browsing data stored in
-MySQL databases, the type in which VPOL data resides.  Some
-applications
-are <a href="http://sixrevisions.com/tools/applications_mysql_databases/">discussed</a>
-on the
-Web. <a href="http://download.cnet.com/Froq/3000-2065_4-189145.html">Froq</a>
-and <a href="http://www.sequelpro.com/">SequelPro</a> are available
-for the Mac. One cross platform tool
-is <a href="http://razorsql.com/">RazorSQL</a>. It works on Mac,
-Linux, and Windows. All these tools list available tables, allow some
-browsing over the tables, and allow one to enter queries whose results
-appear in the interface. Connecting RazorSQL is explained below; the
-other tools work through similar procedures.
+<h2 id="appA">Available Databases</h2>
 
-<h3 id="razorSQL">RazorSQL</h3>
+<h3>List of available courses</h3>
 
-The application <i>RazorSQL</i>, which works under Mac, Windows, and
-Linux, can create either a tunneled or a direct connection to
-MySQL. For details on the difference, please
-see <a href="#appB">Appendix B</a>. You begin the connection process
-by choosing:
-
-<i>File-->New Tab (no connection)</i>
-
-In the subsequent screen, you click on <i>Click to connect to a
-database</i>:
-
-</p><center><img src="figs/razorConnectStep1Web.png"/></center></p>
-
-...resulting in:
-
-</p><center><img src="figs/razorConnectStep2Web.png"/></center></p>
-
-This screen allows you to select among different connections you have
-already defined. Not having defined any, you click <i>Add Profile</i>,
-and pick <i>MySQL</i> from the resulting list of database types that
-the application knows about.
-
-</p><center><img src="figs/razorConnectStep3Web.png"/></center></p>
-
-Here is where you fill in the particulars. Leave all pre-filled fields
-alone. For <i>Profile name</i> you pick any name that reminds you
-later of what this connection is about.
-
-<i>Login</i> and <i>Password</i> are the information you received with
-your access material. For <i>Host or IP Address</i> you fill in
-datastage.stanford.edu. The <i>Port</i> is left
-blank. In the <i>Database</i> field you enter one of the databases of
-<a href="#appA">Appendix A</a>. Click <i>Connect</i>, and you
-(hopefully) see a screen other than one informing you of failure.
-
-At this point, you can continue via the RazorSQL manual and help
-pages. 
-
-<h2>Analysis Tools</h2>
-
-Most researchers use one of the graphical user interface that were
-mentioned above to browse through the data, and to issue queries. They
-then save results into a comma separated values (CSV) file. Analysis
-tools like SPSS can read that data. This approach is likely the least
-complicated.
+The archive includes data from the following Stanford courses:
+<ul>
+<li>Courses that were offered using Stanford's
+<a href="handleCourseNameRequest.php?platform=openedx"
+   target="_blank">OpenEdX platform.</a></li>
+<li>Courses delivered on
+    the <a href="handleCourseNameRequest.php?platform=coursera"
+    target="_blank"> Coursera platform.</a>, and</li>
+<li>Courses that utilized the<a href="handleCourseNameRequest.php?platform=novoed" target="_blank">
+    NovoEd platform.</a></li>
+</ul>
 <p>
-However, Excel, R, and SPSS are among the tools that can access data
-in MySQL servers directly. After some setup, the data appears in your
-table. After that setup, you are in your home territory of the tool
-you are used to. This section explains how to accomplish this data
-import.
+In addition the archive
+includes <a href="handleCourseNameRequest.php?platform=moocdb"
+target="_blank"> MOOCDb versions</a> for many of the above courses.
+MOOCDb is a relational
+<a href="http://edf.stanford.edu/readings/moocdb-developing-data-standards-mooc-data-science"
+   target="_blank"> format that aims to combine schemas</a> from
+   multiple online learning platforms.
 
-<h3 id="dbConn">The All-Important Database Connector</h3>
+<h3>Resources beyond this document</h3>
 
-For all these connections, you will need a 'database connector,'
-sometimes called an 'ODBC driver.' These drivers are set up just once
-in your machine---Mac or Windows. To grab one of them, head over to
-the <a href="http://dev.mysql.com/downloads/connector/odbc/">MySQL
-connector download page</a>, and download the version for your
-operating system (Windows or Mac). Note that even though your computer
-might be of the '64 bit' type (whatever that means), you are likely to
-need the 32-bit version of the database connector! This choice is
-definitely the right one for Macs; for Windows it is the most likely
-choice 
-(see <a href="http://office.microsoft.com/en-us/excel-help/choose-the-32-bit-or-64-bit-version-of-office-HA010369476.aspx">why</a>).
-
-You start the downloaded program as you usually do on your
-computer. Here is information you will need for the mostly-open data: 
-
-<b>Server:</b> <i>datastage.stanford.edu</i><br>
-<b>User:</b> [your username]</br>
-<b>Password:</b> [your password]</br>
-<b>Database:</b> [see appendix A for the list of available databases]</br>
-
-Once you installed the connector, you will find it popping up in all
-the right places among the menu options that are referred to in the
-following sections.
-
-<h3 id="excel">Connecting Excel</h3>
-
-See <a href=http://helpdeskgeek.com/office-tips/excel-to-mysql/>this reference</a>
-for how to fill your spreadsheet with a particular dataset. The result
-will look like this: 
-</p><center><img src="figs/excelToEdxScreenshotWeb.png"/></center></p>
-
-For the phase in the above referenced instructions that looks like
-this:
-</p><center><img src="figs/excelDatasourceConfigScreenshotWeb.png"/></center></p>
-
-... the information you enter will depend on whether you will be
-accessing more restricted information, or the mostly open data.
-
-<b>Open data</b>:
-</b>Data source name: <enter a name that will have you recognize the
-			 connection></br>
-<b>Description:</b> [a reminder for yourself]</br>
-<b>Server:</b> datastage.stanford.edu</br>
-<b>Port:</b> 3306</br>
-<b>User:</b> [your user name]</br>
-<b>Password:</b> [your password]</br>
-<b>Database:</b> [the name of the database of
-	       interest. See <a href="#appA">Appendix A</a>].</br>
-
-<h3 id="spss">Connecting SPSS</h3>
-
-Here is how you connect an SPSS sheet to one of the VPOL data
-sources. Remember first to <href src="#dbConn">install your database connector</a>.
-
-In SPSS:</br>
-
-<i>File-->Open Database-->New Query</i></br>
-
-Assuming you have set your connector to point to database <i>Edx</i>,
-and that you named it <i>MonoEdx</i> (for whatever fanciful reason),
-you will then see this:
-
-</p><center><img src="figs/spssToEdxStep0Web.png"/></center></p>
-
-Choose whichever real name you gave your connector, and
-click <i>next</i>. You now get to choose the fields that you want to
-extract from the database:
-
-</p><center><img src="figs/spssToEdxStep1Web.png"/></center></p>
-
-SPSS has figured out which tables are available in this database, and
-you can start moving fields over to the right. Once you again clicked
-on <i>next</i>, you will have an opportunity to introduce conditions
-on which rows you would like to import:
-
-</p><center><img src="figs/spssToEdxStep2Web.png"/></center>
-
-I am still a bit puzzled by the interface of this screen. If you get
-stuck, we can try to figure it out. If all goes well, you will now see
-something like this:
-
-</p><center><img src="figs/spssToEdxScreenshotWeb.png"/></center></p>
-
-<h2 id="pickUp">Picking up data and visualizations prepared by staff
-  or friends</h2>
-
-Sometimes staff or friends might prepare either data extracts or
-visualizations for you. If they park this information on
-infoviz.stanford.edu, they will give you the name of a 'workbook' on
-that server. To see the visualizations, and/or to grab the underlying
-data as .csv files follow these instructions:
-
-<ol>
-  <li>Go to <i>infoviz.stanford.edu</i></li>
-  <li>Log in as vpol/vpol</li>
-  <li>Click on <i>Workbooks</i></li>
-  <li>Find your workbook, and click on it</li>
-</ol>
-
-<center><img src="figs/tableauServerWorkbookScreenshotWeb.png"/></center>
-
-
-You should then see some number of charts that are part of the
-material for you. Open one of these <i>views</i>. Hover over marks to
-see tooltips. To see the data that is involved in a view, click the
-leftmost of the icons above the view.  
-
-Its tooltip says <i>Export</i>. You'll get a new window with two tabs:
-the one you'll be on will be just the data that went into the
-particular view you were on when you clicked export.
-
-If you want to grab all the data, choose the
-tab <i>Underlying</i>. You'll see the first 200 rows. Note that you
-might see some data in this fully populated table that you don't see
-in the visualizations: some rows might be filtered out in the
-views. You will need to do the same if appropriate to your further
-plans. 
-
-<center><img src="figs/tableauServerExportScreenshotWeb.png"/></center>
-
-Finally, to download, click the link <i>Download all rows as a text
-file</i>
-
-
-<h2 id="appA">Appendix A: List of Available Databases</h2>
-
-<h3>Courses on Platforms OpenEdX Operated at Stanford</h3>
-
-Data from Stanford courses offered via the OpenEdx platform software
+Data from Stanford courses offered via the OpenEdX platform software
 by Stanford includes the above mentioned <i>events</i>, which document
 how participants interacted with the platform. Forum posts are
 available as well. All data has personally identifiable information
-removed. For <a href="#appB">details of each table</a>, see below.
-
-
-<h3>Courses on Platforms Coursera and NovoEd</h3>
-For a list of Coursera courses as of May 18, 2014, see the
-<a href="datastageDbsMay18_2014.html#coursera">Coursera list</a>.
-For NovoEd, see
-the <a href="datastageDbsMay18_2014.html#novoed">NovoEd list</a>. 
+removed. 
+<p>
+For <a href="#appB">schema details of each OpenEdX table</a>, see
+below. Meanings of OpenEdX data fields are also explained at
+the <a href="http://edx.readthedocs.org/en/latest/">OpenEdX Consortium
+Tracking Log documentation</a>
+<p>
+Forum data is explained in the <a href="http://devdata.readthedocs.org/en/latest/internal_data_formats/discussion_data.html">
+OpenEdX Consortium</a> documentation.
 <p>
 Coursera <a href="https://spark-public.s3.amazonaws.com/mooc/20130414_data_exports.pdf">export
-  format information</a> is a useful resource. However, the data is
-only available via the <a href="#accessProcedure">access
-  procedure</a>. 
+ format information</a> is a useful resource for understanding formats
+ in the Coursera archives.
 
 
-<h2 id="appB">Appendix B: Explanation of OpenEdx data fields</h2>
+<h2 id="appB">Explanation of OpenEdX data fields</h2>
 
 The Edx and EdxPrivate databases provide a lossless translation from
-the OpenEdx platform tracking logs to relational tables. The
+the OpenEdX platform tracking logs to relational tables. The
 translation was constructed based on tracking logs of Stanford's
-OpenEdx classes.
+OpenEdX classes.
 <p>
 Each entry in a tracking log contains information about one small
 interaction that one participant undertook with the learning
@@ -518,7 +362,7 @@ group by group.
 The first of the basic export tables is the main table, which contains
 all the events: <i>EventXtract</i>. NOTE: the <i>event_type</i> field
 is the key to interpreting the remaining columns. Please see the 
-<a href="http://edx.readthedocs.org/en/latest/">OpenEdx
+<a href="http://edx.readthedocs.org/en/latest/">OpenEdX
 Tracking Log documentation</a> of the original JSON formatted
 fields. Those descriptions are authoritative.
 <p>
@@ -539,7 +383,7 @@ fields. Those descriptions are authoritative.
   <tr>
     <td class="tg-031e">event_type</td>
     <td class="tg-031e">Type of action the participant took
-                        See <a href="http://edx.readthedocs.org/en/latest/">OpenEdx
+                        See <a href="http://edx.readthedocs.org/en/latest/">OpenEdX
                         Tracking Log documentation</a>
   </td>
   </tr>
@@ -863,11 +707,11 @@ its JSON values are made accessible as columns in ActivityGrade.
   </tr>
   <tr>
     <td class="tg-031e">first_submit</td>
-    <td class="tg-031e">Date and time the participant first submitted the assignment solution</td>
+    <td class="tg-031e">This date is currently unreliable.</td>
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">last_submit</td>
-    <td class="tg-031e">Most recent date and time the participant submitted the assignment solution</td>
+    <td class="tg-031e">This date is currently unreliable.</td>
   </tr>
   <tr>
     <td class="tg-031e">module_type</td>
@@ -951,8 +795,7 @@ don't; some lie, others tell the truth.
                         participant interacted with a course from 
                         multiple Internet addresses, Demographics
                         will contain one entry for each distinct
-                        address, even if the countries are the same.
-  </td>
+                        address, even if the countries are the same.</td>
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">country_name</td>
@@ -1001,8 +844,10 @@ enough that detecting them results in many false positives. Some
 non-zip numeric information is therefore redacted for no good
 reason. Conversely you may find some text that does identify someone
 in the course directly or indirectly. We do the best we can at the
-scale of information. Please be respectful if you find such a
-case. Keep the information to yourself,
+scale of information. Human inspection of a 30,000 post samples
+revealed a scrubbing success rate of 98.4%. Please be respectful if
+you do find one of the rare cases where identification is
+possible. Keep the information to yourself,
 and <a href="mailto://paepcke@cs.stanford.edu">report it to us</a> so
 that we can fix the problem.
 <p>
@@ -1079,7 +924,7 @@ Each Forum post is contained in one row:
         <td class="border-bottom border-left border-right">forum_post_id</td>
         <td class="border-bottom border-right">unique id for this
               post; used in other columns of other posts to refer to
-              this row. This ID is assigned by the OpenEdx
+              this row. This ID is assigned by the OpenEdX
              Forum software.
 	</td>
     </tr>
@@ -1228,6 +1073,82 @@ Each Forum post is contained in one row:
     +----------------------------------------------------------------------------
 </pre>
 
+The <b>CourseInfo</b> table is constructed from the
+OpenEdX <i>modulestore</i> MongoDB structure.
+<p>
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 8px;border-style:solid;border-width:1px;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;}
+</style>
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">CourseInfo</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">course_display_name</td>
+    <td class="tg-031e">Course name as used in other tables of the archive.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">course_catalog_name</td>
+    <td class="tg-031e">The course name as shown in the course catalog.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">academic_year</td>
+    <td class="tg-031e">The <b>academic</b> year in which this row's
+        course ran. For example, a course that ran in the Fall quarter
+        of 2013 will have 2013 in this field. If the course instead
+        ran in, say, the Spring quarter of that same academic year
+        (2013/2014), this field will again contain 2013, even though
+        the course would have run in the calendar year 2014.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">quarter</td>
+    <td class="tg-031e">The academic quarter in which the course was
+        offered. This value will be one of 'fall,', 'winter,',
+        'spring,' or 'summer.'</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">num_quarters</td>
+    <td class="tg-031e">Duration of the course in academic
+        quarters. This number is computed from the start and end
+        dates in the OpenEdX platform table <i>modulestore</i>. When
+        that source does not provide an instruction end date, then
+        this field is set to -1, because the correct entry cannot be
+        computed. </td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">is_internal</td>
+    <td class="tg-031e">A 1 if the course was public. A 0 if the
+        course was either for Stanford students only, or was offered
+        for a fee. </td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">enrollment_start</td>
+    <td class="tg-031e">Date at which the platform opened this course
+        for enrollment.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">start_date</td>
+    <td class="tg-031e">Date when instruction began.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">end_date</td>
+    <td class="tg-031e">Date when instruction ended.</td>
+  </tr>
+</table>
+</pre>
+</div>
+<p>
+Example rows:
+<pre>        
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| course_display_name                          | course_catalog_name              | academic_year | quarter | num_quarters | is_internal | enrollment_start    | start_date          | end_date            |
+| HumanitiesSciences/Physics101E/Spring2014    | The Special Theory of Relativity |          2012 | summer  |           -1 |           0 | 0000-00-00 00:00:00 | 2013-08-18 00:00:00 | 0000-00-00 00:00:00 |
+| Medicine/HRP258/Statistics_in_Medicine       | Statistics in Medicine           |          2012 | summer  |            1 |           0 | 2013-05-10 00:00:00 | 2013-06-11 00:00:00 | 2013-08-18 00:00:00 |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+</pre>
+
 <h3 id="engageDetail">Engagement Export Tables</h3>
 
 Engagement data for one class consists of three tables. One lists all
@@ -1361,6 +1282,29 @@ course. The row summarizes the efforts across all weeks in one
 course. If a single course is being exported, then the table will
 contain only one line. 
 <p>
+This table provides an overview of session lengths that learners tended to 
+invest in a course. For example, if the number of weeks in which the median 
+session length exceeded one hour is high, then learners had to invest
+long, contiguous studying times throughout most of the course. In contrast,
+if the number of weeks in which the median session length was 1-20min 
+is high, then the course tended to have students frequently engage
+for short periods of time.
+<p>
+As an extreme, consider a learner who works through an entire course
+in the first week, then sits out the remaining time. (This example
+would require all course materials to be available from the start.)
+This learner would possibly increment the greater-than-one-hour week
+count by one. Whether or not that increment occurs depends on the
+behavior of other learners during that same week. If everyone else
+only spent 1 minute during that week, the median would be 1-20min for
+that week, and the corresponding 1-20min count would be incremented
+instead of the greater-than-one-hour count.
+<p>
+This summary measure is therefore not sensitive to extreme
+behaviors by individual learners. Such learners do not unduly distort
+the result. Note, however, that the summary measure does not 
+tell us <i>when</i> in a course long sessions prevailed.
+<p>
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
@@ -1478,7 +1422,7 @@ by <a href="#accessProcedure">special arrangement</a>
 This list may change. To add additional tables, see 
 script json_to_relation/scripts/cronRefreshEdxprod.sh.
 <a href="https://media.readthedocs.org/pdf/edx/latest/edx.pdf">
-Documentation for these tables</a> is provided by the Edx consortium.
+Documentation for these tables</a> is provided by the EdX consortium.
 <ul>
 <li>auth_user</li>
 <li>auth_userprofile</li>
@@ -1490,101 +1434,133 @@ Documentation for these tables</a> is provided by the Edx consortium.
 <li>student_courseenrollment</li>
 </ul>
 <p>
-<h3>Useful MySQL Functions</h3>
+<h3 id="functions">Useful MySQL Functions</h3>
 
-If you query the database directly, the following functions might
-prove useful. Some of the functions are privileged because they perform
+If you query the database directly, the following stored functions and procedures 
+might prove useful. Some of the functions are privileged because they perform
 user id conversions that would put privacy in peril. Those functions
-can only be used with the prefix <i>EdxPrivate</i>. You'll know if
+can only be used with the prefix <i>EdxPrivate</i>. You'll know that
 you hit on one of these if you try to use a function, and MySQL
-complains that the function does not exist.
-<ul>
-  <li><b>earliestLog()</b>: the earliest OpenEdx event log load date/time</li>
-  <li><b>latestLog()</b>: the most recent OpenEdx event log load date/time</li>
-  <li><b>idAnon2Int()</b>: convert from hash values used in
-        anon_screen_name columns to integers used in other platform tables</li>
-  <li><b>idInt2Anon()</b>: convert from integers used in other platform
-        tables to hash values used in anon_screen_name columns</li> 
-  <li><b>idAnon2Ext(anon, course_display_name)</b>: convert from Datastage's 40 byte
-        participant ID to the id used by Piazza and Qualtrix.</li>
-  <li><b>idAnon2Exts(anon_screen_name)</b>: convert from Datastage's 40 byte
-        participant ID to <b>all</b> external IDs used by Piazza and Qualtrix.</li>
-  <li><b>idExt2Anon()</b>: convert from the id used by Piazza and
-        Qualtrix to Datastage's 40 byte participant ID</li>
-  <li><b>idInt2Forum()</b>: convert from the id used in platform code
-        to Datastage's 32 byte participant ID used for archive Forum table.</li>
-  <li><b>idForum2Anon()</b>: convert from the id used in archive Forum
-        post tables to Datastage's 40 byte participant ID</li>
-  <li><b>idForum2Int()</b>: convert from the id used in platform code
-        Datastage's 32 byte participant ID in Forum table.</li>
-  <li><b>isUserEvent()</b>: return 1 if given event_type is generated
-        by course participants, rather than instructors, or the
-        server. Similar to isEngagementEvent() below, but includes
-        events like page changes, transcript hiding and others.</li>
-  <li><b>wordcount()</b>: takes a string or column name, and returns
-         the wordcount.</li>
-  <li><b>isTrueCourseName()</b>: takes a platform type course name,
-        such as Engineering/CS101/Summer2014, and returns 1 if the 
-        name denotes a real course, or just a test.</li>
-  <li><b>enrollment()</b>: takes a course name, such as
-        Engineering/CS101/Summer2014, and returns the number of its
-        enrolled students.</li>
-  <li><b>isEngagementEvent()</b>: return 1 if given event_type is generated
-        by course participants interacting with the course: 
-        video player, a homework problem, or peer grading.</li>
-</ul>
-The functions are used within SELECT statements, like: SELECT earliestLog();
+complains that the function does not exist. The current set of 
+private functions are tagged with an asterisk in the table below.
+<br>
+Note that there is a difference between MySQL functions, and MySQL procedures. 
+A function is invoked as if it were a built-in function, like MIN(), or COUNT().
+Examples: 
+<pre>
+SELECT wordcount('I love data');
+SELECT * FROM EventXtract WHERE anon_screen_name = idInt2Anon(44000);
+</pre>
+However, note that due to MySQL not being smart sometimes, the second
+SELECT above is much slower than the following idiom:
+<pre>
+SELECT idInt2Anon(44000) INTO @theAnon;
+SELECT * FROM EventXtract WHERE anon_screen_name = @theAnon;
+</pre>
+In contrast to functions, a procedure must be called in a separate
+statement, and a return variable must be provided. The idiom is:
+<pre>
+CALL computeEnrollmentCoursera('antimicrobial-001', @theEnrollment);
+SELECT @theEnrollment;
+</pre>
 
-
-<h2 id="appC">Appendix C: How to Set up an SSH Tunnel</h2>
-An ssh tunnel is a connection between two computers that encrypts the
-information it carries. Sometimes a server machine is running a
-service that client applications on another machine can connect
-to. For example, Excel connecting directly to a MySQL database is such
-an example. Similarly, Froq and RazorSQL, the graphical querying tools
-mentioned earlier, might connect directly from your computer to the
-MySQL database that runs on the datastage.stanford.edu machine.
-
-This style of direct connection has your password go over the Internet
-unencrypted when you log into the database. This vulnerability to wire
-tapping is a disadvantage of direct connections. On the other hand,
-setting up a direct connection is relatively easy, and client side
-applications, the programs you use on your computer to connect to the
-database, know how to construct a direct connection.
-
-To protect data more securely, a <i>tunnel</i> may first be
-constructed between your computer and the database server
-computer. Your commands to the database then first travel encrypted to
-the server computer through the tunnel. Once they arrive, the commands
-are handled as if they had been issued on the server computer itself
-in the first place.
-
-</p><center><img src="figs/sshTunnelIllustrationWeb.png"></center></br>
-
-To set up a tunnel between your computer and datastage.stanford.edu,
-you type the command at the bottom of the illustration into a terminal
-window <b>before</b> you ask your data access application to try and
-get to the data. The command says: set up a secure connection
-(<i>ssh</i>) to machine <i>datastage.stanford.edu</i>; to applications
-on my own computer the connection is to look like a database to which
-I write via my out-port <i>5556</i>. The connection should function
-Like a tunnel (<i>-L</i>). On the database on the other end, the
-commands I send should look like they were issued on <b>its</b>
-machine (<i>localhost</i> from the database's point of view), and were
-issued directly into the in-port where the database normally listens
-to (<i>3306</i>), as it does in the direct connection case. 
-
-The <i>-f -N</i> just make it so that you can keep using the terminal
-window you used to type in the command.
-
-Important point: in order to get into that in-port 22 in the figure,
-you will need a password; the same password you would need to log into
-that machine. In order to get through the in-port 3306 into the
-database within the server, you will need a second password, the one
-that authenticates you to the database. You would need that one in the
-direct connection as well, unless the database maintainer has not set
-a password for you.
-
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.tg .tg-e3zv{font-weight:bold}
+</style>
+<table class="tg" style="undefined;table-layout: fixed; width: 907px">
+<colgroup>
+<col style="width: 419px">
+<col style="width: 488px">
+</colgroup>
+  <tr>
+    <th class="tg-e3zv">Function/Procedure</th>
+    <th class="tg-031e">Explanation<br></th>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">earliestLog()</td>
+    <td class="tg-031e"><br>the earliest OpenEdX event log load date/time. The function provides two times:  'Loaded' is the time when the earliest log was loaded into Datastage. Collected is the date when the log was originally created.</td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">latestLog()</td>
+    <td class="tg-031e">the most recent OpenEdX event log date. The 'loaded' date is supposed to show when the log was loaded into Datastage. But this date is unreliable. The second date is the date the log was created.<br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">idAnon2Int(anon_screen_name)</td>
+    <td class="tg-031e">takes a learner identifier that as encoded in the Datastage archive. Returns an integer identifier for the same learner, as used in tables generated by the OpenEdX production platform.<br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">idInt2Anon(openEdxPlatformLearnerId)<br></td>
+    <td class="tg-031e">takes an integer learner ID as used in OpenEdX production tables. Returns the corresponding anon_screen_name hash value used in the archive.<br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">idAnon2Ext(anon_screen_name, course_display_name)</td>
+    <td class="tg-031e">converts an anon_screen_name learner ID and course name pair to an LTI ID as used in Qualtrics and other outside vendors.<br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">idAnon2Exts(anon_screen_name)<br>(procedure)<br></td>
+    <td class="tg-031e">procedure takes an anon_screen_name, and fills a temporary memory table with all external LTI-uid/course name,pairs. The procedure creates a temporary in-memory table of, two columns: <br>   ext_id, course_display_name.<br>The new table is called ExtCourseTable, and is available after, the procedure call returns. The table is wiped and renewed with, every call. Each MySQL connection has its own temp table name space, so no collision with other connections occurs. The table vanishes with connection closure.<br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">idExt2Anon(ltiExternalId)</td>
+    <td class="tg-031e">given an external, LTI learner ID as used in Qualtrics and other outside services, return the corresponding anon_screen_name.<br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">idInt2Forum(openEdxPlatformLearnerId)</td>
+    <td class="tg-031e">convert integer learner IDs as used in platform production tables to ID used in forum table for the same learner.<br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">idForum2Int(openEdxPlatformLearnerId)*</td>
+    <td class="tg-031e">convert forum learner IDs to integer learner IDs as used in platform production tables.<br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">idForum2Anon(forumArchiveLearnerId)*</td>
+    <td class="tg-031e">convert learner ID used in forum table to hash, values used in anon_screen_name columns</td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">wasCertified(anon_screen_name)</td>
+    <td class="tg-031e">return 1 if OpenEdX learner was issued a certificate, else return 0.</td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">isUserEvent(event_type)</td>
+    <td class="tg-031e">given a user event type, return 1 if that type of event is triggered by a user action, as opposed to one by the OpenEdX platform server<br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">wordcount(string)</td>
+    <td class="tg-031e">this function works by passing a string, or it can be used to compute the sum of words in an entire colum: SELECT SUM(wordcount(body)) FROM (SELECT body FROM contents) AS Contents;</td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">enrollment(course_display_name)</td>
+    <td class="tg-031e">given an OpenEdX course name, return its current enrollment.<br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">computeEnrollmentCoursera(course_name)<br>(procedure)<br></td>
+    <td class="tg-031e">given a course name that ran on Coursera, return its enrollment. All the following course name examples are acceptable:<br>
+       <ul>
+       <li>coursera_antimicrobial-001_demographics</li>
+       <li>antimicrobial-001_demographics</li>
+       <li>antimicrobial-001_anonymized_general</li>
+       <li>antimicrobial-001</li>
+       </ul>
+       <br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">computeEnrollmentNovoEd(course_name)</td>
+    <td class="tg-031e">given a course name that ran on NovoEd, return its enrollment. All the following course name examples are acceptable:<br>
+        <ul>
+	<li>novoed_crs_93</li>
+	<li>novoed_crs_email_93</li>
+	<li>93</li>
+	</ul>
+	<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">* procedure or function is only available in EdxPrivate.</td>
+    <td class="tg-031e"></td>
+  </tr>
+</table>
 
 <html>
 <head>
