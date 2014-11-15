@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>Datastage Data Access How-To</title>
+    <style>
+      body
+      {
+      background-color:#b0c4de;
+      }
+      #spanhand
+      {
+      font-style: bold;
+      font-size: 150%;
+      display: inline-block;
+      }
+      
+      /* Table header style: */
+      .tg .tg-s6z2
+      {text-align:center; 
+       font-style: bold;
+       font-size: 130%;
+      }
+
+    </style>
+
+    <script LANGUAGE="JavaScript">
+    <!-- Hiding JavaScript>
+
+    function showEmailAddr()
+    {
+      var theName = "Paepcke";
+      var theAt = "@";
+      var theDomain = "CS.Stanford.edu";
+      var theMailTo = "<A HREF='mailto:" + theName + theAt + theDomain + "'>";
+      var theMailToClose = "</A>";
+
+      document.write(theMailTo + theName + theAt + theDomain + theMailToClose);
+    }// End hiding JavaScript -->
+    </script>
+
+  </head>
+
+  <body>
+<h2>Browsing and Querying the Data</h2>
+
+A number of applications are available for browsing data stored in
+MySQL databases, the type in which VPOL data resides.  Some
+applications
+are <a href="http://sixrevisions.com/tools/applications_mysql_databases/">discussed</a>
+on the
+Web. <a href="http://download.cnet.com/Froq/3000-2065_4-189145.html">Froq</a>
+and <a href="http://www.sequelpro.com/">SequelPro</a> are available
+for the Mac. One cross platform tool
+is <a href="http://razorsql.com/">RazorSQL</a>. It works on Mac,
+Linux, and Windows. All these tools list available tables, allow some
+browsing over the tables, and allow one to enter queries whose results
+appear in the interface. Connecting RazorSQL is explained below; the
+other tools work through similar procedures.
+
+<h3 id="razorSQL">RazorSQL</h3>
+
+The application <i>RazorSQL</i>, which works under Mac, Windows, and
+Linux, can create either a tunneled or a direct connection to
+MySQL. For details on the difference, please
+see <a href="#appB">Appendix B</a>. You begin the connection process
+by choosing:
+
+<i>File-->New Tab (no connection)</i>
+
+In the subsequent screen, you click on <i>Click to connect to a
+database</i>:
+
+</p><center><img src="figs/razorConnectStep1Web.png"/></center></p>
+
+...resulting in:
+
+</p><center><img src="figs/razorConnectStep2Web.png"/></center></p>
+
+This screen allows you to select among different connections you have
+already defined. Not having defined any, you click <i>Add Profile</i>,
+and pick <i>MySQL</i> from the resulting list of database types that
+the application knows about.
+
+</p><center><img src="figs/razorConnectStep3Web.png"/></center></p>
+
+Here is where you fill in the particulars. Leave all pre-filled fields
+alone. For <i>Profile name</i> you pick any name that reminds you
+later of what this connection is about.
+
+<i>Login</i> and <i>Password</i> are the information you received with
+your access material. For <i>Host or IP Address</i> you fill in
+datastage.stanford.edu. The <i>Port</i> is left
+blank. In the <i>Database</i> field you enter one of the databases of
+<a href="#appA">Appendix A</a>. Click <i>Connect</i>, and you
+(hopefully) see a screen other than one informing you of failure.
+
+At this point, you can continue via the RazorSQL manual and help
+pages. 
+
+<h2>Analysis Tools</h2>
+
+Most researchers use one of the graphical user interface that were
+mentioned above to browse through the data, and to issue queries. They
+then save results into a comma separated values (CSV) file. Analysis
+tools like SPSS can read that data. This approach is likely the least
+complicated.
+<p>
+However, Excel, R, and SPSS are among the tools that can access data
+in MySQL servers directly. After some setup, the data appears in your
+table. After that setup, you are in your home territory of the tool
+you are used to. This section explains how to accomplish this data
+import.
+
+<h3 id="dbConn">The All-Important Database Connector</h3>
+
+For all these connections, you will need a 'database connector,'
+sometimes called an 'ODBC driver.' These drivers are set up just once
+in your machine---Mac or Windows. To grab one of them, head over to
+the <a href="http://dev.mysql.com/downloads/connector/odbc/">MySQL
+connector download page</a>, and download the version for your
+operating system (Windows or Mac). Note that even though your computer
+might be of the '64 bit' type (whatever that means), you are likely to
+need the 32-bit version of the database connector! This choice is
+definitely the right one for Macs; for Windows it is the most likely
+choice 
+(see <a href="http://office.microsoft.com/en-us/excel-help/choose-the-32-bit-or-64-bit-version-of-office-HA010369476.aspx">why</a>).
+
+You start the downloaded program as you usually do on your
+computer. Here is information you will need for the mostly-open data: 
+
+<b>Server:</b> <i>datastage.stanford.edu</i><br>
+<b>User:</b> [your username]</br>
+<b>Password:</b> [your password]</br>
+<b>Database:</b> [see appendix A for the list of available databases]</br>
+
+Once you installed the connector, you will find it popping up in all
+the right places among the menu options that are referred to in the
+following sections.
+
+<h3 id="excel">Connecting Excel</h3>
+
+See <a href=http://helpdeskgeek.com/office-tips/excel-to-mysql/>this reference</a>
+for how to fill your spreadsheet with a particular dataset. The result
+will look like this: 
+</p><center><img src="figs/excelToEdxScreenshotWeb.png"/></center></p>
+
+For the phase in the above referenced instructions that looks like
+this:
+</p><center><img src="figs/excelDatasourceConfigScreenshotWeb.png"/></center></p>
+
+... the information you enter will depend on whether you will be
+accessing more restricted information, or the mostly open data.
+
+<b>Open data</b>:
+</b>Data source name: <enter a name that will have you recognize the
+			 connection></br>
+<b>Description:</b> [a reminder for yourself]</br>
+<b>Server:</b> datastage.stanford.edu</br>
+<b>Port:</b> 3306</br>
+<b>User:</b> [your user name]</br>
+<b>Password:</b> [your password]</br>
+<b>Database:</b> [the name of the database of
+	       interest. See <a href="#appA">Appendix A</a>].</br>
+
+<h3 id="spss">Connecting SPSS</h3>
+
+Here is how you connect an SPSS sheet to one of the VPOL data
+sources. Remember first to <href src="#dbConn">install your database connector</a>.
+
+In SPSS:</br>
+
+<i>File-->Open Database-->New Query</i></br>
+
+Assuming you have set your connector to point to database <i>Edx</i>,
+and that you named it <i>MonoEdx</i> (for whatever fanciful reason),
+you will then see this:
+
+</p><center><img src="figs/spssToEdxStep0Web.png"/></center></p>
+
+Choose whichever real name you gave your connector, and
+click <i>next</i>. You now get to choose the fields that you want to
+extract from the database:
+
+</p><center><img src="figs/spssToEdxStep1Web.png"/></center></p>
+
+SPSS has figured out which tables are available in this database, and
+you can start moving fields over to the right. Once you again clicked
+on <i>next</i>, you will have an opportunity to introduce conditions
+on which rows you would like to import:
+
+</p><center><img src="figs/spssToEdxStep2Web.png"/></center>
+
+I am still a bit puzzled by the interface of this screen. If you get
+stuck, we can try to figure it out. If all goes well, you will now see
+something like this:
+
+</p><center><img src="figs/spssToEdxScreenshotWeb.png"/></center></p>
+
+<h2 id="pickUp">Picking up data and visualizations prepared by staff
+  or friends</h2>
+
+Sometimes staff or friends might prepare either data extracts or
+visualizations for you. If they park this information on
+infoviz.stanford.edu, they will give you the name of a 'workbook' on
+that server. To see the visualizations, and/or to grab the underlying
+data as .csv files follow these instructions:
+
+<ol>
+  <li>Go to <i>infoviz.stanford.edu</i></li>
+  <li>Log in as vpol/vpol</li>
+  <li>Click on <i>Workbooks</i></li>
+  <li>Find your workbook, and click on it</li>
+</ol>
+
+<center><img src="figs/tableauServerWorkbookScreenshotWeb.png"/></center>
+
+
+You should then see some number of charts that are part of the
+material for you. Open one of these <i>views</i>. Hover over marks to
+see tooltips. To see the data that is involved in a view, click the
+leftmost of the icons above the view.  
+
+Its tooltip says <i>Export</i>. You'll get a new window with two tabs:
+the one you'll be on will be just the data that went into the
+particular view you were on when you clicked export.
+
+If you want to grab all the data, choose the
+tab <i>Underlying</i>. You'll see the first 200 rows. Note that you
+might see some data in this fully populated table that you don't see
+in the visualizations: some rows might be filtered out in the
+views. You will need to do the same if appropriate to your further
+plans. 
+
+<center><img src="figs/tableauServerExportScreenshotWeb.png"/></center>
+
+Finally, to download, click the link <i>Download all rows as a text
+file</i>
+
+<h2 id="sshTunnel">How to Set up an SSH Tunnel</h2>
+An ssh tunnel is a connection between two computers that encrypts the
+information it carries. Sometimes a server machine is running a
+service that client applications on another machine can connect
+to. For example, Excel connecting directly to a MySQL database is such
+an example. Similarly, Froq and RazorSQL, the graphical querying tools
+mentioned earlier, might connect directly from your computer to the
+MySQL database that runs on the datastage.stanford.edu machine.
+
+This style of direct connection has your password go over the Internet
+unencrypted when you log into the database. This vulnerability to wire
+tapping is a disadvantage of direct connections. On the other hand,
+setting up a direct connection is relatively easy, and client side
+applications, the programs you use on your computer to connect to the
+database, know how to construct a direct connection.
+
+To protect data more securely, a <i>tunnel</i> may first be
+constructed between your computer and the database server
+computer. Your commands to the database then first travel encrypted to
+the server computer through the tunnel. Once they arrive, the commands
+are handled as if they had been issued on the server computer itself
+in the first place.
+
+</p><center><img src="figs/sshTunnelIllustrationWeb.png"></center></br>
+
+To set up a tunnel between your computer and datastage.stanford.edu,
+you type the command at the bottom of the illustration into a terminal
+window <b>before</b> you ask your data access application to try and
+get to the data. The command says: set up a secure connection
+(<i>ssh</i>) to machine <i>datastage.stanford.edu</i>; to applications
+on my own computer the connection is to look like a database to which
+I write via my out-port <i>5556</i>. The connection should function
+Like a tunnel (<i>-L</i>). On the database on the other end, the
+commands I send should look like they were issued on <b>its</b>
+machine (<i>localhost</i> from the database's point of view), and were
+issued directly into the in-port where the database normally listens
+to (<i>3306</i>), as it does in the direct connection case. 
+
+The <i>-f -N</i> just make it so that you can keep using the terminal
+window you used to type in the command.
+
+Important point: in order to get into that in-port 22 in the figure,
+you will need a password; the same password you would need to log into
+that machine. In order to get through the in-port 3306 into the
+database within the server, you will need a second password, the one
+that authenticates you to the database. You would need that one in the
+direct connection as well, unless the database maintainer has not set
+a password for you.
+
+</body>
+</html>
