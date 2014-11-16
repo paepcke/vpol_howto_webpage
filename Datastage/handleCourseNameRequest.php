@@ -1,8 +1,20 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Coursera Courses</title>
+    <title>Course List</title>
     <meta charset="UTF-8"> 
+    <style>
+      body
+      {
+      background-color:#b0c4de;
+      }
+      #spanhand
+      {
+      font-style: bold;
+      font-size: 150%;
+      display: inline-block;
+      }
+    </style>
   </head>
   <body>
 <?php 
