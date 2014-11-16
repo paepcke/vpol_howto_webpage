@@ -48,8 +48,9 @@ function printCourseNames($platform) {
 }
 
 function prepDb() {
-    // Connect to database server
-    mysql_connect("datastage.stanford.edu", "paepcke", "r0d1ngard3n") or die (mysql_error ());
+    // Connect to database server. The mysqli.default.xxx
+    // variables below are set in /etc/php5/apache2/php.ini:
+    mysql_connect(get_cfg_var("mysqli.default_host"), get_cfg_var("mysqli.default_user"), get_cfg_var("mysqli.default_pw"));
     // Select database
     mysql_select_db("Edx") or die(mysql_error());
 }
