@@ -1,0 +1,29 @@
+body {
+    background-color:#b0c4de;
+}
+
+h1 {
+   text-align : center;
+   font-size  : 180%;
+   margin : 0px;
+}
+h1#byline {
+   text-align : center;
+   font-size  : 130%;
+   font-style : italic;
+   margin : 0px;
+   padding : 10px;
+}
+
+table {
+    border: 1px solid black;
+}
+table td {
+    border: 1px solid black;
+    text-align: right;
+    background-color: lightblue;
+}
+table th {
+    border: 1px solid black;
+    font-weight : bold;
+}
