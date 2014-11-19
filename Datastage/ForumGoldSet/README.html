@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>README</title>
+<LINK href="readme.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>The Stanford MOOCPosts Data Set</h1>
+<h1 id="byline">Created by nine ODesk Consultants<br>
+under direction of<br>
+Akshay Agrawal and Andreas Paepcke
+</h1>
+
+The Stanford MOOCPosts dataset contains 29,604 anonymized learner
+forum posts from eleven Stanford University public online
+classes. Each post was coded along six dimensions by three independent
+coders:
+<ul>
+<li>Is this post a question? (Yes/No)</li>
+<li>Is this post an answer? (Yes/No)</li>
+<li>Is this post an opinion? (Yes/No)</li>
+<li>What sentiment does this post express? (1-7)</li>
+<li>How much confusion does this post express? (1-7)</li>
+<li>How urgent is it that this post be seen by an instructor? (1-7)</li>
+</ul>
+
+In addition, coders were asked to flag posts in which our automated
+anonymization program had failed, and that therefore revealed any
+poster's identity. These posts were then manually
+anonymized. Intercoder reliability was computed, and separate 'gold'
+codings were derived for each of the dimensions. This procedure is
+described <a href="#procedures">below</a>.
+<p>
+The posts are organized into three sets of related courses:
+<p>
+<b>Humanities/Sciences:</b>
+<table class="table.readme">
+  <tr>
+    <th>Course Name</th>
+    <th>Number of Entries</th>
+  </tr>
+  <tr>
+    <td>GlobalHealth/WomensHealth/Winter2014</td>
+    <td>2,254 entries</td>
+  </tr>
+  <tr>
+    <td>HumanitiesScience/StatLearning/Winter2014</td>
+    <td>3,112 entries</td>
+  </tr>
+  <tr>
+    <td>HumanitiesScience/Stats216/Winter2014</td>
+    <td>341 entries</td>
+  </tr>
+  <tr>
+    <td>HumanitiesSciences/EP101/Environmental_Physiology</td>
+    <td>2,549 entries</td>
+  </tr>
+  <tr>
+    <td>HumanitiesSciences/Econ-1/Summer2014</td>
+    <td>1,584 entries</td>
+  </tr>
+  <tr>
+    <td>HumanitiesSciences/Econ1V/Summer2014</td>
+    <td>160 entries</td>
+  </tr>
+  <tr>
+    <td><b>Total:</b</td>
+    <td>10,000 entries</td>
+  </tr>
+</table>
+<p>
+<b>Medicine:</b>
+<table class="table.readme">
+  <tr>
+    <th>Course Name</th>
+    <th>Number of Entries</th>
+  </tr>
+  <tr>
+    <td>Medicine/HRP258/Statistics_in_Medicine</td>
+    <td>3,321 entries</td>
+  </tr>
+  <tr>
+    <td>Medicine/MedStats/Summer2014</td>
+    <td>1,218 entries</td>
+  </tr>
+  <tr>
+    <td>Medicine/SciWrite/Fall2013</td>
+    <td>5,184 entries</td>
+  </tr>
+  <tr>
+    <td>Medicine/SURG210/Managing_Emergencies_What_Every_Doctor_Must_Know</td>
+    <td>279 entries</td>
+  </tr>
+</table>
+<p>
+<b>Education:</b>
+<table class="table.readme">
+  <tr>
+    <th>Course Name</th>
+    <th>Number of Entries</th>
+  </tr>
+  <tr>
+    <td>Education/EDUC115N/How_to_Learn_Math</td>
+    <td>10,000 entries</td>
+  </tr>
+</table>
+<p>
+The number of entries lists the posts that were presented to the
+coders. The final set is somewhat smaller, because missing data was
+removed from the coded results.
+
+<h2>Procedures</h2>
+
+Creating the final set involved several steps. First, the randomly
+chosen posts were anonymized via an automated facility. Then the
+30,000 posts were distributed to ODesk consultants for coding. The
+returned sets were then combined into one gold set. These steps are
+next described in more detail. 
+
+<h3>Anonymization</h3>
+
+Automated anonymization replaced identity-revealing words with a
+single word that indicates the type of revealing information being
+obscured. Example: when the anonymization algorithm detects a string
+that might be a telephone number, the string is replaced
+with <i>&lt;phoneRedac&gt;</i>. Some such fillers contain underscores, all are
+delimited by angle brackets. Except for rare cases of a full,
+two-part name being redacted, word count of the posts is thus the
+same as the original, as long as the tokenizer underneath the word
+counter considers the terms in angle brackets as one token. Strings
+that are suspected to be zip codes are replaced by <i>&lt;zipRedac&gt;</i>, email
+addresses are replaced by <i>&lt;emailRedac&gt;</i>. For uninteresting reasons,
+posters’ names are replaced by the more complex
+<i>&lt;nameRedac_&lt;anon_screen_name_redacted&gt;&gt;</i>.
+
+<h3>Coding Process</h3>
+
+Each course set was coded by three distinct, independent, paid
+coders. That is three triplets of coders each worked on one set of
+10,000 posts. No coder worked on more than one course set. Each coder
+attempted to code every post for his or her particular set. All posts
+with malformed or missing scores in at least one coder’s spreadsheet
+were discarded. This elision accounts for the difference of 29,604
+between the total number of posts in the final set, and the original
+30,002 posts.
+
+<h3>Generating the Gold Sets</h3>
+
+We employed the following heuristics in computing scores for the gold
+sets: For each course set and <b>Likert variable</b> in that course
+set, we computed the
+<a href="http://en.wikipedia.org/wiki/Krippendorff%27s_alpha">Krippendorff
+alphas</a> for all possible combinations of coders. In every case, we
+found that some combination of two coders achieved higher agreement
+than the combination of all three coders. For each variable we
+therefore picked the coder combination that achieved the highest
+agreement and discarded the scores from the coder not included in that
+combination. A given post’s gold score was computed as an unweighted
+average of the two scores assigned to it by the selected coder
+combination. You can download CSV files containing scores submitted by
+the
+<a href="ForumGoldSet/likert-coder-combination">
+optimal coder combination for each Likert variable, across all three
+course sets</a>.
+<p>
+For each course set's <b>binary variable</b>, posts’ gold scores were
+chosen by majority votes across all three coders.  Download CSV files
+with <a href="ForumGoldSet/binary-scores-pre-vote"> scores submitted
+by all three coders for every binary variable, across all course
+sets</a>, and
+the <a href="ForumGoldSet/binary-scores-pre-vote/consensus"> consensus
+files</a>.
+<p>
+The <a href="ForumGoldSet/Krippendorff.xlsx"> spreadsheet titled
+Krippendorff</a> enumerates the Krippendorff alphas for the CSVs of
+Likert and binary variables. Note that the spreadsheet contains two
+worksheets. Alphas were computed using <code>ReCal</code>, a free
+online tool. Likert variables were treated as interval data, while
+binary variables were treated as nominal.
+
+</body>
+</html>
