@@ -10,7 +10,7 @@
       }
       #spanhand
       {
-      font-style: bold;
+      font-weight: bold;
       font-size: 150%;
       display: inline-block;
       }
