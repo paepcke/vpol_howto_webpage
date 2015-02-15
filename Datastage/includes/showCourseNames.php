@@ -10,7 +10,9 @@ function printCourseNames($platform) {
         $platform != 'moocdb' &&
         $platform != 'novoed')
         die("Only courses for platforms coursera, openedx, and moocdb are available on datastage.stanford.edu");
-    prepDb();
+
+    $mySQLDb =& prepDb();
+
     if ($platform == 'coursera') {
         // SQL query
         $strSQL = "SELECT DISTINCT extractCourseraCourseName(SCHEMA_NAME) AS courseName
@@ -22,10 +24,19 @@ function printCourseNames($platform) {
                   FROM information_schema.SCHEMATA 
                   WHERE isMoocDbCourseName(schema_name) != '' ORDER BY courseName;";
         echo "<b>MOOCDb courses archived on Datastage</b><br>";
+
     } elseif ($platform == 'openedx') {
-        $strSQL = "SELECT course_display_name AS courseName, academic_year, quarter
+        $strSQL = "SELECT course_display_name AS courseName, 
+	                  enrollment(course_display_name) AS enrollment, 
+			  academic_year, 
+			  quarter
                    FROM CourseInfo ORDER BY courseName;";
+
         echo "<b>OpenEdX courses archived on Datastage</b><br>";
+	echo "<i>Courses in <span class=sharable>green</span> may be shared with researchers outside of Stanford</i><br><br>";
+	echo "<b>Course,Enrollment</b><br>";
+
+
     } elseif ($platform == 'novoed') {
         $strSQL = "SELECT DISTINCT extractNovoEdCourseName(SCHEMA_NAME) AS courseName
                    FROM information_schema.SCHEMATA 
@@ -35,49 +46,57 @@ function printCourseNames($platform) {
 
     // Execute the query (the recordset $result contains the result
     // an a php array):
-    $result = mysql_query($strSQL) or die (mysql_error());
 
-    // Print the array to the browser (debugging only):
-    // while ($row = mysql_fetch_array($result)) {
-    //     foreach ($row as $columnName => $columnData) {
-    //         echo 'Column name: ' . $columnName . ' Column data: ' . $columnData . '<br />';
-    //     }
-    // }
-    
+    if (!$result = $mySQLDb->query($strSQL)) {
+        die('There was an error running the query [' . $mySQLDb->error . ']');
+	}
+
     // Loop the recordset $result
-    // Each row will be made into an array ($row) using mysql_fetch_array
-    while($row = mysql_fetch_assoc($result)) {
+    // Each row will be made into an array ($row) using fetch_array()
+
+    while($row = $result->fetch_assoc()) {
       if ($platform != 'openedx') {
         // Write the value back to the browser:
         echo $row['courseName'] . "<br />";
       } else {
+          // Asking for OpenEdX courses:
 
+	  // Get rid of the bogus 'connecting to: modulestore':
+	  if ($row['courseName'] == 'connecting to: modulestore' ||
+	      $row['courseName'] == 'course_display_name') {
+	      continue;
+	  }
+	  
           //*********
-          //echo "academic_year: " . $row['academic_year'] . '\n';
-          //echo "quarter: " . $row['quarter'] . '\n';
+          // echo "ran: " . $row['academic_year'] . ':' . $row['quarter'] . '<br>';
           //*********
         
           if ($row['academic_year'] > 2014 ||
-              ($row['academic_year'] == 2014 && $row['quarter'] == 'summer')) {
-              echo '<span class="sharable">' . $row['courseName'] . '</span>' . '<br />';
+              ($row['academic_year'] == 2014 && (  ($row['quarter'] == 'summer')
+	      			     	         || $row['quarter'] == 'fall'))) {
+              echo '<span class="sharable">' . $row['courseName'] . ',' . $row['enrollment'] . '</span><br />';
           } else {
-              echo $row['courseName'] . "<br />";
+              echo $row['courseName'] . ',' . $row['enrollment'] . "<br />";
           }
       }
     }
 
-   // Close the database connection
-    mysql_close();
+    // Close the database connection
+    $mySQLDb->close();
 }
 
-function prepDb() {
-    // Connect to database server. The mysqli.default.xxx
-    // variables below are set in /etc/php5/apache2/php.ini:
-    //****mysql_connect(get_cfg_var("mysqli.default_host"), get_cfg_var("mysqli.default_user"), get_cfg_var("mysqli.default_pw"));
-    //****mysql_connect(get_cfg_var("mysqli.default_host"), "dataman", file_get_contents("/var/www/include/mysql"));
-    mysql_connect("localhost", "webnobody", "Rpd$9Q34@?");
-    // Select database
-    mysql_select_db("Edx") or die(mysql_error());
-}
+// The '&' in the following function def indicates that a pointer (to an object)
+// will be returned:
 
+function &prepDb() {
+
+    $mySQLDb = new mysqli("localhost", "webnobody", "Rpd$9Q34@?", "Edx");
+
+    if($mySQLDb->connect_errno > 0){
+        die('Unable to connect to database [' . $mySQLDb->connect_error . ']');
+    }
+
+    return $mySQLDb;
+}
+	
 ?>
