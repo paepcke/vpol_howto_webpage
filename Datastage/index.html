@@ -643,7 +643,14 @@ the solution was correct, in some parts, or in its entirety. If only
 parts were correct, the table shows which parts, and which incorrect
 answers the participant provided.
 <p>
-<b>Note:</b>the ActivityGrade table is not constructed from EdX track
+
+<b>Note 1:</b>For historical reasons the ActivityGrade table contains not only
+grade related activities, but also some activities like accesses to surveys
+or course chapters. You can filter out the true grade related items by
+considering only rows in which num_attempts is not -1.
+<p>
+
+<b>Note 2:</b>the ActivityGrade table is not constructed from EdX track
 event logs. Instead, this table is composited from information in
 the platform table courseware_studentmodule. In particular the
 infamous JSON encoded <i>state</i> field in that table is parsed and
