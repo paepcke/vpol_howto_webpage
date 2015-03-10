@@ -13,10 +13,10 @@
       font-size: 150%;
       display: inline-block;
       }
-      
+
       /* Table header style: */
       .tg .tg-s6z2
-      {text-align:center; 
+      {text-align:center;
        font-style: bold;
        font-size: 130%;
       }
@@ -124,7 +124,7 @@ class
 or <a href="https://www.citiprogram.org/">through CITI</a>, or some
 other
 institution). Then <a href="mailto:upload.IRBcert.ucf1bw6ifx@u.box.com">email
-    your resulting PDF file.</a> 
+    your resulting PDF file.</a>
 <p>
 If you publish a paper, we appreciate credit for the data, and a note
 telling us about how you used the material. Both of these steps help
@@ -174,7 +174,7 @@ missing data.
    reflects the platform's current grade. That grade might reflect
    work other than the assignments that are captured in the
    ActivityGrade table.</li>
-   
+
  <li><b>UserGrade</b>: Raw grades as recorded by the platform. An
    amalgam of the platform tables auth_user and
    certificates_generatedcertificate.</li>
@@ -213,7 +213,7 @@ missing data.
   tables above. If you are familiar with the OpenEdX tracking log
   event format, you will recognize the names, and can use them
   individually.</li>
-   
+
 <h3>Computed tables</h3>
 
 <ul>
@@ -288,7 +288,7 @@ Data from Stanford courses offered via the OpenEdX platform software
 by Stanford includes the above mentioned <i>events</i>, which document
 how participants interacted with the platform. Forum posts are
 available as well. All data has personally identifiable information
-removed. 
+removed.
 <p>
 For <a href="#appB">schema details of each OpenEdX table</a>, see
 below. Meanings of OpenEdX data fields are also explained at
@@ -337,7 +337,7 @@ created some tables that allow you to focus.
   <li>VideoInteraction and</li>
   <li>ActivityGrade</li>
 </ul>
-We call these the <i>basic</i> tables.  During export we partition the
+We call these the <i>basic</i> tables.  During export, we partition the
 tables into groups that correspond to the analysis purposes for which
 they are intended. The <b>Basic Tables</b> are meant for everyday
 use. Those tables exist in the database on Datastage, and we can
@@ -347,7 +347,7 @@ Export table group <b>Engagement</b> are tables that approximate how
 much time course participants spent interacting with a course on their
 computer. These tables are only available as per-course exports. They
 do not exist in the database, but are computed when we export.  We
-will add more table groups as we go along. 
+will add more table groups as we go along.
 <p>
 Other tables of interests are <b>Demographics</b>, which provides
 basic, anonymized info about each participant, and <b>EdxForum</b> the
@@ -361,7 +361,7 @@ group by group.
 
 The first of the basic export tables is the main table, which contains
 all the events: <i>EventXtract</i>. NOTE: the <i>event_type</i> field
-is the key to interpreting the remaining columns. Please see the 
+is the key to interpreting the remaining columns. Please see the
 <a href="http://edx.readthedocs.org/en/latest/">OpenEdX
 Tracking Log documentation</a> of the original JSON formatted
 fields. Those descriptions are authoritative.
@@ -397,7 +397,7 @@ fields. Those descriptions are authoritative.
       of origin in two and three letter code, plus full name. IP addresses
       themselves are considered personally identifiable information, but are
       available by special request in the private table EdxPrivate.EventIp.
-      </td> 
+      </td>
   </tr>
   <tr>
     <td class="tg-031e">time</td>
@@ -405,16 +405,16 @@ fields. Those descriptions are authoritative.
   </tr>
   <tr>
     <td class="tg-031e">quarter</td>
-    <td class="tg-031e">The academic during which the event occurred. 
+    <td class="tg-031e">The academic during which the event occurred.
        Format is &lt;quarterName&gt;&lt;academicYear&gt;, such as
        <i>summer2014</i>. Using this field in your query significantly
        accelerates processing, because all events of one quarter are
        internally stored in a separate table. If you do not know a
        course quarter, you get it via:<b>
 	 <pre>
-    	   SELECT academic_year, quarter 
-    	     FROM CourseInfo 
-    	    WHERE course_display_name 
+    	   SELECT academic_year, quarter
+    	     FROM CourseInfo
+    	    WHERE course_display_name
     	     LIKE '%HRP258%';
 	 </pre>
 
@@ -439,7 +439,7 @@ fields. Those descriptions are authoritative.
     <td class="tg-031e">Machine name of video, (video actions only)
                         For YouTube videos this column allows you
                         to find the video itself. For example,
-                        if this column contains '6Tnr8OL-9So' 
+                        if this column contains '6Tnr8OL-9So'
                         you can google that code, and will find
                         the video.
     </td>
@@ -613,9 +613,9 @@ Here again some example rows:<br>
 +------------------------------------------+---------------+----------------+---------------------+---------------------------------------------+----------------
 | event_type  | resource_display_name | video_current_time |video_speed  | video_new_speed | video_old_speed | video_new_time | video_old_time | video_seek_type ...
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
-| play_video  | Video 7.3.2: Hydrogen | 1244.047           | None        |                 |                 |                |                |                 
+| play_video  | Video 7.3.2: Hydrogen | 1244.047           | None        |                 |                 |                |                |
 | pause_video | Video 7.3.2: Hydrogen | 1217.389976        | None        |                 |                 |                |                |                 ...
-| play_video  | Video 7.2.2: Oxygen   | 101.046621         | None        |                 |                 |                |                |                 
+| play_video  | Video 7.2.2: Oxygen   | 101.046621         | None        |                 |                 |                |                |
 +-------------+------------------------------------------------+--------------------+-------------+-----------------+-----------------+----------------+---------
 
     -------+---------+------------+----------------------------------------------|
@@ -726,7 +726,7 @@ its JSON values are made accessible as columns in ActivityGrade.
                        received. <br>
                        Note: each attempt generates an event, <br>
                        only the last attempt has the correct number. <br>
-                       The number -1 stands for 'not applicable.' 
+                       The number -1 stands for 'not applicable.'
   </td>
   </tr>
   <tr>
@@ -811,12 +811,12 @@ don't; some lie, others tell the truth.
                         School, Junior secondary/junior high/middle
                         School, Elementary/Primary School, None,
                         Other, User withheld, Signup before level
-                        collected.</td> 
+                        collected.</td>
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">country_three_letters</td>
     <td class="tg-031e">Official three-letter code of country. If
-                        participant interacted with a course from 
+                        participant interacted with a course from
                         multiple Internet addresses, Demographics
                         will contain one entry for each distinct
                         address, even if the countries are the same.</td>
@@ -824,7 +824,7 @@ don't; some lie, others tell the truth.
   <tr class="tg-even">
     <td class="tg-031e">country_name</td>
     <td class="tg-031e">Full name of country. See
-                        country_three_letters for explanation of 
+                        country_three_letters for explanation of
                         multiple entries.
   </td>
   </tr>
@@ -838,10 +838,10 @@ address, even if the address' countries are the same. It is therefore
 wise to use DISTINCT when querying:
 
 <pre>
-mysql> SELECT DISTINCT Demographics.*, FinalGrade.grade  
-       FROM Demographics, FinalGrade 
-       WHERE Demographics.anon_screen_name = FinalGrade.anon_screen_name  
-        AND  FinalGrade.course_id = 'Engineering/Solar/Fall2013' 
+mysql> SELECT DISTINCT Demographics.*, FinalGrade.grade
+       FROM Demographics, FinalGrade
+       WHERE Demographics.anon_screen_name = FinalGrade.anon_screen_name
+        AND  FinalGrade.course_id = 'Engineering/Solar/Fall2013'
        LIMIT 4;
 +------------------------------------------+--------+---------------+----------+--------------------+-----------------------+---------------+-------+
 | anon_screen_name                         | gender | year_of_birth | curr_age | level_of_education | country_three_letters | country_name  | grade |
@@ -978,7 +978,7 @@ Each Forum post is contained in one row:
         different from anon_screen_name. <a href="http://vpol.stanford.edu/research">Need
         permission</a> to convert from <i>forum_uid</i>
         to <i>anon_screen_name</i>. Use functions <code>idForum2Anon()/idAnon2Forum()</code> for conversion
-            between them. 
+            between them.
 	</td>
     </tr>
     <tr>
@@ -1065,7 +1065,7 @@ Each Forum post is contained in one row:
     +--------------------------------------------------------------------
 ... | body            | course_display_name      | created_at           | ...
     +--------------------------------------------------------------------
-    | This is a post. | Engineering/CS144/Spring | 2013-05-16 04:32:20  |  
+    | This is a post. | Engineering/CS144/Spring | 2013-05-16 04:32:20  |
 ... | Another post    | MITx/6.002x/2012_Fall    | 2013-05-16 04:32:20  | ...
     | Third post      | MITx/6.002x/2012_Fall    | 2013-05-16 04:32:21  |
     +--------------------------------------------------------------------
@@ -1089,11 +1089,11 @@ Each Forum post is contained in one row:
 
 
     +----------------------------------------------------------------------------
-... | parent_id | parent_ids | sk                       | confusion | happiness |                                                                                                                                                                                                                                                                                                                                                                                                                         
+... | parent_id | parent_ids | sk                       | confusion | happiness |
     +----------------------------------------------------------------------------
-    | None      | None       | None                     |           |           |                                                                                                                                                                                                                                                                                                                                                                                                                         
-... | None      | []         | 519461545924670200000005 |           |           |                                                                                                                                                                                                                                                                                                                                                                                                                         
-    | None      | []         | 519461555924670200000006 |           |           |                                                                                                                                                                                                                                                                                                                                                                                                                         
+    | None      | None       | None                     |           |           |
+... | None      | []         | 519461545924670200000005 |           |           |
+    | None      | []         | 519461555924670200000006 |           |           |
     +----------------------------------------------------------------------------
 </pre>
 
@@ -1165,7 +1165,7 @@ OpenEdX <i>modulestore</i> MongoDB structure.
 </div>
 <p>
 Example rows:
-<pre>        
+<pre>
 +----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | course_display_name                          | course_catalog_name              | academic_year | quarter | num_quarters | is_internal | enrollment_start    | start_date          | end_date            |
 | HumanitiesSciences/Physics101E/Spring2014    | The Special Theory of Relativity |          2012 | summer  |           -1 |           0 | 0000-00-00 00:00:00 | 2013-08-18 00:00:00 | 0000-00-00 00:00:00 |
@@ -1204,7 +1204,7 @@ learner rests. What is the effect on the weekly session length? The
 answer depends on what the other learners were doing. If no learner
 touched the course during the first week, the median will be dominated
 by the eager learner, and the number of weeks during which the median
-was greater than one hour will be incremented. 
+was greater than one hour will be incremented.
 <p>
 If instead many learners are active during the first week, but they
 all only put in very short sessions, then the median will favor those
@@ -1325,13 +1325,13 @@ A typical row in engagement_weeklyEffort looks like this:
 The final table in the engagement group is a single row for each
 course. The row summarizes the efforts across all weeks in one
 course. If a single course is being exported, then the table will
-contain only one line. 
+contain only one line.
 <p>
-This table provides an overview of session lengths that learners tended to 
-invest in a course. For example, if the number of weeks in which the median 
+This table provides an overview of session lengths that learners tended to
+invest in a course. For example, if the number of weeks in which the median
 session length exceeded one hour is high, then learners had to invest
 long, contiguous studying times throughout most of the course. In contrast,
-if the number of weeks in which the median session length was 1-20min 
+if the number of weeks in which the median session length was 1-20min
 is high, then the course tended to have students frequently engage
 for short periods of time.
 <p>
@@ -1347,7 +1347,7 @@ instead of the greater-than-one-hour count.
 <p>
 This summary measure is therefore not sensitive to extreme
 behaviors by individual learners. Such learners do not unduly distort
-the result. Note, however, that the summary measure does not 
+the result. Note, however, that the summary measure does not
 tell us <i>when</i> in a course long sessions prevailed.
 <p>
 <style type="text/css">
@@ -1388,7 +1388,7 @@ tell us <i>when</i> in a course long sessions prevailed.
   <tr>
     <td class="tg-031e">MedPerWeekGreaterSixty</td>
     <td class="tg-031e">Median number of sessions with weekly median
-         larger than one hour.<br></td> 
+         larger than one hour.<br></td>
   </tr>
 </table>
 <p>
@@ -1446,7 +1446,7 @@ by <a href="#accessProcedure">special arrangement</a>
                         tables.<br> (<img src="figs/expert.png"
                         width="2%">This is the same value as the
                         student_id column in courseware_studentmodule.)
-   </td> 
+   </td>
   </tr>
   <tr>
     <td class="tg-031e">anon_screen_name</td>
@@ -1462,9 +1462,9 @@ by <a href="#accessProcedure">special arrangement</a>
 </table>
 <p>
 
-<h3 id="mirrors">Platform tables mirrored on Datastage</h3> 
+<h3 id="mirrors">Platform tables mirrored on Datastage</h3>
 
-This list may change. To add additional tables, see 
+This list may change. To add additional tables, see
 script json_to_relation/scripts/cronRefreshEdxprod.sh.
 <a href="https://media.readthedocs.org/pdf/edx/latest/edx.pdf">
 Documentation for these tables</a> is provided by the EdX consortium.
@@ -1481,17 +1481,17 @@ Documentation for these tables</a> is provided by the EdX consortium.
 <p>
 <h3 id="functions">Useful MySQL Functions</h3>
 
-If you query the database directly, the following stored functions and procedures 
+If you query the database directly, the following stored functions and procedures
 might prove useful. Some of the functions are privileged because they perform
 user id conversions that would put privacy in peril. Those functions
 can only be used with the prefix <i>EdxPrivate</i>. You'll know that
 you hit on one of these if you try to use a function, and MySQL
-complains that the function does not exist. The current set of 
+complains that the function does not exist. The current set of
 private functions are tagged with an asterisk in the table below.
 <br>
-Note that there is a difference between MySQL functions, and MySQL procedures. 
+Note that there is a difference between MySQL functions, and MySQL procedures.
 A function is invoked as if it were a built-in function, like MIN(), or COUNT().
-Examples: 
+Examples:
 <pre>
 SELECT wordcount('I love data');
 SELECT * FROM EventXtract WHERE anon_screen_name = idInt2Anon(44000);
