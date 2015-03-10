@@ -61,9 +61,15 @@ other tools work through similar procedures.
 
 The application <i>RazorSQL</i>, which works under Mac, Windows, and
 Linux, can create either a tunneled or a direct connection to
-MySQL. For details on the difference, please
-see <a href="#appB">Appendix B</a>. You begin the connection process
-by choosing:
+MySQL. Only tunneling is possible for connecting to Datastage.
+The concept is that your application (e.g. RazorSQL) first logs into
+the Datastage machine, and once there logs into the MySQL database.
+The advantage over logging straight into the MySQL database is
+security. The 'tunnel' that carries your data to and from the remote
+database encrypts the data as it travels over the Internet.
+
+The following example uses RazorSQL, but Froq and others work
+similarly. You begin the connection process by choosing:
 
 <i>File-->New Tab (no connection)</i>
 
@@ -72,7 +78,7 @@ database</i>:
 
 </p><center><img src="figs/razorConnectStep1Web.png"/></center></p>
 
-...resulting in:
+...resulting in something like:
 
 </p><center><img src="figs/razorConnectStep2Web.png"/></center></p>
 
@@ -81,18 +87,38 @@ already defined. Not having defined any, you click <i>Add Profile</i>,
 and pick <i>MySQL</i> from the resulting list of database types that
 the application knows about.
 
-</p><center><img src="figs/razorConnectStep3Web.png"/></center></p>
+</p><center><img src="figs/razorNoDirectLegalMainPanel.png" width="50%"/></center></p>
 
 Here is where you fill in the particulars. Leave all pre-filled fields
 alone. For <i>Profile name</i> you pick any name that reminds you
 later of what this connection is about.
 
 <i>Login</i> and <i>Password</i> are the information you received with
-your access material. For <i>Host or IP Address</i> you fill in
-datastage.stanford.edu. The <i>Port</i> is left
-blank. In the <i>Database</i> field you enter one of the databases of
-<a href="#appA">Appendix A</a>. Click <i>Connect</i>, and you
-(hopefully) see a screen other than one informing you of failure.
+your access material. They are the user ID and passwords for the MySQL
+database on datastage. 
+
+For <i>Host or IP Address</i> you fill in
+<i>localhost</i>. This may seem counterintuitive at first. But
+remember the tunnel: the login to the database occurs only after your
+GUI application has reached the remote Datastage
+machine. At <b>that</b> point the connect is local.
+
+The <i>Port</i> is left blank. In the <i>Database</i> field you enter
+one of the databases of
+<a href="index.html#appA">Appendix A</a>. 
+
+Next, you need to specify how the tunnel is built. This step is
+equivalent to login into the Datastage machine. In RazorSQL you
+click on the button labeled <i>SSH Tunnel</i>, which exposes the
+following panel:
+
+</p><center><img src="figs/razorNoDirectLegalSSHTunnelPanel.png"/></center></p>
+
+The <i>SSH User</i> and <i>SSH Password</i> in this panel are for
+logging into the Datastage machine. You will not yourself execute that
+login, but the GUI application will do it on your behalf. Click OK,
+and then click <i>Connect</i>, and you (hopefully) see a screen other
+than one informing you of failure.
 
 At this point, you can continue via the RazorSQL manual and help
 pages. 
@@ -160,12 +186,12 @@ accessing more restricted information, or the mostly open data.
 <b>User:</b> [your user name]</br>
 <b>Password:</b> [your password]</br>
 <b>Database:</b> [the name of the database of
-	       interest. See <a href="#appA">Appendix A</a>].</br>
+	       interest. See <a href="index.html#appA">Appendix A</a>].</br>
 
 <h3 id="spss">Connecting SPSS</h3>
 
 Here is how you connect an SPSS sheet to one of the VPOL data
-sources. Remember first to <href src="#dbConn">install your database connector</a>.
+sources. Remember first to <href src="index.html#dbConn">install your database connector</a>.
 
 In SPSS:</br>
 
