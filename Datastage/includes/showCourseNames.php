@@ -81,7 +81,7 @@ function printCourseNames($platform) {
                ($row['academic_year'] == 2014 && (  ($row['quarter'] == 'summer')
 						    || $row['quarter'] == 'fall'))
 	       ) 
-	      && (strpos($row['courseName'], 'ohsx') === false)
+	      && (strpos(strtolower($row['courseName']), 'ohsx') === false)
 	      ) {
 	    echo '<span class="sharable">' . $row['courseName'] . ',' . $row['enrollment'] . '</span><br />';
           } else {
