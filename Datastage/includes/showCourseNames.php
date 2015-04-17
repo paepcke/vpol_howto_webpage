@@ -70,11 +70,20 @@ function printCourseNames($platform) {
           //*********
           // echo "ran: " . $row['academic_year'] . ':' . $row['quarter'] . '<br>';
           //*********
-        
-          if ($row['academic_year'] > 2014 ||
-              ($row['academic_year'] == 2014 && (  ($row['quarter'] == 'summer')
-	      			     	         || $row['quarter'] == 'fall'))) {
-              echo '<span class="sharable">' . $row['courseName'] . ',' . $row['enrollment'] . '</span><br />';
+	  // Show course name in green if:
+	  //       o course ran in academic year later than 2014
+	  //  or   o course ran in academic year 2014, but in the summer or fall
+	  // BUT   o course name does not start with 'ohsx': the open high school
+	  //         courses are never shared, even if they happened in the correct
+	  //         year.
+          if ((
+	       $row['academic_year'] > 2014 ||
+               ($row['academic_year'] == 2014 && (  ($row['quarter'] == 'summer')
+						    || $row['quarter'] == 'fall'))
+	       ) 
+	      && (strpos($row['courseName'], 'ohsx') === false)
+	      ) {
+	    echo '<span class="sharable">' . $row['courseName'] . ',' . $row['enrollment'] . '</span><br />';
           } else {
               echo $row['courseName'] . ',' . $row['enrollment'] . "<br />";
           }
