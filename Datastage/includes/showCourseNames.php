@@ -26,7 +26,7 @@ function printCourseNames($platform) {
                   WHERE isMoocDbCourseName(schema_name) != '' ORDER BY courseName;";
         echo "<b>MOOCDb courses archived on Datastage</b><br>";
 	echo "<i>Only certain OpenEdX MOOCDb course can be shared with researchers outside Stanford University</i><br>";
-	echo "<i>The sharables are the same as those listed in green in the <a href="http://datastage.stanford.edu/handleCourseNameRequest.php?platform=openedx">
+	echo "<i>The sharables are the same as those listed in green in the <a href=\"http://datastage.stanford.edu/handleCourseNameRequest.php?platform=openedx\">
 OpenEdX course listings</a>.</i><br>"; 
 
     } elseif ($platform == 'openedx') {
