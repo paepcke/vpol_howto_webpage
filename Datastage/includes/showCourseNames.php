@@ -19,11 +19,15 @@ function printCourseNames($platform) {
                   FROM information_schema.SCHEMATA WHERE schema_name
                   LIKE 'Coursera%' ORDER BY courseName;";
         echo "<b>Coursera courses archived on Datastage</b><br>";
+	echo "<i>Coursera course can unfortunately currently only be shared with researchers within Stanford University</i><br>";
     } elseif ($platform == 'moocdb') {
         $strSQL = "SELECT DISTINCT extractMoocDbCourseName(SCHEMA_NAME) AS courseName
                   FROM information_schema.SCHEMATA 
                   WHERE isMoocDbCourseName(schema_name) != '' ORDER BY courseName;";
         echo "<b>MOOCDb courses archived on Datastage</b><br>";
+	echo "<i>Only certain OpenEdX MOOCDb course can be shared with researchers outside Stanford University</i><br>";
+	echo "<i>The sharables are the same as those listed in green in the <a href="http://datastage.stanford.edu/handleCourseNameRequest.php?platform=openedx">
+OpenEdX course listings</a>.</i><br>"; 
 
     } elseif ($platform == 'openedx') {
         $strSQL = "SELECT course_display_name AS courseName, 
@@ -42,6 +46,7 @@ function printCourseNames($platform) {
                    FROM information_schema.SCHEMATA 
                    WHERE schema_name LIKE 'novoed%' ORDER BY courseName;";
         echo "<b>NovoEd courses archived on Datastage</b><br>";
+	echo "<i>NovoEd course can unfortunately currently only be shared with researchers within Stanford University</i><br>";
     }
 
     // Execute the query (the recordset $result contains the result
