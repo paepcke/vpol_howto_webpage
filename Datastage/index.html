@@ -177,7 +177,11 @@ missing data.
 
  <li><b>UserGrade</b>: Raw grades as recorded by the platform. An
    amalgam of the platform tables auth_user and
-   certificates_generatedcertificate.</li>
+   certificates_generatedcertificate. This table is not normally
+   shared, as it includes personally identifiable
+   information. However, the anonymized view onto UserGrade:
+   FinalGrade (see above) is the table to use for anonymized grade and
+   distinction information.</li>
 
  <li><b>ABExperiment</b>: Data resulting from the use of the OpenEdX AB
    testing facilities.</li>
