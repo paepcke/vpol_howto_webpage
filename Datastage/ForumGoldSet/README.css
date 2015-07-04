@@ -27,3 +27,13 @@ table th {
     border: 1px solid black;
     font-weight : bold;
 }
+
+#downloadLink {
+    width:300px;
+    margin:0px auto; /* Right and left margin widths set to "auto" */
+    text-align:center;
+    padding:15px;
+    border:1px solid #333;
+    <!- background-color:#3399FF;-->
+    opacity: 0.8;
+    }
