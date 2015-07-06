@@ -35,14 +35,13 @@ OpenEdX course listings</a>.</i></br></br>";
 			  -- academic_year,
 			  -- quarter,
         start_date,
-        is_internal
+        is_internal,
+        if(start_date > '2014-06-14', 1, 0) as date_sharable
                    FROM CourseInfo
-                   WHERE start_date > '2014-06-14'
                    ORDER BY courseName;";
 
         echo "<b>OpenEdX courses archived on Datastage</b></br>";
 	echo "<i>Courses in <span class=sharable>green</span> may be shared with researchers outside of Stanford</i></br></br>";
-	echo "<b>Course,Enrollment</b><br>";
 
 
     } elseif ($platform == 'novoed') {
@@ -82,7 +81,12 @@ OpenEdX course listings</a>.</i></br></br>";
           // if ($row['academic_year'] > 2014 ||
           //     ($row['academic_year'] == 2014 && (  ($row['quarter'] == 'summer')
 	      	// 		     	         || $row['quarter'] == 'fall'))) {
-             if (($row['is_internal'] == 0) && (strpos(strtolower($row['courseName']), 'ohsx') === false)) {
+             if (
+                ($row['is_internal'] == 0)
+             && (strpos(strtolower($row['courseName']), 'ohsx') === false)
+             && ($row['enrollment'] > 100)
+             && ($row['date_sharable'] == 1)
+             ) {
               echo '<span class="sharable">' . $row['courseName'] . ' (enrollment: ' . $row['enrollment'] . ')</span><br />';
           } else {
               echo $row['courseName'] . ' (enrollment: ' . $row['enrollment'] . ")<br />";
