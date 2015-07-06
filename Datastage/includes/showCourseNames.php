@@ -36,7 +36,9 @@ OpenEdX course listings</a>.</i></br></br>";
 			  -- quarter,
         start_date,
         is_internal
-                   FROM CourseInfo ORDER BY courseName;";
+                   FROM CourseInfo
+                   WHERE start_date > '2014-06-14'
+                   ORDER BY courseName;";
 
         echo "<b>OpenEdX courses archived on Datastage</b></br>";
 	echo "<i>Courses in <span class=sharable>green</span> may be shared with researchers outside of Stanford</i></br></br>";
@@ -80,8 +82,7 @@ OpenEdX course listings</a>.</i></br></br>";
           // if ($row['academic_year'] > 2014 ||
           //     ($row['academic_year'] == 2014 && (  ($row['quarter'] == 'summer')
 	      	// 		     	         || $row['quarter'] == 'fall'))) {
-             if ((($row['start_date' > '2014-06-14') && ($row['is_internal'] == 0))
-             && (strpos(strtolower($row['courseName']), 'ohsx') === false)) {
+             if (($row['is_internal'] == 0) && (strpos(strtolower($row['courseName']), 'ohsx') === false)) {
               echo '<span class="sharable">' . $row['courseName'] . ' (enrollment: ' . $row['enrollment'] . ')</span><br />';
           } else {
               echo $row['courseName'] . ' (enrollment: ' . $row['enrollment'] . ")<br />";
