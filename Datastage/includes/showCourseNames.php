@@ -21,15 +21,17 @@ function printCourseNames($platform) {
         echo "<b>Coursera courses archived on Datastage</b><br>";
     } elseif ($platform == 'moocdb') {
         $strSQL = "SELECT DISTINCT extractMoocDbCourseName(SCHEMA_NAME) AS courseName
-                  FROM information_schema.SCHEMATA 
+                  FROM information_schema.SCHEMATA
                   WHERE isMoocDbCourseName(schema_name) != '' ORDER BY courseName;";
         echo "<b>MOOCDb courses archived on Datastage</b><br>";
 
     } elseif ($platform == 'openedx') {
-        $strSQL = "SELECT course_display_name AS courseName, 
-	                  enrollment(course_display_name) AS enrollment, 
-			  academic_year, 
-			  quarter
+        $strSQL = "SELECT course_display_name AS courseName,
+	                  enrollment(course_display_name) AS enrollment,
+			  -- academic_year,
+			  -- quarter,
+        start_date,
+        is_internal
                    FROM CourseInfo ORDER BY courseName;";
 
         echo "<b>OpenEdX courses archived on Datastage</b><br>";
@@ -39,7 +41,7 @@ function printCourseNames($platform) {
 
     } elseif ($platform == 'novoed') {
         $strSQL = "SELECT DISTINCT extractNovoEdCourseName(SCHEMA_NAME) AS courseName
-                   FROM information_schema.SCHEMATA 
+                   FROM information_schema.SCHEMATA
                    WHERE schema_name LIKE 'novoed%' ORDER BY courseName;";
         echo "<b>NovoEd courses archived on Datastage</b><br>";
     }
@@ -66,17 +68,18 @@ function printCourseNames($platform) {
 	      $row['courseName'] == 'course_display_name') {
 	      continue;
 	  }
-	  
+
           //*********
           // echo "ran: " . $row['academic_year'] . ':' . $row['quarter'] . '<br>';
           //*********
-        
-          if ($row['academic_year'] > 2014 ||
-              ($row['academic_year'] == 2014 && (  ($row['quarter'] == 'summer')
-	      			     	         || $row['quarter'] == 'fall'))) {
-              echo '<span class="sharable">' . $row['courseName'] . ',' . $row['enrollment'] . '</span><br />';
+
+          // if ($row['academic_year'] > 2014 ||
+          //     ($row['academic_year'] == 2014 && (  ($row['quarter'] == 'summer')
+	      	// 		     	         || $row['quarter'] == 'fall'))) {
+             if (($row['start_date' > '2014-06-14') && ($row['is_internal'] == 0)) {
+              echo '<span class="sharable">' . $row['courseName'] . ' (enrollment: ' . $row['enrollment'] . ')</span><br />';
           } else {
-              echo $row['courseName'] . ',' . $row['enrollment'] . "<br />";
+              echo $row['courseName'] . ' (enrollment: ' . $row['enrollment'] . ")<br />";
           }
       }
     }
@@ -98,5 +101,5 @@ function &prepDb() {
 
     return $mySQLDb;
 }
-	
+
 ?>
