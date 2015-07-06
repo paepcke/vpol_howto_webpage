@@ -11,13 +11,41 @@
 <h1>The Stanford MOOCPosts Data Set</h1>
 <h1 id="byline">Created by nine ODesk Consultants<br>
 under direction of<br>
-Akshay Agrawal and Andreas Paepcke
+<a href="mailto:akshayka@stanford.edu">Akshay Agrawal</a> and <a href="mailto:paepcke@cs.stanford.edu">Andreas Paepcke</a>
 </h1>
 
 The Stanford MOOCPosts dataset contains 29,604 anonymized learner
-forum posts from eleven Stanford University public online
-classes. Each post was coded along six dimensions by three independent
-coders:
+forum posts from eleven Stanford University public online classes. The
+purpose of this collection is to serve as a foundation for testing
+computational algorithms that process forum posts. You are free to use
+the corpus for academic studies. Please credit the corpus in any
+publications for which it proved useful.
+<p>
+<div id="downloadLink">
+   <a href="http://vpol.stanford.edu/research">Data application</a><br>
+<!--
+   <a href="MoocPosts/stanfordMOOCForumPostsSet.xlsx">Download Excel 2010 File</a><br>
+   <a href="MoocPosts/stanfordMOOCForumPostsSet.txt">Download
+   Tab-Separated Values File</a><br>
+-->
+</div>
+<p>
+<h2>Table of Contents</h2>
+<ul>
+  <li><a href="#corpus">The corpus</a>
+  <li><a href="#schema">Corpus schema</a>
+  <li><a href="#procedures">Procedures</a>
+    <ul>
+      <li><a href="#anonymization">Anonymization</a>
+      <li><a href="#coding">Coding process</a>
+      <li><a href="#setgen">Corpus generation</a>
+      <li><a href="#coderinstructions">Coder instructions</a>
+    </ul>
+</ul>
+<p>
+<h2 id="corpus">The Corpus</h2>
+Each post was manually coded along six dimensions by three
+independent coders:
 <ul>
 <li>Is this post a question? (Yes/No)</li>
 <li>Is this post an answer? (Yes/No)</li>
@@ -94,6 +122,10 @@ The posts are organized into three sets of related courses:
     <td>Medicine/SURG210/Managing_Emergencies_What_Every_Doctor_Must_Know</td>
     <td>279 entries</td>
   </tr>
+  <tr>
+    <td><b>Total:</b</td>
+    <td>10,002 entries</td>
+  </tr>
 </table>
 <p>
 <b>Education:</b>
@@ -112,7 +144,98 @@ The number of entries lists the posts that were presented to the
 coders. The final set is somewhat smaller, because missing data was
 removed from the coded results.
 
-<h2>Procedures</h2>
+<h2 id="schema">Corpus Schema</h2>
+
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+</style>
+<table class="tg" width="500px">
+<!-- <table class="table.readme"> -->
+  <tr>
+    <th class="tg-031e">ColumnName</th>
+    <th class="tg-031e">ValueDescription</th>
+  </tr>
+  <tr>
+    <td class="tg-031e">Text</td>
+    <td class="tg-031e">Text of one post</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Opinion(1/0</td>
+    <td class="tg-031e">binary: post contains an opinion</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Question(1/0)</td>
+    <td class="tg-031e">binary: post contains a question</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Answer(1/0)</td>
+    <td class="tg-031e">binary: post contains an answer</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Sentiment(1-7)</td>
+    <td class="tg-031e">Learner sentiment expressed in post: 1=negative; 7=positive; 4=neutral</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Confusion(1-7)</td>
+    <td class="tg-031e">Learner degree of confusion expressed in post: 1=not confused; 7=very confused</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Urgency(1-7)</td>
+    <td class="tg-031e">How urgent is it that instructor reads the post: 1=not urgent, 7=very urgent</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">CourseType</td>
+    <td class="tg-031e">One of Education, Humanities, and Medicine</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">forum_post_id</td>
+    <td class="tg-031e">Unique ID of the respective row's post in its original OpenEdX context</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">course_display_name</td>
+    <td class="tg-031e">Name of course in context of Stanford's online, free, public offerings</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">forum_uid</td>
+    <td class="tg-031e">Unique identifier of learner who posted the post</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">created_at</td>
+    <td class="tg-031e">Post date</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">post_type</td>
+    <td class="tg-031e">One of <i>Comment</i> or <i>CommentThread</i>; the
+    latter is assigned to posts that originated a thread, while the
+    former is assigned to all other posts</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">anonymous</td>
+    <td class="tg-031e">If True, poster appears to everyone as name `anonymous'</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">anonymous_to_peers</td>
+    <td class="tg-031e">If True, poster appears under his/her own
+    screen name to discussion moderator and instructor, but as 'anonymous' to everyone else.</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">up_count</td>
+    <td class="tg-031e">Number of post's up-votes</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">comment_thread_id</td>
+    <td class="tg-031e">ID of thread object</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">reads</td>
+    <td class="tg-031e">The total number of reads logged for the
+    thread with ID comment_thread_id.</td>
+  </tr>
+</table>
+
+<h2 id="procedures">Procedures</h2>
 
 Creating the final set involved several steps. First, the randomly
 chosen posts were anonymized via an automated facility. Then the
@@ -120,8 +243,15 @@ chosen posts were anonymized via an automated facility. Then the
 returned sets were then combined into one gold set. These steps are
 next described in more detail. 
 
-<h3>Anonymization</h3>
+<h3 id="anonymization">Anonymization</h3>
 
+The original forum posts were on the Web, visible to tens of thousands
+of learners who had enrolled in the respective course. Anyone,
+anywhere was free to enroll without cost, and thereby enjoyed access
+to the material. We nevertheless removed personally identifiable
+information from this research set as best we could. Here a
+description of our procedure.
+<p>
 Automated anonymization replaced identity-revealing words with a
 single word that indicates the type of revealing information being
 obscured. Example: when the anonymization algorithm detects a string
@@ -135,19 +265,26 @@ that are suspected to be zip codes are replaced by <i>&lt;zipRedac&gt;</i>, emai
 addresses are replaced by <i>&lt;emailRedac&gt;</i>. For uninteresting reasons,
 posters’ names are replaced by the more complex
 <i>&lt;nameRedac_&lt;anon_screen_name_redacted&gt;&gt;</i>.
+<p>
+The coders were asked to note any posts that still contained
+personally identifying information. A staff member went through all
+those posts, and manually redacted as per the above automated
+procedure.
 
-<h3>Coding Process</h3>
+We ask that you respect the posters' anonymity, and do not attempt to
+reconstruct redacted information.
+
+<h3 id="coding">Coding Process</h3>
 
 Each course set was coded by three distinct, independent, paid
 coders. That is three triplets of coders each worked on one set of
 10,000 posts. No coder worked on more than one course set. Each coder
 attempted to code every post for his or her particular set. All posts
 with malformed or missing scores in at least one coder’s spreadsheet
-were discarded. This elision accounts for the difference of 29,604
-between the total number of posts in the final set, and the original
-30,002 posts.
+were discarded. This elision accounts for the difference between the
+29,604 posts in the final set, and the original 30,002 posts.
 
-<h3>Generating the Gold Sets</h3>
+<h3 id="setgen">Generating the Gold Sets</h3>
 
 We employed the following heuristics in computing scores for the gold
 sets: For each course set and <b>Likert variable</b> in that course
@@ -160,35 +297,42 @@ therefore picked the coder combination that achieved the highest
 agreement and discarded the scores from the coder not included in that
 combination. A given post’s gold score was computed as an unweighted
 average of the two scores assigned to it by the selected coder
-combination. 
-
-<h3>Downloads</h3>
-
-The main three files are the <a href="education-gold.xlsx">Education
-set</a>, the <a href="humanities-gold.xlsx">Humanities</a> set, and
-the <a href="medicine-gold.xlsx">Medicine</a> set.
-<p>
-If you are interested in the intermediate files, you can download CSVs
-containing scores submitted by the
+combination. You can download CSV files containing scores submitted by
+the
 <a href="likert-coder-combinations">
 optimal coder combination for each Likert variable, across all three
-course sets</a>.
+course sets</a>. Each row in these files correspond to one row in the
+gold set. The two columns in each file list the scores given by the
+two most similar coders. The gold set contains the average of those
+number pairs. For example, file education-pair-confusion.csv lists for
+each post the confusion scores given by the coders with the highest
+Krippendorff alpha around the confusion dimension. Note: you can use
+these files to compute your own inter-coder reliability score between
+the two coders.
 <p>
-For each course set's <b>binary variable</b>, posts’ gold scores were
-chosen by majority votes across all three coders.  Download CSV files
-with <a href="binary-scores-pre-vote"> scores submitted
-by all three coders for every binary variable, across all course
-sets</a>, and
+For each course set's <b>binary variable</b>, post gold scores were
+chosen by majority vote across all three coders.  Download CSV files
+with <a href="binary-scores-pre-vote"> scores submitted by all three
+coders for every binary variable, across all course sets</a>, and
 the <a href="binary-scores-pre-vote/consensus"> consensus
-files</a>.
+files</a>. Note: you can use these files to compute your own
+inter-coder reliability score between the three coders with respect to
+each binary quantity.
 <p>
-The <a href="Krippendorff.xlsx"> spreadsheet titled Krippendorff</a>
-enumerates the Krippendorff alphas for the CSVs of Likert and binary
-variables. Note that the spreadsheet contains two worksheets. Beware
-that some of the Alphas are weak!  Alphas were computed
-using <code>ReCal</code>, a free online tool. Likert variables were
-treated as interval data, while binary variables were treated as
-nominal.
+The <a href="Krippendorff.xlsx"> spreadsheet titled
+Krippendorff</a> enumerates the Krippendorff alphas for the CSVs of
+Likert and binary variables. Note that the spreadsheet contains two
+worksheets. Alphas were computed using <code>ReCal</code>, a free
+online tool. Likert variables were treated as interval data, while
+binary variables were treated as nominal.
 
+<h3 id="coderinstructions">Coder Instructions</h3>
+The <a href="CoderInstructions.pdf">coder instructions</a> were posted
+on <a href="https://www.odesk.com/">oDesk</a>. We hired nine
+colleagues for the task. During the first week of coding some
+questions arose, which we answered immediately. The most important
+clarification was that it was possible for a post to have multiple
+binary dimensions be true. That is, a post could express both a
+question, and an opinion.
 </body>
 </html>

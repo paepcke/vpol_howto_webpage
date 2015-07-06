@@ -1,0 +1,848 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>README</title>
+<LINK href="README.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>The Stanford MOOCPosts Data Set</h1>
+<h1 id="byline">Created by nine ODesk Consultants<br>
+under direction of<br>
+<a href="mailto:akshayka@stanford.edu">Akshay Agrawal</a> and <a href="mailto:paepcke@cs.stanford.edu">Andreas Paepcke</a>
+</h1>
+
+The Stanford MOOCPosts dataset contains 29,604 anonymized learner
+forum posts from eleven Stanford University public online classes. The
+purpose of this collection is to serve as a foundation for testing
+computational algorithms that process forum posts. You are free to use
+the corpus for academic studies. Please credit the corpus in any
+publications for which it proved useful.
+<p>
+<div id="downloadLink">
+   <a href="http://vpol.stanford.edu/research">Data application</a><br>
+<!--
+   <a href="MoocPosts/stanfordMOOCForumPostsSet.xlsx">Download Excel 2010 File</a><br>
+   <a href="MoocPosts/stanfordMOOCForumPostsSet.txt">Download
+   Tab-Separated Values File</a><br>
+-->
+</div>
+<p>
+<h2>Table of Contents</h2>
+<ul>
+  <li><a href="#corpus">The corpus</a>
+  <li><a href="#schema">Corpus schema</a>
+  <li><a href="#demographics">Corpus demographics</a>
+  <li><a href="#procedures">Procedures</a>
+    <ul>
+      <li><a href="#anonymization">Anonymization</a>
+      <li><a href="#coding">Coding process</a>
+      <li><a href="#setgen">Corpus generation</a>
+      <li><a href="#coderinstructions">Coder instructions</a>
+    </ul>
+  <li><a href="#appendix1">Appendix: Corpus Learner Origins</a>
+</ul>
+<p>
+<h2 id="corpus">The Corpus</h2>
+Each post was manually coded along six dimensions by three
+independent coders:
+<ul>
+<li>Is this post a question? (Yes/No)</li>
+<li>Is this post an answer? (Yes/No)</li>
+<li>Is this post an opinion? (Yes/No)</li>
+<li>What sentiment does this post express? (1-7)</li>
+<li>How much confusion does this post express? (1-7)</li>
+<li>How urgent is it that this post be seen by an instructor? (1-7)</li>
+</ul>
+
+In addition, coders were asked to flag posts in which our automated
+anonymization program had failed, and that therefore revealed any
+poster's identity. These posts were then manually
+anonymized. Intercoder reliability was computed, and separate 'gold'
+codings were derived for each of the dimensions. This procedure is
+described <a href="#procedures">below</a>.
+<p>
+The posts are organized into three sets of related courses:
+<p>
+<b>Humanities/Sciences:</b>
+<table class="table.readme">
+  <tr>
+    <th>Course Name</th>
+    <th>Number of Entries</th>
+  </tr>
+  <tr>
+    <td>GlobalHealth/WomensHealth/Winter2014</td>
+    <td>2,254 entries</td>
+  </tr>
+  <tr>
+    <td>HumanitiesScience/StatLearning/Winter2014</td>
+    <td>3,112 entries</td>
+  </tr>
+  <tr>
+    <td>HumanitiesScience/Stats216/Winter2014</td>
+    <td>341 entries</td>
+  </tr>
+  <tr>
+    <td>HumanitiesSciences/EP101/Environmental_Physiology</td>
+    <td>2,549 entries</td>
+  </tr>
+  <tr>
+    <td>HumanitiesSciences/Econ-1/Summer2014</td>
+    <td>1,584 entries</td>
+  </tr>
+  <tr>
+    <td>HumanitiesSciences/Econ1V/Summer2014</td>
+    <td>160 entries</td>
+  </tr>
+  <tr>
+    <td><b>Total:</b</td>
+    <td>10,000 entries</td>
+  </tr>
+</table>
+<p>
+<b>Medicine:</b>
+<table class="table.readme">
+  <tr>
+    <th>Course Name</th>
+    <th>Number of Entries</th>
+  </tr>
+  <tr>
+    <td>Medicine/HRP258/Statistics_in_Medicine</td>
+    <td>3,321 entries</td>
+  </tr>
+  <tr>
+    <td>Medicine/MedStats/Summer2014</td>
+    <td>1,218 entries</td>
+  </tr>
+  <tr>
+    <td>Medicine/SciWrite/Fall2013</td>
+    <td>5,184 entries</td>
+  </tr>
+  <tr>
+    <td>Medicine/SURG210/Managing_Emergencies_What_Every_Doctor_Must_Know</td>
+    <td>279 entries</td>
+  </tr>
+  <tr>
+    <td><b>Total:</b</td>
+    <td>10,002 entries</td>
+  </tr>
+</table>
+<p>
+<b>Education:</b>
+<table class="table.readme">
+  <tr>
+    <th>Course Name</th>
+    <th>Number of Entries</th>
+  </tr>
+  <tr>
+    <td>Education/EDUC115N/How_to_Learn_Math</td>
+    <td>10,000 entries</td>
+  </tr>
+</table>
+<p>
+The number of entries lists the posts that were presented to the
+coders. The final set is somewhat smaller, because missing data was
+removed from the coded results.
+
+<h2 id="schema">Corpus Schema</h2>
+
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+</style>
+<table class="tg" width="500px">
+<!-- <table class="table.readme"> -->
+  <tr>
+    <th class="tg-031e">ColumnName</th>
+    <th class="tg-031e">ValueDescription</th>
+  </tr>
+  <tr>
+    <td class="tg-031e">Text</td>
+    <td class="tg-031e">Text of one post</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Opinion(1/0</td>
+    <td class="tg-031e">binary: post contains an opinion</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Question(1/0)</td>
+    <td class="tg-031e">binary: post contains a question</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Answer(1/0)</td>
+    <td class="tg-031e">binary: post contains an answer</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Sentiment(1-7)</td>
+    <td class="tg-031e">Learner sentiment expressed in post: 1=negative; 7=positive; 4=neutral</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Confusion(1-7)</td>
+    <td class="tg-031e">Learner degree of confusion expressed in post: 1=not confused; 7=very confused</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Urgency(1-7)</td>
+    <td class="tg-031e">How urgent is it that instructor reads the post: 1=not urgent, 7=very urgent</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">CourseType</td>
+    <td class="tg-031e">One of Education, Humanities, and Medicine</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">forum_post_id</td>
+    <td class="tg-031e">Unique ID of the respective row's post in its original OpenEdX context</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">course_display_name</td>
+    <td class="tg-031e">Name of course in context of Stanford's online, free, public offerings</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">forum_uid</td>
+    <td class="tg-031e">Unique identifier of learner who posted the post</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">created_at</td>
+    <td class="tg-031e">Post date</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">post_type</td>
+    <td class="tg-031e">One of <i>Comment</i> or <i>CommentThread</i>; the
+    latter is assigned to posts that originated a thread, while the
+    former is assigned to all other posts</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">anonymous</td>
+    <td class="tg-031e">If True, poster appears to everyone as name `anonymous'</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">anonymous_to_peers</td>
+    <td class="tg-031e">If True, poster appears under his/her own
+    screen name to discussion moderator and instructor, but as 'anonymous' to everyone else.</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">up_count</td>
+    <td class="tg-031e">Number of post's up-votes</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">comment_thread_id</td>
+    <td class="tg-031e">ID of thread object</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">reads</td>
+    <td class="tg-031e">The total number of reads logged for the
+    thread with ID comment_thread_id.</td>
+  </tr>
+</table>
+
+<h2 id="demographics">Corpus Demographics</h2>
+
+The following table shows self-reported gender and education
+distribution for all but one of the courses. Course
+HumanitiesSciences/Econ1V/Summer2014 was small, and its demographics
+are folded into course HumanitiesSciences/Econ1/Summer2014. For
+convenience,
+an <a href="stanfordMOOCForumPostsSetDemographics.xlsx">Excel
+version</a> is available.
+<p>
+Column header <i>GenderO</i> stands for <i>Other</i>.
+</i>Column <i>EduNotCollected</i> shows the number of learners who
+enrolled before the level of education was collected by the OpenEdX
+software.
+
+<table border="1" class="table.readme">
+<tr>
+    <td></td>
+    <td>GenderF</td>
+    <td>GenderM</td>
+    <td>GenderO</td>
+    <td>GenderWithheld</td>
+    <td>EduElementary</td>
+    <td>EduJunHighSchool</td>
+    <td>EduHighSchool</td>
+    <td>EduAssocDeg</td>
+    <td>EduBachelors</td>
+    <td>EduMasters</td>
+    <td>EduPhD</td>
+    <td>EduOther</td>
+    <td>EduNone</td>
+    <td>EduWithheld</td>
+    <td>EduNotCollected</td>
+</tr>
+<tr><td>GlobalHealth/WomensHealth/Winter2014</td>
+    <td>5049</td><td>647</td><td>22</td><td>190</td><td>5</td><td>56</td><td>689</td>
+    <td>245</td><td>2278</td><td>2050</td><td>273</td><td>112</td><td>6</td><td>187</td><td>7</td>
+</tr>
+<tr><td>HumanitiesScience/StatLearning/Winter2014
+    </td><td>10793</td><td>37124</td><td>92</td><td>5559</td><td>30</td><td>130</td>
+    <td>2522</td><td>603</td><td>15367</td><td>21827</td><td>7824</td><td>320</td>
+    <td>61</td><td>4703</td><td>181</td>
+</tr>
+<tr><td>HumanitiesScience/Stats216/Winter2014</td>
+    <td>9</td><td>25</td><td>0</td><td>258</td><td>0</td><td>0</td><td>6</td><td>0</td>
+    <td>16</td><td>9</td><td>3</td><td>0</td><td>0</td><td>12</td><td>246</td>
+</tr>
+<tr><td>HumanitiesSciences/EP101/Environmental_Physiology</td>
+    <td>5831</td><td>6416</td><td>31</td><td>1009</td><td>41</td><td>359</td><td>1768</td>
+    <td>523</td><td>4329</td><td>4198</td><td>894</td><td>232</td><td>24</td><td>894</td>
+    <td>25</td>
+</tr>
+<tr><td>HumanitiesSciences/Econ-1[+V]/Summer2014</td>
+    <td>6321</td><td>14774</td><td>53</td><td>1803</td><td>50</td><td>451</td><td>3392</td>
+    <td>681</td><td>8065</td><td>7122</td><td>1291</td><td>241</td><td>44</td><td>1536</td>
+    <td>78</td>
+</tr>
+<tr><td>Medicine/HRP258/Statistics_in_Medicine</td>
+    <td>9925</td><td>15215</td><td>65</td><td>2472</td><td>29</td><td>239</td><td>2036</td>
+    <td>520</td><td>7306</td><td>10193</td><td>4810</td><td>353</td><td>41</td><td>2098</td>
+    <td>52</td>
+</tr>
+<tr><td>Medicine/MedStats/Summer2014</td>
+    <td>6465</td><td>9132</td><td>28</td><td>1246</td><td>17</td><td>147</td><td>1379</td>
+    <td>251</td><td>4497</td><td>6399</td><td>2859</td><td>207</td><td>22</td><td>1030</td>
+    <td>63</td>
+</tr>
+<tr><td>Medicine/Sci Write/Fall2013</td>
+    <td>21004</td><td>24414</td><td>75</td><td>3402</td><td>45</td><td>298</td><td>3897</td>
+    <td>701</td><td>12435</td><td>19630</td><td>8463</td><td>429</td><td>46</td><td>2909</td>
+    <td>42</td>
+</tr>
+<tr><td>Medicine/SURG210/Managing_Emergencies_What...</td>
+    <td>43</td><td>82</td><td>0</td><td>67</td><td>1</td><td>0</td><td>62</td><td>0</td>
+    <td>33</td><td>15</td><td>13</td><td>0</td><td>0</td><td>10</td><td>58</td>
+</tr>
+<tr><td>Education/EDUC115N/How_to_Learn_Math</td>
+    <td>24565</td><td>14563</td><td>77</td><td>2571</td><td>136</td><td>318</td><td>2930</td>
+    <td>1163</td><td>13791</td><td>18583</td><td>2279</td><td>447</td><td>83</td><td>2041</td>
+    <td>5</td>
+</tr>
+</table>
+
+
+<h2 id="procedures">Procedures</h2>
+
+Creating the final set involved several steps. First, the randomly
+chosen posts were anonymized via an automated facility. Then the
+30,000 posts were distributed to ODesk consultants for coding. The
+returned sets were then combined into one gold set. These steps are
+next described in more detail. 
+
+<h3 id="anonymization">Anonymization</h3>
+
+The original forum posts were on the Web, visible to tens of thousands
+of learners who had enrolled in the respective course. Anyone,
+anywhere was free to enroll without cost, and thereby enjoyed access
+to the material. We nevertheless removed personally identifiable
+information from this research set as best we could. Here a
+description of our procedure.
+<p>
+Automated anonymization replaced identity-revealing words with a
+single word that indicates the type of revealing information being
+obscured. Example: when the anonymization algorithm detects a string
+that might be a telephone number, the string is replaced
+with <i>&lt;phoneRedac&gt;</i>. Some such fillers contain underscores, all are
+delimited by angle brackets. Except for rare cases of a full,
+two-part name being redacted, word count of the posts is thus the
+same as the original, as long as the tokenizer underneath the word
+counter considers the terms in angle brackets as one token. Strings
+that are suspected to be zip codes are replaced by <i>&lt;zipRedac&gt;</i>, email
+addresses are replaced by <i>&lt;emailRedac&gt;</i>. For uninteresting reasons,
+posters’ names are replaced by the more complex
+<i>&lt;nameRedac_&lt;anon_screen_name_redacted&gt;&gt;</i>.
+<p>
+The coders were asked to note any posts that still contained
+personally identifying information. A staff member went through all
+those posts, and manually redacted as per the above automated
+procedure.
+
+We ask that you respect the posters' anonymity, and do not attempt to
+reconstruct redacted information.
+
+<h3 id="coding">Coding Process</h3>
+
+Each course set was coded by three distinct, independent, paid
+coders. That is three triplets of coders each worked on one set of
+10,000 posts. No coder worked on more than one course set. Each coder
+attempted to code every post for his or her particular set. All posts
+with malformed or missing scores in at least one coder’s spreadsheet
+were discarded. This elision accounts for the difference between the
+29,604 posts in the final set, and the original 30,002 posts.
+
+<h3 id="setgen">Generating the Gold Sets</h3>
+
+We employed the following heuristics in computing scores for the gold
+sets: For each course set and <b>Likert variable</b> in that course
+set, we computed the
+<a href="http://en.wikipedia.org/wiki/Krippendorff%27s_alpha">Krippendorff
+alphas</a> for all possible combinations of coders. In every case, we
+found that some combination of two coders achieved higher agreement
+than the combination of all three coders. For each variable we
+therefore picked the coder combination that achieved the highest
+agreement and discarded the scores from the coder not included in that
+combination. A given post’s gold score was computed as an unweighted
+average of the two scores assigned to it by the selected coder
+combination. You can download CSV files containing scores submitted by
+the
+<a href="likert-coder-combinations">
+optimal coder combination for each Likert variable, across all three
+course sets</a>. Each row in these files correspond to one row in the
+gold set. The two columns in each file list the scores given by the
+two most similar coders. The gold set contains the average of those
+number pairs. For example, file education-pair-confusion.csv lists for
+each post the confusion scores given by the coders with the highest
+Krippendorff alpha around the confusion dimension. Note: you can use
+these files to compute your own inter-coder reliability score between
+the two coders.
+<p>
+For each course set's <b>binary variable</b>, post gold scores were
+chosen by majority vote across all three coders.  Download CSV files
+with <a href="binary-scores-pre-vote"> scores submitted by all three
+coders for every binary variable, across all course sets</a>, and
+the <a href="binary-scores-pre-vote/consensus"> consensus
+files</a>. Note: you can use these files to compute your own
+inter-coder reliability score between the three coders with respect to
+each binary quantity.
+<p>
+The <a href="Krippendorff.xlsx"> spreadsheet titled
+Krippendorff</a> enumerates the Krippendorff alphas for the CSVs of
+Likert and binary variables. Note that the spreadsheet contains two
+worksheets. Alphas were computed using <code>ReCal</code>, a free
+online tool. Likert variables were treated as interval data, while
+binary variables were treated as nominal.
+
+<h3 id="coderinstructions">Coder Instructions</h3>
+The <a href="CoderInstructions.pdf">coder instructions</a> were posted
+on <a href="https://www.odesk.com/">oDesk</a>. We hired nine
+colleagues for the task. During the first week of coding some
+questions arose, which we answered immediately. The most important
+clarification was that it was possible for a post to have multiple
+binary dimensions be true. That is, a post could express both a
+question, and an opinion.
+
+<h2 id="appendix1">Appendix: Corpus Learner Origins</h2>
+
+The following tables show course countries of learner origins for
+countries that contributed more than 100 learners to a respective
+course. Courses without a table below only hosted learners in
+which no country contributed more than 100 learners.
+
+<pre>
+GlobalHealth/WomensHealth/Winter2014:
++----------------+------------------+
+| country        | LearnerCountries |
++----------------+------------------+
+| Australia      |              205 |
+| Brazil         |              136 |
+| Canada         |              310 |
+| China          |              134 |
+| France         |              145 |
+| Germany        |              173 |
+| India          |              254 |
+| Reserved       |              107 |
+| United Kingdom |              409 |
+| United States  |             2973 |
++----------------+------------------+
+<p>
+
+HumanitiesScience/StatLearning/Winter2014:
++---------------------------------+------------------+
+| country                         | LearnerCountries |
++---------------------------------+------------------+
+| Argentina                       |              246 |
+| Australia                       |             1312 |
+| Austria                         |              632 |
+| Bangladesh                      |              103 |
+| Belarus                         |              103 |
+| Belgium                         |              326 |
+| Brazil                          |             1131 |
+| Bulgaria                        |              151 |
+| Canada                          |             1931 |
+| Chile                           |              195 |
+| China                           |             3794 |
+| Colombia                        |              380 |
+| Croatia (LOCAL Name: Hrvatska)  |              138 |
+| Czech Republic                  |              324 |
+| Denmark                         |              411 |
+| Egypt                           |              407 |
+| European Union                  |              175 |
+| Finland                         |              307 |
+| France                          |             1464 |
+| Germany                         |             2327 |
+| Greece                          |              386 |
+| Hong Kong                       |              549 |
+| Hungary                         |              168 |
+| India                           |             5272 |
+| Indonesia                       |              210 |
+| Iran (ISLAMIC Republic Of)      |              319 |
+| Ireland                         |              250 |
+| Israel                          |              362 |
+| Italy                           |              976 |
+| Japan                           |              887 |
+| Kenya                           |              138 |
+| Korea Republic of               |              977 |
+| Lithuania                       |              225 |
+| Malaysia                        |              213 |
+| Mexico                          |              535 |
+| Netherlands                     |              910 |
+| New Zealand                     |              246 |
+| Nigeria                         |              116 |
+| Norway                          |              600 |
+| Pakistan                        |              314 |
+| Peru                            |              164 |
+| Philippines                     |              175 |
+| Poland                          |              824 |
+| Portugal                        |              308 |
+| Reserved                        |             1356 |
+| Romania                         |              316 |
+| Russian Federation              |             1377 |
+| Saudi Arabia                    |              167 |
+| Serbia                          |              155 |
+| Singapore                       |              888 |
+| Slovakia (SLOVAK Republic)      |              141 |
+| South Africa                    |              286 |
+| Spain                           |             1692 |
+| Sweden                          |              761 |
+| Switzerland                     |              593 |
+| Taiwan; Republic of China (ROC) |              447 |
+| Thailand                        |              144 |
+| Turkey                          |              273 |
+| Ukraine                         |              307 |
+| United Arab Emirates            |              147 |
+| United Kingdom                  |             3140 |
+| United States                   |            23138 |
+| Venezuela                       |              128 |
+| Viet Nam                        |              261 |
++---------------------------------+------------------+
+<p>
+
+HumanitiesSciences/EP101/Environmental_Physiology:
++--------------------+------------------+
+| country            | LearnerCountries |
++--------------------+------------------+
+| Australia          |              352 |
+| Austria            |              136 |
+| Brazil             |              315 |
+| Canada             |              497 |
+| China              |              433 |
+| Colombia           |              136 |
+| Denmark            |              116 |
+| Egypt              |              165 |
+| France             |              323 |
+| Germany            |              472 |
+| Greece             |              159 |
+| Hong Kong          |              111 |
+| India              |              858 |
+| Italy              |              223 |
+| Japan              |              165 |
+| Korea Republic of  |              105 |
+| Mexico             |              222 |
+| Netherlands        |              180 |
+| Norway             |              122 |
+| Pakistan           |              127 |
+| Poland             |              234 |
+| Reserved           |              251 |
+| Romania            |              207 |
+| Russian Federation |              446 |
+| Singapore          |              144 |
+| Spain              |              288 |
+| Sweden             |              138 |
+| Switzerland        |              104 |
+| Turkey             |              103 |
+| Ukraine            |              183 |
+| United Kingdom     |              710 |
+| United States      |             5413 |
++--------------------+------------------+
+<p>
+
+HumanitiesSciences/Econ-1/Summer2014:
++---------------------------------+------------------+
+| country                         | LearnerCountries |
++---------------------------------+------------------+
+| Argentina                       |              124 |
+| Australia                       |              722 |
+| Austria                         |              213 |
+| Belgium                         |              139 |
+| Brazil                          |              799 |
+| Canada                          |              703 |
+| Chile                           |              134 |
+| China                           |             1625 |
+| Colombia                        |              251 |
+| Czech Republic                  |              107 |
+| Denmark                         |              156 |
+| Egypt                           |              920 |
+| France                          |              596 |
+| Germany                         |              756 |
+| Greece                          |              191 |
+| Hong Kong                       |              291 |
+| India                           |             2616 |
+| Indonesia                       |              146 |
+| Iran (ISLAMIC Republic Of)      |              143 |
+| Ireland                         |              111 |
+| Israel                          |              130 |
+| Italy                           |              369 |
+| Japan                           |              429 |
+| Korea Republic of               |              279 |
+| Malaysia                        |              177 |
+| Mexico                          |              385 |
+| Netherlands                     |              299 |
+| Nigeria                         |              140 |
+| Norway                          |              213 |
+| Pakistan                        |              250 |
+| Peru                            |              127 |
+| Philippines                     |              143 |
+| Poland                          |              277 |
+| Portugal                        |              114 |
+| Reserved                        |              667 |
+| Romania                         |              201 |
+| Russian Federation              |              548 |
+| Saudi Arabia                    |              208 |
+| Singapore                       |              425 |
+| South Africa                    |              146 |
+| Spain                           |              454 |
+| Sweden                          |              253 |
+| Switzerland                     |              207 |
+| Taiwan; Republic of China (ROC) |              198 |
+| Turkey                          |              200 |
+| Ukraine                         |              187 |
+| United Arab Emirates            |              166 |
+| United Kingdom                  |             1343 |
+| United States                   |             7737 |
+| Viet Nam                        |              195 |
++---------------------------------+------------------+
+50 rows in set (2.78 sec)
+<p>
+
+Medicine/HRP258/Statistics_in_Medicine:
++---------------------------------+------------------+
+| country                         | LearnerCountries |
++---------------------------------+------------------+
+| Argentina                       |              118 |
+| Australia                       |              805 |
+| Austria                         |              257 |
+| Belgium                         |              146 |
+| Brazil                          |              485 |
+| Canada                          |              925 |
+| Chile                           |              108 |
+| China                           |              917 |
+| Colombia                        |              225 |
+| Croatia (LOCAL Name: Hrvatska)  |              104 |
+| Czech Republic                  |              109 |
+| Denmark                         |              226 |
+| Egypt                           |              695 |
+| Finland                         |              119 |
+| France                          |              649 |
+| Germany                         |              936 |
+| Greece                          |              255 |
+| Hong Kong                       |              182 |
+| India                           |             2127 |
+| Iran (ISLAMIC Republic Of)      |              241 |
+| Ireland                         |              141 |
+| Israel                          |              129 |
+| Italy                           |              504 |
+| Japan                           |              342 |
+| Kenya                           |              316 |
+| Korea Republic of               |              217 |
+| Lithuania                       |              133 |
+| Malaysia                        |              142 |
+| Mexico                          |              316 |
+| Morocco                         |              104 |
+| Netherlands                     |              407 |
+| New Zealand                     |              103 |
+| Nigeria                         |              155 |
+| Norway                          |              347 |
+| Pakistan                        |              412 |
+| Poland                          |              376 |
+| Portugal                        |              226 |
+| Reserved                        |              419 |
+| Romania                         |              231 |
+| Russian Federation              |              465 |
+| Saudi Arabia                    |              262 |
+| Singapore                       |              246 |
+| South Africa                    |              161 |
+| Spain                           |              611 |
+| Sweden                          |              386 |
+| Switzerland                     |              244 |
+| Taiwan; Republic of China (ROC) |              112 |
+| Turkey                          |              105 |
+| Ukraine                         |              102 |
+| United Arab Emirates            |              106 |
+| United Kingdom                  |             1627 |
+| United States                   |            10403 |
+| Viet Nam                        |              195 |
++---------------------------------+------------------+
+<p>
+
+Medicine/MedStats/Summer2014:
++---------------------------------+------------------+
+| country                         | LearnerCountries |
++---------------------------------+------------------+
+| Australia                       |              550 |
+| Austria                         |              191 |
+| Belgium                         |              121 |
+| Brazil                          |              449 |
+| Canada                          |              637 |
+| China                           |              613 |
+| Colombia                        |              177 |
+| Czech Republic                  |              117 |
+| Denmark                         |              246 |
+| Egypt                           |             1064 |
+| France                          |              489 |
+| Germany                         |              642 |
+| Greece                          |              160 |
+| Hong Kong                       |              137 |
+| India                           |             1405 |
+| Iran (ISLAMIC Republic Of)      |              192 |
+| Italy                           |              395 |
+| Japan                           |              281 |
+| Kenya                           |              164 |
+| Korea Republic of               |              229 |
+| Malaysia                        |              112 |
+| Mexico                          |              289 |
+| Netherlands                     |              354 |
+| Nigeria                         |              171 |
+| Norway                          |              229 |
+| Pakistan                        |              272 |
+| Poland                          |              330 |
+| Portugal                        |              147 |
+| Reserved                        |              562 |
+| Romania                         |              228 |
+| Russian Federation              |              373 |
+| Saudi Arabia                    |              236 |
+| Singapore                       |              161 |
+| South Africa                    |              138 |
+| Spain                           |              532 |
+| Sweden                          |              283 |
+| Switzerland                     |              180 |
+| Taiwan; Republic of China (ROC) |              115 |
+| Turkey                          |              107 |
+| United Arab Emirates            |              109 |
+| United Kingdom                  |             1242 |
+| United States                   |             5954 |
+| Viet Nam                        |              108 |
++---------------------------------+------------------+
+43 rows in set (2.37 sec)
+
+<p>
+Medicine/wSURG210/Managing_Emergencies_What_Every_Doctor_Must_Know:
++---------------------------------+------------------+
+| country                         | LearnerCountries |
++---------------------------------+------------------+
+| Argentina                       |              392 |
+| Australia                       |             1284 |
+| Austria                         |              676 |
+| Belgium                         |              318 |
+| Brazil                          |             2119 |
+| Bulgaria                        |              124 |
+| Canada                          |             1489 |
+| Chile                           |              331 |
+| China                           |             2921 |
+| Colombia                        |             1030 |
+| Croatia (LOCAL Name: Hrvatska)  |              154 |
+| Czech Republic                  |              256 |
+| Denmark                         |              392 |
+| Ecuador                         |              121 |
+| Egypt                           |              886 |
+| European Union                  |              109 |
+| Finland                         |              293 |
+| France                          |             1382 |
+| Germany                         |             2502 |
+| Greece                          |              469 |
+| Hong Kong                       |              444 |
+| Hungary                         |              153 |
+| India                           |             3383 |
+| Indonesia                       |              246 |
+| Iran (ISLAMIC Republic Of)      |              750 |
+| Ireland                         |              233 |
+| Israel                          |              245 |
+| Italy                           |             1139 |
+| Japan                           |              742 |
+| Kenya                           |              201 |
+| Korea Republic of               |              585 |
+| Lithuania                       |              225 |
+| Malaysia                        |              301 |
+| Mexico                          |              766 |
+| Morocco                         |              139 |
+| Netherlands                     |              917 |
+| New Zealand                     |              269 |
+| Nigeria                         |              201 |
+| Norway                          |              708 |
+| Pakistan                        |              615 |
+| Peru                            |              230 |
+| Philippines                     |              248 |
+| Poland                          |             1667 |
+| Portugal                        |              593 |
+| Reserved                        |              626 |
+| Romania                         |              428 |
+| Russian Federation              |             1513 |
+| Saudi Arabia                    |              398 |
+| Serbia                          |              206 |
+| Singapore                       |              408 |
+| Slovakia (SLOVAK Republic)      |              163 |
+| South Africa                    |              292 |
+| Spain                           |             2329 |
+| Sri Lanka                       |              112 |
+| Sweden                          |              722 |
+| Switzerland                     |              488 |
+| Taiwan; Republic of China (ROC) |              311 |
+| Thailand                        |              194 |
+| Turkey                          |              351 |
+| Ukraine                         |              475 |
+| United Arab Emirates            |              168 |
+| United Kingdom                  |             2583 |
+| United States                   |            12938 |
+| Venezuela                       |              106 |
+| Viet Nam                        |              381 |
++---------------------------------+------------------+
+<p>
+Education/EDUC115N/How_to_Learn_Math:
++----------------------+------------------+
+| country              | LearnerCountries |
++----------------------+------------------+
+| Australia            |             1193 |
+| Austria              |              196 |
+| Brazil               |              418 |
+| Canada               |             1765 |
+| China                |              609 |
+| Colombia             |              192 |
+| Denmark              |              178 |
+| Egypt                |              131 |
+| Finland              |              106 |
+| France               |              488 |
+| Germany              |              711 |
+| Greece               |              203 |
+| Hong Kong            |              154 |
+| India                |             1543 |
+| Indonesia            |              121 |
+| Ireland              |              122 |
+| Israel               |              123 |
+| Italy                |              336 |
+| Japan                |              215 |
+| Korea Republic of    |              132 |
+| Malaysia             |              129 |
+| Mexico               |              370 |
+| Netherlands          |              170 |
+| New Zealand          |              380 |
+| Norway               |              181 |
+| Pakistan             |              251 |
+| Philippines          |              230 |
+| Poland               |              204 |
+| Reserved             |              326 |
+| Romania              |              200 |
+| Russian Federation   |              402 |
+| Singapore            |              224 |
+| South Africa         |              264 |
+| Spain                |              371 |
+| Sweden               |              346 |
+| Switzerland          |              120 |
+| Turkey               |              109 |
+| Ukraine              |              115 |
+| United Arab Emirates |              126 |
+| United Kingdom       |             1965 |
+| United States        |            23099 |
++----------------------+------------------+
+
+</pre>
+</body>
+</html>

@@ -177,7 +177,11 @@ missing data.
 
  <li><b>UserGrade</b>: Raw grades as recorded by the platform. An
    amalgam of the platform tables auth_user and
-   certificates_generatedcertificate.</li>
+   certificates_generatedcertificate. This table is not normally
+   shared, as it includes personally identifiable
+   information. However, the anonymized view onto UserGrade:
+   FinalGrade (see above) is the table to use for anonymized grade and
+   distinction information.</li>
 
  <li><b>ABExperiment</b>: Data resulting from the use of the OpenEdX AB
    testing facilities.</li>
@@ -552,7 +556,10 @@ activities, so this table can underestimate video activity frequency.
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">video_current_time</td>
-    <td class="tg-031e">Video player's current playhead time</td>
+    <td class="tg-031e">Video player's current playhead
+    time. <b>Note:</b> we have observed that this time
+    is in some records incorrectly large, or negative.
+    You'll want to do bound checking when using this column.</td>
   </tr>
   <tr>
     <td class="tg-031e">video_speed</td>
@@ -568,11 +575,17 @@ activities, so this table can underestimate video activity frequency.
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">video_new_time</td>
-    <td class="tg-031e">For video seek: new playhead time</td>
+    <td class="tg-031e">For video seek: new playhead time.  
+      <b>Note:</b> we have observed that this time
+      is in some records incorrectly large, or negative.
+      You'll want to do bound checking when using this column.</td>
   </tr>
   <tr>
     <td class="tg-031e">video_old_time</td>
-    <td class="tg-031e">For video seek: old playhead time</td>
+    <td class="tg-031e">For video seek: old playhead time.  
+      <b>Note:</b> we have observed that this time
+      is in some records incorrectly large, or negative.
+      You'll want to do bound checking when using this column.</td>
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">video_seek_type</td>
@@ -1513,6 +1526,32 @@ statement, and a return variable must be provided. The idiom is:
 CALL computeEnrollmentCoursera('antimicrobial-001', @theEnrollment);
 SELECT @theEnrollment;
 </pre>
+<p>
+A word about the functions that begin with 'id', such as idAnon2Ext().
+These are functions that convert between a number of learner IDs that
+are used (i) in Datastage's tables, (2) in tables created by the EdX
+platform, and (3) as learner IDs given to outside learning tool
+vendors. 
+<p>
+Instead of personally identifiable learner names, Datastage uses in
+its tables a 20-byte hash, which is always in column
+anon_screen_name. This ID shows up as the <i>Anon</i> in the above
+conversion function name.
+<p>
+Meanwhile, the OpenEdX platform code uses a different integer ID for
+each learner. We call those IDs a learner's <i>Int</i> id. You will
+see functions with embedded <i>Int</i>, such as idAnon2Int().
+<p>
+A third source of IDs for any given learner are 16-byte hashes that
+OpenEdX produces in line with the Learning Technology Interchange
+(LTI) method of generating IDs. OpenEdX assigns each learner a
+different LTI ID for each course they enroll in. Also assigned to each
+learner is one distinguished LTI ID that is independent from any
+course: the learner's <i>Global LTI ID</i>.  For historic reasons, we
+call a learner's LTI IDs their <i>External</i> IDs. You will see
+function names that include the letters <i>Ext</i>, which stands for
+external (e.g. idAnon2Ext())
+<p>
 
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
@@ -1546,16 +1585,33 @@ SELECT @theEnrollment;
     <td class="tg-031e">takes an integer learner ID as used in OpenEdX production tables. Returns the corresponding anon_screen_name hash value used in the archive.<br></td>
   </tr>
   <tr>
-    <td class="tg-e3zv">idAnon2Ext(anon_screen_name, course_display_name)</td>
+    <td class="tg-e3zv">idAnon2Ext(anon_screen_name)</td>
+    <td class="tg-031e">converts an anon_screen_name learner ID to a
+    'global' LTI ID (in contrast to idAnon2ExtByCourse(), which
+    returns a learner's course-specific LTI ID.<br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">idAnon2ExtByCourse(anon_screen_name, course_display_name)</td>
     <td class="tg-031e">converts an anon_screen_name learner ID and course name pair to an LTI ID as used in Qualtrics and other outside vendors.<br></td>
   </tr>
   <tr>
     <td class="tg-e3zv">idAnon2Exts(anon_screen_name)<br>(procedure)<br></td>
-    <td class="tg-031e">procedure takes an anon_screen_name, and fills a temporary memory table with all external LTI-uid/course name,pairs. The procedure creates a temporary in-memory table of, two columns: <br>   ext_id, course_display_name.<br>The new table is called ExtCourseTable, and is available after, the procedure call returns. The table is wiped and renewed with, every call. Each MySQL connection has its own temp table name space, so no collision with other connections occurs. The table vanishes with connection closure.<br></td>
+    <td class="tg-031e">procedure takes an anon_screen_name, and fills
+    a temporary memory table with all external LTI-uid/course
+    name,pairs. The procedure creates a temporary in-memory table of,
+    two columns: <br>   ext_id, course_display_name.<br>The new table
+    is called ExtCourseTable, and is available after the procedure
+    call returns. The table is wiped and renewed with every
+    call. Each MySQL connection has its own temp table name space, so
+    no collision with other connections occurs. The table vanishes
+    with connection closure.<br></td> 
   </tr>
   <tr>
     <td class="tg-e3zv">idExt2Anon(ltiExternalId)</td>
-    <td class="tg-031e">given an external, LTI learner ID as used in Qualtrics and other outside services, return the corresponding anon_screen_name.<br></td>
+    <td class="tg-031e">given an external, LTI learner ID as used in
+    Qualtrics and other outside services, return the corresponding
+    anon_screen_name. The input LTI may be the global LTI, or any of
+    the learner's course-specific ones.<br></td>
   </tr>
   <tr>
     <td class="tg-e3zv">idInt2Forum(openEdxPlatformLearnerId)</td>
