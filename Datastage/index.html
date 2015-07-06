@@ -575,14 +575,14 @@ activities, so this table can underestimate video activity frequency.
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">video_new_time</td>
-    <td class="tg-031e">For video seek: new playhead time.  
+    <td class="tg-031e">For video seek: new playhead time.
       <b>Note:</b> we have observed that this time
       is in some records incorrectly large, or negative.
       You'll want to do bound checking when using this column.</td>
   </tr>
   <tr>
     <td class="tg-031e">video_old_time</td>
-    <td class="tg-031e">For video seek: old playhead time.  
+    <td class="tg-031e">For video seek: old playhead time.
       <b>Note:</b> we have observed that this time
       is in some records incorrectly large, or negative.
       You'll want to do bound checking when using this column.</td>
@@ -869,6 +869,107 @@ mysql> SELECT DISTINCT Demographics.*, FinalGrade.grade
 | 610467062fa05ff271198cfcc689febe856f48e7 |        |          NULL |     NULL | User withheld      | FRA                   | France        |     0 |
 +------------------------------------------+--------+---------------+----------+--------------------+-----------------------+---------------+-------+
 </pre>
+
+<hr>
+
+<p>
+The <b>EdxQualtrics</b> set of tables contains data from pre-course and
+post-course surveys. Qualtrics maintains detailed documentation <a href="http://www.qualtrics.com/university/researchsuite/reporting/download-data/understanding-data-set/">here</a>;
+the following information explains some idiosyncrasies that may make analysis slightly easier.
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">Survey</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">SurveyID</td>
+    <td class="tg-031e">Qualtrics-assigned unique identifier for a survey, e.g. "SV_XXXXXXXXXXXXXXX"</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">QuestionID</td>
+    <td class="tg-031e">Qualtrics-assigned ID for a given question, e.g. "QID3".</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">QuestionNumber</td>
+    <td class="tg-031e">Surveymaker-assigned ID for a given question, e.g. "Q3.2" or "gender". Note that this field is distinct from QuestionID.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">QuestionType</td>
+    <td class="tg-031e">Question type code from Qualtrics. See Qualtrics documentation for a detailed explanation
+    of what individual codes mean.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">QuestionText</td>
+    <td class="tg-031e">Text of the question as displayed to users.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">ChoiceID</td>
+    <td class="tg-031e">ID for a given choice. Unique within a given question, but not between questions; i.e. there is only one
+    choice marked '1' per question, but most questions have their own choice '1'. Combined with a QuestionNumber and SurveyID, this
+    field links survey data to response data.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">Description</td>
+    <td class="tg-031e">Text of the choice presented to users.</td>
+  </tr>
+</table>
+
+<br>
+
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">Response</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">SurveyID</td>
+    <td class="tg-031e">Qualtrics-assigned unique identifier for a survey, e.g. "SV_XXXXXXXXXXXXXXX"</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">ResponseID</td>
+    <td class="tg-031e">Qualtrics-assigned unique identifier for a given response.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">QuestionNumber</td>
+    <td class="tg-031e">Surveymaker-assigned ID for a given question, e.g. "Q3.2" or "gender".</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">AnswerChoiceID</td>
+    <td class="tg-031e">Identifier for a particular choice within a question and a survey. Corresponds to ChoiceID in Survey view.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">Description</td>
+    <td class="tg-031e">Contains learner response to this combination of Survey-Question-Choice IDs. May contain short-answer responses,
+    boolean values, browser metadata, responses on a value scale (e.g. between 1-7), or randomzization data (e.g. if choices for a given question were presented
+    in random order).</td>
+  </tr>
+</table>
+
+<br>
+
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">ResponseMetadata</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">ResponseID</td>
+    <td class="tg-031e">Qualtrics-assigned unique identifier for a given response.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">anon_screen_name</td>
+    <td class="tg-031e">Anonymized user ID; links response IDs to course data from the LMS.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">Country</td>
+    <td class="tg-031e">Three letter country code for learner. Conversion from learner IP address as retrieved from Qualtrics.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">StartDate</td>
+    <td class="tg-031e">Date and time when learner began survey.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">EndDate</td>
+    <td class="tg-031e">Date and time when learner completed survey.</td>
+  </tr>
+</table>
 
 <hr>
 
@@ -1531,7 +1632,7 @@ A word about the functions that begin with 'id', such as idAnon2Ext().
 These are functions that convert between a number of learner IDs that
 are used (i) in Datastage's tables, (2) in tables created by the EdX
 platform, and (3) as learner IDs given to outside learning tool
-vendors. 
+vendors.
 <p>
 Instead of personally identifiable learner names, Datastage uses in
 its tables a 20-byte hash, which is always in column
@@ -1604,7 +1705,7 @@ external (e.g. idAnon2Ext())
     call returns. The table is wiped and renewed with every
     call. Each MySQL connection has its own temp table name space, so
     no collision with other connections occurs. The table vanishes
-    with connection closure.<br></td> 
+    with connection closure.<br></td>
   </tr>
   <tr>
     <td class="tg-e3zv">idExt2Anon(ltiExternalId)</td>
