@@ -977,6 +977,26 @@ the following information explains some idiosyncrasies that may make analysis sl
   </tr>
 </table>
 
+<p>
+For users working with data from Coursera courses: it's possible to link survey
+responses to Coursera data by joining the 'a' ID field with the session_user_id field
+contained in the ID map from Coursera's data export. You need to know which Coursera
+database corresponds to which SurveyID; this data can be looked up manually in the
+Podio database. For example (replacing `COURSERA_DB_NAME` and `SURVEYID` with a matching
+pair as designated in Podio.CourseIDMap):
+
+<pre>
+  SELECT *
+  FROM EdxQualtrics.response_metadata as edxq
+  INNER JOIN `COURSERA_DB_NAME`.hash_mapping as hm
+	 ON edxq.a = hm.session_user_id
+  WHERE edxq.SurveyID = 'SURVEYID';
+</pre>
+
+<p>
+Note that for each survey (agnostic of platform) some of the 'a' field values will
+occasionally fail to correspond with any platform identifier.
+
 <hr>
 
 <p>
