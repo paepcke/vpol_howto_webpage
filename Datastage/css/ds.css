@@ -1,0 +1,40 @@
+body,
+html {
+    background-color: linen;
+    width: 90%;
+    height: 100%;
+}
+
+/* Table header style: */
+.tg .tg-s6z2 {
+    text-align: center;
+    font-style: bold;
+    font-size: 110%;
+    color: #981E32;
+    font-family: "Helvetica Neue";
+    font-weight: 700;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #981E32;
+    font-family: "Helvetica Neue";
+    font-weight: 700;
+}
+
+a:link {
+    color: #8F7031;
+}
+
+a:hover,
+a:visited {
+    color: #3F3C30;
+}
+
+span.sharable {
+    color: green;
+}

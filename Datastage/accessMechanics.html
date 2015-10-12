@@ -2,7 +2,8 @@
 <html>
   <head>
   <title>Datastage Data Access How-To</title>
-    <style>
+  <link href="css/ds.css" rel="stylesheet">
+    <!-- /*<style>
       body
       {
       background-color:#b0c4de;
@@ -13,15 +14,15 @@
       font-size: 150%;
       display: inline-block;
       }
-      
+
       /* Table header style: */
       .tg .tg-s6z2
-      {text-align:center; 
+      {text-align:center;
        font-style: bold;
        font-size: 130%;
       }
 
-    </style>
+    </style>*/ -->
 
     <script LANGUAGE="JavaScript">
     <!-- Hiding JavaScript>
@@ -95,7 +96,7 @@ later of what this connection is about.
 
 <i>Login</i> and <i>Password</i> are the information you received with
 your access material. They are the user ID and passwords for the MySQL
-database on datastage. 
+database on datastage.
 
 For <i>Host or IP Address</i> you fill in
 <i>localhost</i>. This may seem counterintuitive at first. But
@@ -105,7 +106,7 @@ machine. At <b>that</b> point the connect is local.
 
 The <i>Port</i> is left blank. In the <i>Database</i> field you enter
 one of the databases of
-<a href="index.html#appA">Appendix A</a>. 
+<a href="index.html#appA">Appendix A</a>.
 
 Next, you need to specify how the tunnel is built. This step is
 equivalent to login into the Datastage machine. In RazorSQL you
@@ -121,7 +122,7 @@ and then click <i>Connect</i>, and you (hopefully) see a screen other
 than one informing you of failure.
 
 At this point, you can continue via the RazorSQL manual and help
-pages. 
+pages.
 
 <h2>Analysis Tools</h2>
 
@@ -148,11 +149,11 @@ operating system (Windows or Mac). Note that even though your computer
 might be of the '64 bit' type (whatever that means), you are likely to
 need the 32-bit version of the database connector! This choice is
 definitely the right one for Macs; for Windows it is the most likely
-choice 
+choice
 (see <a href="http://office.microsoft.com/en-us/excel-help/choose-the-32-bit-or-64-bit-version-of-office-HA010369476.aspx">why</a>).
 
 You start the downloaded program as you usually do on your
-computer. Here is information you will need for the mostly-open data: 
+computer. Here is information you will need for the mostly-open data:
 
 <b>Server:</b> <i>datastage.stanford.edu</i><br>
 <b>User:</b> [your username]</br>
@@ -167,7 +168,7 @@ following sections.
 
 See <a href=http://helpdeskgeek.com/office-tips/excel-to-mysql/>this reference</a>
 for how to fill your spreadsheet with a particular dataset. The result
-will look like this: 
+will look like this:
 </p><center><img src="figs/excelToEdxScreenshotWeb.png"/></center></p>
 
 For the phase in the above referenced instructions that looks like
@@ -244,7 +245,7 @@ data as .csv files follow these instructions:
 You should then see some number of charts that are part of the
 material for you. Open one of these <i>views</i>. Hover over marks to
 see tooltips. To see the data that is involved in a view, click the
-leftmost of the icons above the view.  
+leftmost of the icons above the view.
 
 Its tooltip says <i>Export</i>. You'll get a new window with two tabs:
 the one you'll be on will be just the data that went into the
@@ -255,7 +256,7 @@ tab <i>Underlying</i>. You'll see the first 200 rows. Note that you
 might see some data in this fully populated table that you don't see
 in the visualizations: some rows might be filtered out in the
 views. You will need to do the same if appropriate to your further
-plans. 
+plans.
 
 <center><img src="figs/tableauServerExportScreenshotWeb.png"/></center>
 
@@ -298,7 +299,7 @@ Like a tunnel (<i>-L</i>). On the database on the other end, the
 commands I send should look like they were issued on <b>its</b>
 machine (<i>localhost</i> from the database's point of view), and were
 issued directly into the in-port where the database normally listens
-to (<i>3306</i>), as it does in the direct connection case. 
+to (<i>3306</i>), as it does in the direct connection case.
 
 The <i>-f -N</i> just make it so that you can keep using the terminal
 window you used to type in the command.

@@ -1,171 +1,144 @@
 <!DOCTYPE html>
 <html>
   <head>
-  <title>Datastage Data Access How-To</title>
-    <style>
-      body
-      {
-      background-color:#b0c4de;
-      }
-      #spanhand
-      {
-      font-style: bold;
-      font-size: 150%;
-      display: inline-block;
-      }
 
-      /* Table header style: */
-      .tg .tg-s6z2
-      {text-align:center;
-       font-style: bold;
-       font-size: 130%;
-      }
-
-    </style>
-
-    <script LANGUAGE="JavaScript">
-    <!-- Hiding JavaScript>
-
-    function showEmailAddr()
-    {
-      var theName = "Paepcke";
-      var theAt = "@";
-      var theDomain = "CS.Stanford.edu";
-      var theMailTo = "<A HREF='mailto:" + theName + theAt + theDomain + "'>";
-      var theMailToClose = "</A>";
-
-      document.write(theMailTo + theName + theAt + theDomain + theMailToClose);
-    }// End hiding JavaScript -->
-    </script>
+  <title>Datastage | Documentation</title>
+  <link href="css/ds.css" rel="stylesheet">
 
   </head>
 
   <body>
 
-<center><h1>How to Access the CAROL Online Learning Data</h1></center>
+<center><h1>CAROL Learner Data Documentation</h1></center>
 
+<h3>Contents</h3>
 <ul>
-<!-- ****** <li><a href="http://mono.stanford.edu:8000">AnswerServer</a></li> -->
-  <li><a href="#accessProcedure">Protocol for Access</a></li>
-  <li><a href="#dataSummary"><span id="spanhand">Summary of Available Data</a></span></a>&#8592;Good section to check out</li>
-  <li><a href="#appA">List of available data sets</a></li>
-  <li><a href="#appB"><span id="spanhand">Explanation of OpenEdX data fields</span></a>&#8592;Good section to check out</li>
-  <li><a href="#mirrors">OpenEdX platform tables mirrored on datastage</li>
-  <li><a href="#functions">Handy MySQL functions and procedures</li>
-  <li><a href="accessMechanics.html#dbConn">Preparing your machine for connecting to
-      databases</a></li>
-  <li><a href="accessMechanics.html#excel">Connecting from Excel</a></li>
-  <li><a href="accessMechanics.html#spss">Connecting from SPSS</a></li>
-  <li><a href="accessMechanics.html#razorSQL">Connecting from RazorSQL or Froq</a></li>
-  <li><a href="accessMechanics.html#pickUp">Picking up visualizations prepared
-  by staff or friends</a></li>
-  <li><a href="accessMechanics.html#sshTunnel">How to build an ssh tunnel</a></li>
+  <li><a href="#access">Protocols for access</a></li>
+  <li><a href="#summary">Summary of available data</a></li>
+  <li><a href="#search">List of available data sets</a></li>
+  <li><a href="#appB">Explanation of OpenEdX data fields</a></li>
+  <li><a href="#mirrors">OpenEdX platform tables mirrored on datastage</a></li>
+  <li><a href="#functions">Handy MySQL functions and procedures</a></li>
+</ul>
+
+<h3>Additional information</h3>
+<ul>
+  <li><a href="accessMechanics.html">Database connection instructions</a>
   <li><a href="https://docs.google.com/document/d/1WlWkaFkpzt9i3zGVqGYAnxK_wdklUncOnh4A0T5yeJs/edit?pli=1">Example queries</a></li>
   <li><a href="http://www.tableausoftware.com/public/gallery">Gallery
   of example data visualizations</a></li>
 </ul>
 
+<p>The Center for Advanced Research through Online Learning facilitates research
+using data from online courses. Stanford's instructional environments are instrumented
+to collect a variety of data around participants' interaction with each other and
+with course material. For example, we collect data on learners manipulating controls
+on video players as they view portions of a class, solution submissions to problem
+sets, posts on course message boards, peer grading activities, and some demographic
+data. The type of data that is collected depends on the delivery platform used for
+a particular class.</p>
 
-The Center for Advanced Research through Online Learning facilitates the teaching
-of online classes. The instruction delivery platforms are instrumented
-to collect a variety of data around participants' interaction with the
-study material. Examples are participants manipulating video players as
-they view portions of a class, solution submissions to problem sets,
-uses of the online forum available for some classes, peer grading
-activities, and some demographic data. The type of data that is
-collected depends on the delivery platform used for a particular
-class.
-<p>
-CAROL makes some of this data available for research on learning
-processes, and for explorations into improving instruction.
-<p>
-All data that CAROL shares is available on machine
-<i>datastage.stanford.edu</i>. You have multiple methods of using this data:
-We provide self service answers to frequent questions, customizable to
-your context. Data viewing programs for MAC and Windows allow you to
+<p>CAROL makes some of this data available for use by researchers and instructors,
+both to improve instructional delivery and as the basis for more general insights into
+teaching and learning in digital environments.</p>
+
+<p>All data that CAROL shares is available on machine <i>datastage.stanford.edu</i>.
+This page documents protocols for accessing learner data, describes technical details
+about table schemas and other metadata useful for data analysis, and provides
+practical guidance on using analysis tools with our system.</p>
+
+<p>Data viewing programs for MAC and Windows allow you to
 browse through our content. Going further, most analysis tools, like
 R, SPSS, and Excel can connect directly to our databases. Similarly,
 visualization tools are available that allow you to create static, or
-interactive charts of data directly from our sources. We explain these
-access methods here, or point to relevant instructions on the Web.
-<p>
-Additionally, we run
-a <a href="http://www.tableausoftware.com/products/server">Tableau Server</a>
+interactive charts of data directly from our sources. We run a
+<a href="http://www.tableausoftware.com/products/server">Tableau Server</a>
 to which you can publish visualizations you create with the Tableau
 Desktop visualization tool. Visitors can manipulate these
 visualizations to the degree you provide for. A comment area is
 available for each view to discuss the information. If desired, access
-to the views can be limited. Again, more in this document.
+to the views can be limited.</p>
 
-We now run through the available access paths to the data, ordered in
-increasing power (and sometimes associated complexity).
+<h2 id="access">Protocols for accessing learner data</h2>
 
-<h2 id="accessProcedure">Protocols for Access</h2>
-
-Even though we do not keep highly sensitive information on this
+<p>Although we do not keep highly sensitive information on this
 server, we do need to protect the data from malicious intrusion. If
 you are interested in studying the data, please fill out
-<a href="http://CAROL.stanford.edu/research">our request form</a>.
-<p>
-While the form accommodates requests for data with personally
-identifiable information, we can only provide such access in special
-cases. The data from which personalized information has been removed
-is quite rich. Please at least try to work with that data until you
-have a firm research plan in mind.
-<p>
-If you are the instructor of a class, and you need the data to improve
-future runs of your course, the personally identifiable data is more
-freely available than if the data is used for research.
-<p>
-Please take the online non-medical human subjects research certification
-class
-(<a href="https://humansubjects.stanford.edu/new/resources/training/citi.html">
-    through Stanford</a>
-or <a href="https://www.citiprogram.org/">through CITI</a>, or some
-other
-institution). Then <a href="mailto:upload.IRBcert.ucf1bw6ifx@u.box.com">email
-    your resulting PDF file.</a>
-<p>
-If you publish a paper, we appreciate credit for the data, and a note
-telling us about how you used the material. Both of these steps help
-us justify the cost of data collection, and we are plain interested in
-what you find!
+<a href="http://carol.stanford.edu/research">our request form</a>.</p>
 
-<h2 id="dataSummary">Summary of Available Data</h2>
-Datastage holds learning research data derived from courses offered on
-three platforms: NovoEd, Coursera, and OpenEdX.  Documentation on
-Coursera export formats are
-described <a href="https://spark-public.s3.amazonaws.com/mooc/data_exports.pdf">
-in a separate document</a>. For NovoEd format documentation you need
-to browse their tables. Here is a summary of data that is available
-for Stanford courses taught on OpenEdX. For more in-depth information
-see <a href="#appB">Explanation of OpenEdX data fields</a>.
-</p>
-Data include both raw numbers that the OpenEdX platform collects, and
-tables that result from computations over that base data.
+<p>While the form accommodates requests for data with personally
+identifiable information, we can only provide such access in special
+cases. However, the data from which personalized information has been removed
+is quite rich, so we anticipate that most users will not need access to
+sensitive information.</p>
+
+<p>If you are the instructor of a class, and you need the data to improve
+future runs of your course, the personally identifiable data is more
+freely available than if the data is used for research.</p>
+
+<p>Note that all researchers must demonstrate completion of training in human
+subjects research ethics prior to receiving learner data.</p>
+
 <p>
-<b>Note: </b><i>tracking log</i> data that the platform collects is
-known to be incomplete. Tracking logs list small actions that
-participants undertake when interacting with a course through their
-browser. Examples are video playback controls, and assignment
-submissions. The platform instrumentation misses an unknown number of
-these events. The EdX consortium is working on this issue. Meanwhile,
-consider data based on tracking logs a conservative
-estimate. Reportedly, Coursera tracking logs experience similar
-missing data.
+If your results are published in a paper, we appreciate credit for the data,
+as well as a note telling us about how you used the material. Both of these steps
+help us justify the cost of data collection and provide us with more information
+on the development of science using online learner data.
 </p>
-<h3>Stored tables and Associated Views</h3>
+
+
+<br><hr>
+
+
+<h2 id="summary">Summary of Available Data</h2>
+
+<p>Datastage holds learning research data derived from courses offered on
+three platforms: NovoEd, Coursera, and Lagunita, a Stanford instance of the
+OpenEdX platform.</p>
+
+<p>Documentation on Coursera export formats are described in
+<a href="https://spark-public.s3.amazonaws.com/mooc/data_exports.pdf">this document</a>.</p>
+
+<p>No detailed documentation is available for NovoEd tables. Please contact us if you
+plan to use NovoEd data; we are happy to advise on what is possible with the NovoEd
+course data.</p>
+
+<p>We have developed a local system for ingesting and structuring data from Stanford
+courses taught using the OpenEdX platform. These data include raw events taken
+directly from the course tracking logs and instructional data, as well as secondary
+computations and other derived datasets. More detailed information on table schemas
+can be found below.</p>
+
+<p>Note that the tracking log data collected from the OpenEdX platform is known to
+be incomplete. These logs are intended to list each interaction between the platform
+and each learner as they progress through a course. For example, the tracking logs
+capture video playback control interactions as well as assignment submissions. The
+platform currently misses approximately 1% of these events. Users of data from
+Coursera have reported similar issues. The EdX consortium is working on fixing this
+issue; meanwhile, consider data based on tracking logs to be conservative estimates
+of actual course behavior.</p>
+
+<h3>Stored tables and associated views</h3>
+
 <ul>
- <li><b>CourseInfo</b>: Facts about courses, such as start/end dates,
-   academic year and quarter in which a course was offered.</li>
+  <li><b>EventXtract</b>: A much slimmed view of the OpenEdX tracking log
+    events. The view only includes fields that are currently in use by
+    the platform. </li>
+
  <li> <b>ActivityGrade</b>: Assignment grades; includes right/wrong for each
    problem part, the learners' solution choice for each answer pard,
    and the first and last solution submission times. Constructed from platform table
    courseware_studentmodule.</li>
 
+ <li> <b>VideoInteraction</b>: An excerpt from tracking logs, focusing on
+   participants' interactions with video.</li>
+
  <li> <b>Performance</b>: Daily cumulative assignment performance per
    learner. This is the average grade over all assignments up to the
-   day before the query. A view onto ActivityGrade. </li>
+   day before the query. A view onto ActivityGrade.</li>
+
+ <li> <b>Demographics</b>: Combines learner self-reported demographic
+   information across multiple tables. Does not contain PII.</li>
 
  <li> <b>FinalGrade</b>: 'Raw' final grades. Raw in that they do not
    take into account instructor defined weightings. This is an
@@ -175,18 +148,10 @@ missing data.
    work other than the assignments that are captured in the
    ActivityGrade table.</li>
 
- <li><b>UserGrade</b>: Raw grades as recorded by the platform. An
-   amalgam of the platform tables auth_user and
-   certificates_generatedcertificate. This table is not normally
-   shared, as it includes personally identifiable
-   information. However, the anonymized view onto UserGrade:
-   FinalGrade (see above) is the table to use for anonymized grade and
-   distinction information.</li>
-
- <li><b>ABExperiment</b>: Data resulting from the use of the OpenEdX AB
+ <li> <b>ABExperiment</b>: Data resulting from the use of the OpenEdX AB
    testing facilities.</li>
 
- <li><b>OpenAssessment</b>: Data resulting from the use of the OpenEdX
+ <li> <b>OpenAssessment</b>: Data resulting from the use of the OpenEdX
    peer grading facilities.</li>
 
  <li> <b>UserCountry</b>: country of origin by IP address. Each row is a tuple
@@ -202,103 +167,98 @@ missing data.
    different from the hashes used in other tables, and anonymized
    using the same hashes.</li>
 
- <li> <b>VideoInteraction</b>: an excerpt from tracking logs, focusing on
-   participants' interactions with video.</li>
-
  <li> <b>EdxQualtrics.Survey</b>:Information about surveys
    administered via the Qualtrics service.</li>
 
  <li> <b>EdxQualtrics.Response</b>: Learner responses to survey
    questions.</li>
 
-<li> <b>EdxQualtrics.ResponseMetadata</b>: Information about the
-   learner behind each survey response.</li>
+ <li> <b>EdxQualtrics.ResponseMetadata</b>: Information about the
+   learner behind each survey response. This table can be used to
+   link survey responses to learners in the course.</li>
 
+ <li> <b>CourseInfo</b>: Facts about courses, such as start/end dates,
+   academic year and quarter in which a course was offered. </li>
 
- <li><b>EventXtract</b>: A much slimmed view of the OpenEdX tracking log
-   events. The view only includes fields that are currently in use by
-   the platform. </li>
- <li><b>LoadInfo</b>: Information about archive updates.</li>
- <li><b>EdxPrivate.EventIp</b>:IP addresses for each event. This table
-     is only available by special arrangement.</li>
 </ul>
 
-<b>State, InputState, Answer, and CorrectMap</b> are subsumed by the
-  tables above. If you are familiar with the OpenEdX tracking log
-  event format, you will recognize the names, and can use them
-  individually.</li>
+<h3>Infrequently shared tables</h3>
+
+<ul>
+
+ <li><b>LoadInfo</b>: Information about archive updates.</li>
+
+ <li> <b>UserGrade</b>: Raw grades as recorded by the platform. An
+   amalgam of the platform tables auth_user and
+   certificates_generatedcertificate. This table is not normally
+   shared, as it includes personally identifiable
+   information. However, the anonymized view onto UserGrade:
+   FinalGrade (see above) is the table to use for anonymized grade and
+   distinction information.</li>
+
+ <li><b>EdxPrivate.EventIp</b>:IP addresses for each event. This table
+     is only available by special arrangement.</li>
+
+ <li><b>State, InputState, Answer, and CorrectMap</b>: These tables are
+     subsumed by the above tables. If you are familiar with the OpenEdX
+     tracking logs, you will recognize the names and can use these tables
+     individually as needed.</li>
+
+</ul>
 
 <h3>Computed tables</h3>
 
 <ul>
- <li> <b>Time-on-task</b>: estimate for how long participants worked online on
+ <li> <b>Time-on-task</b>: Estimate for how long participants worked online on
    their courses. Computed from tracking log events, and partitioned
    into 30 minute sessions. Available: every session for every participant
    and course, weekly aggregates of the sessions, and course level
    aggregates. Session length for the computations can be customized
-   on request, but this is a manual process. Part of the canned table
-   exports, because this table is computed on demand, not stored (see
-   next section)</li>
+   on request, but this is a manual process. This table is computed on-demand
+   and is not stored in our database.</li>
 
 </ul>
 
-<h3>Canned exports</h3>
+<h3>Mirrored platform tables from OpenEdX</h3>
 
+<p>In addition to the above tables, a number of <a href="#mirrors">tables
+are mirrored</a> directly from the Stanford OpenEdX platform, with some delay.
+This collection can be extended as needed.</p>
+
+
+<br><hr>
+
+
+<h2 id="search">Available data</h2>
+
+<h3>Search all courses</h3>
+
+<p>The archive includes data from the following Stanford courses:
 <ul>
- <li> The tracking log data, video interactions, activity grade, forum
-      posts, and time-on-task tables can be exported per course, and picked up over
-   the Web.</li>
+  <li>Courses that were offered using Stanford's
+  <a href="handleCourseNameRequest.php?platform=openedx"
+     target="_blank">OpenEdX platform.</a></li>
+  <li>Courses delivered on the
+  <a href="handleCourseNameRequest.php?platform=coursera"
+     target="_blank">Coursera platform.</a></li>
+  <li>Courses that utilized the
+  <a href="handleCourseNameRequest.php?platform=novoed"
+     target="_blank">NovoEd platform.</a></li>
+</ul></p>
 
- <li> Other interactions with the tables require access to our server,
-   and knowledge of SQL.</li>
-</ul>
-
-<h3>Mirrored OpenEdX Platform Tables</h3>
-
-A number of <a href="#mirrors">tables are mirrored</a> from the
-Stanford OpenEdX platform with delay. This collection can be extended.
-
-<!-- <h2>If We Anticipated your Question</h2> -->
-
-<!-- In the simplest case your question has been asked and answered before, -->
-<!-- albeit for a different context. Such a context might be a particular -->
-<!-- class for which the question was originally asked, or a particular -->
-<!-- problem set. For cases like this -->
-<!-- our <a href="http://mono.stanford.edu:8000">AnswerServer</a> will -->
-<!-- eventually help. It is <b>under construction</b>. This server differs -->
-<!-- from a typical FAQ list in that you are able to adjust the question to -->
-<!-- your context. We will be growing the coverage of that page as we go -->
-<!-- along. If you have an idea for a useful one-liner question, please -->
-<!-- send email to <script LANGUAGE="JavaScript">showEmailAddr()</script>. -->
-
-
-<h2 id="appA">Available Databases</h2>
-
-<h3>List of available courses</h3>
-
-The archive includes data from the following Stanford courses:
-<ul>
-<li>Courses that were offered using Stanford's
-<a href="handleCourseNameRequest.php?platform=openedx"
-   target="_blank">OpenEdX platform.</a></li>
-<li>Courses delivered on
-    the <a href="handleCourseNameRequest.php?platform=coursera"
-    target="_blank"> Coursera platform.</a>, and</li>
-<li>Courses that utilized the<a href="handleCourseNameRequest.php?platform=novoed" target="_blank">
-    NovoEd platform.</a></li>
-</ul>
-<p>
-In addition, the archive
-includes <a href="handleCourseNameRequest.php?platform=moocdb"
-target="_blank"> MOOCDb versions</a> for many of the above courses.
-MOOCDb is a relational
+<p>In addition, the archive includes <a href="handleCourseNameRequest.php?platform=moocdb"
+target="_blank">MOOCDb versions</a> for many of the above courses. MOOCDb is a relational
 <a href="http://edf.stanford.edu/readings/moocdb-developing-data-standards-mooc-data-science"
-   target="_blank"> format that aims to combine schemas</a> from
-   multiple online learning platforms.
-<p>
-The archive also includes the <a href="http://datastage.stanford.edu/StanfordMoocPosts/">
+target="_blank"> format that aims to combine schemas</a> from multiple online
+learning platforms.</p>
+
+<p>The archive also includes the <a href="http://datastage.stanford.edu/StanfordMoocPosts/">
 Stanford MOOCPosts dataset</a>, a corpus of forum posts sampled from
-Stanford's public MOOC offerings.
+Stanford's public MOOC offerings.</p>
+
+
+
+
 
 <h3>Resources beyond this document</h3>
 
@@ -307,72 +267,69 @@ by Stanford includes the above mentioned <i>events</i>, which document
 how participants interacted with the platform. Forum posts are
 available as well. All data has personally identifiable information
 removed.
-<p>
+</p><p>
 For <a href="#appB">schema details of each OpenEdX table</a>, see
 below. Meanings of OpenEdX data fields are also explained at
 the <a href="http://edx.readthedocs.org/en/latest/">OpenEdX Consortium
 Tracking Log documentation</a>
-<p>
+</p><p>
 Forum data is explained in the <a href="http://devdata.readthedocs.org/en/latest/internal_data_formats/discussion_data.html">
 OpenEdX Consortium</a> documentation.
-<p>
+</p><p>
 Coursera <a href="https://spark-public.s3.amazonaws.com/mooc/20130414_data_exports.pdf">export
  format information</a> is a useful resource for understanding formats
- in the Coursera archives.
+ in the Coursera archives.</p>
+
+
+<br><hr>
 
 
 <h2 id="appB">Explanation of OpenEdX data fields</h2>
 
-The Edx and EdxPrivate databases provide a lossless translation from
+<p>The Edx and EdxPrivate databases provide a lossless translation from
 the OpenEdX platform tracking logs to relational tables. The
 translation was constructed based on tracking logs of Stanford's
-OpenEdX classes.
-<p>
-Each entry in a tracking log contains information about one small
+OpenEdX classes.</p>
+
+<p>Each entry in a tracking log contains information about one small
 interaction that one participant undertook with the learning
 platform. Examples are the submission of a problem solution, a video
 control action, like starting a video, or the initial creation of an
-account. <b>Note:</b>the event collection process of the OpenEdX
-platform is not perfect yet. Events do get lost on the way. The EdX
-consortium is working on this issue. But meanwhile you need to
-consider computations based on track logs as lower bounds.
-<p>
-<b>Beware 9c1185a5c5e9fc54612808977ee8f548b2258d31</b>: One event
+account. Note that the event handling and collection facilities in the OpenEdX
+platform are not perfect yet. Events do get lost on the way. The EdX
+consortium is working on this issue; in the meanwhile it is important to
+consider computations based on track logs as lower bounds.</p>
+
+<p><b>Beware 9c1185a5c5e9fc54612808977ee8f548b2258d31</b>: One event
 track failure is that some screen names show up as empty strings. When
 we anonymize these empty screen names, they all come to look like the
 same anonymized person, the above ugly string. When we export tables
 for you, we filter these duds out. But if you work on the database
-tables themselves, you need to take of it yourself.
-<p>
-The logs were designed to hold every piece of information that might
+tables themselves, you need to take of it yourself.</p>
+
+<p>The logs were designed to hold every piece of information that might
 need to be captured now or in the future. Not all of the log fields
 are currently in use. Of the many columns in the relational tables
 only some therefore need to be considered at this point. We therefore
-created some tables that allow you to focus.
-<p>
+created some tables that allow you to focus:</p>
+
 <ul>
   <li>EventXtract</li>
-  <li>VideoInteraction and</li>
+  <li>VideoInteraction</li>
   <li>ActivityGrade</li>
 </ul>
-We call these the <i>basic</i> tables.  During export, we partition the
+
+<p>We call these the <i>basic</i> tables.  During export, we partition the
 tables into groups that correspond to the analysis purposes for which
 they are intended. The <b>Basic Tables</b> are meant for everyday
 use. Those tables exist in the database on Datastage, and we can
-export extracts of the three tables for individual classes as well.
-<p>
-Export table group <b>Engagement</b> are tables that approximate how
+export extracts of the three tables for individual classes as well.</p>
+
+<p>Export table group <b>Engagement</b> are tables that approximate how
 much time course participants spent interacting with a course on their
 computer. These tables are only available as per-course exports. They
 do not exist in the database, but are computed when we export.  We
-will add more table groups as we go along.
-<p>
-Other tables of interests are <b>Demographics</b>, which provides
-basic, anonymized info about each participant, and <b>EdxForum</b> the
-Forum posts, upvotes, downvotes for all courses.
-
-We describe the tables now,
-group by group.
+will add more table groups as we go along.</p>
 
 <hr>
 <h3 id="basicTables">Basic Export Tables</h3>
@@ -383,7 +340,7 @@ is the key to interpreting the remaining columns. Please see the
 <a href="http://edx.readthedocs.org/en/latest/">OpenEdX
 Tracking Log documentation</a> of the original JSON formatted
 fields. Those descriptions are authoritative.
-<p>
+</p><p>
 <style type="text/css">
 .tg  {margin-left: auto; margin-right: auto}
 .tg  {border-collapse:collapse;border-spacing:0;}
@@ -499,7 +456,7 @@ fields. Those descriptions are authoritative.
     <td class="tg-031e">Teaching sequence change: destination</td>
   </tr>
 </table>
-<p>
+</p><p>
 
 Here are a couple of example rows, with most of the video related
 columns skipped. Those are more easily accessed using the
@@ -514,7 +471,7 @@ VideoInteraction table (see below):<br>
 | 6e9...           | problem_check | BEL                   | 2013-11-10 06:43:10 | Engineering/Solar/2013| I-V curve             |         |            |                       |           |           |
 +------------------------------------------+---------------+----------------+---------------------+---------------------------------------------+-----------------------+---------+------------+--
 </pre>
-<p>
+</p><p>
 <!--
 EventXtract AS
    SELECT anon_screen_name,
@@ -542,11 +499,11 @@ If your focus is video behavior analysis, then the <b>VideoInteraction</b>
 table is the easiest to use. It just extracts the video events from
 the EventXtract table; the video related information is the same in
 both tables.
-<p>
+</p><p>
 Note that participants can download videos, and subsequently use their
 own, local player. The platform software will not 'see' such local
 activities, so this table can underestimate video activity frequency.
-<p>
+</p><p>
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 8px;border-style:solid;border-width:1px;}
@@ -628,7 +585,7 @@ activities, so this table can underestimate video activity frequency.
     <td class="tg-031e">a unique OpenEdX id for this video</td>
   </tr>
 </table>
-<p>
+</p><p>
 Here again some example rows:<br>
 
 <b>VideoInteraction Example Rows:</b><br>
@@ -649,7 +606,7 @@ Here again some example rows:<br>
     | 6Tnr8OL-9So | 2013-11-10 06:43:43 | Eng/EE-222/ME_I     | 8998...          |
     -------+-----------------+-------------+---------------------+----------------
 </pre>
-<p>
+</p><p>
 <!--
 CREATE VIEW VideoInteraction AS
 SELECT event_type,
@@ -675,27 +632,27 @@ WHERE  CHAR_LENGTH(video_code) > 0 OR
        CHAR_LENGTH(video_new_speed) > 0 OR
        CHAR_LENGTH(video_old_speed) > 0
 -->
-<p>
+</p><p>
 The <b>ActivityGrade</b> table holds events that concern homework
 assignments. Each row in the table is one solution submission, or
 inspection of one assignment by one participant. The rows inform whether
 the solution was correct, in some parts, or in its entirety. If only
 parts were correct, the table shows which parts, and which incorrect
 answers the participant provided.
-<p>
+</p><p>
 
 <b>Note 1:</b>For historical reasons the ActivityGrade table contains not only
 grade related activities, but also some activities like accesses to surveys
 or course chapters. You can filter out the true grade related items by
 considering only rows in which num_attempts is not -1.
-<p>
+</p><p>
 
 <b>Note 2:</b>the ActivityGrade table is not constructed from EdX track
 event logs. Instead, this table is composited from information in
 the platform table courseware_studentmodule. In particular the
 infamous JSON encoded <i>state</i> field in that table is parsed and
 its JSON values are made accessible as columns in ActivityGrade.
-<p>
+</p><p>
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 8px;border-style:solid;border-width:1px;}
@@ -781,9 +738,9 @@ its JSON values are made accessible as columns in ActivityGrade.
   </tr>
 </table>
 </pre>
-<p>
+</p><p>
 <b>ActivityGrade Example Rows:</b><br>
-<p>
+</p><p>
 <pre>
 +------------------------------------------+---------------+----------------+---------------------+---------------------------------------------+-----------------------+---------+------------+------|
 | course_display_name | grade | max_grade | percent_grade | parts_correctness |     answers       | numAttempts | first_submit | last_submit | module_type | resource_display_name | anon_screen_name |
@@ -799,7 +756,7 @@ The <b>Demographics</b> view contains anonymized demographic data
 on participants. A major consideration when using this table that
 participants provide this information voluntarily. Some do, others
 don't; some lie, others tell the truth.
-<p>
+</p><p>
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 8px;border-style:solid;border-width:1px;}
@@ -854,7 +811,7 @@ don't; some lie, others tell the truth.
 </table>
 </pre>
 </div>
-<p>
+</p><p>
 If participant interacted with a course from multiple Internet
 addresses, Demographics will contain one entry for each distinct
 address, even if the address' countries are the same. It is therefore
@@ -878,7 +835,7 @@ mysql> SELECT DISTINCT Demographics.*, FinalGrade.grade
 
 <hr>
 
-<p>
+</p><p>
 The <b>EdxQualtrics</b> set of tables contains data from pre-course and
 post-course surveys. Qualtrics maintains detailed documentation <a href="http://www.qualtrics.com/university/researchsuite/reporting/download-data/understanding-data-set/">here</a>;
 the following information explains some idiosyncrasies that may make analysis slightly easier.
@@ -977,7 +934,7 @@ the following information explains some idiosyncrasies that may make analysis sl
   </tr>
 </table>
 
-<p>
+</p><p>
 For users working with data from Coursera courses: it's possible to link survey
 responses to Coursera data by joining the 'a' ID field with the session_user_id field
 contained in the ID map from Coursera's data export. You need to know which Coursera
@@ -993,13 +950,13 @@ pair as designated in Podio.CourseIDMap):
   WHERE edxq.SurveyID = 'SURVEYID';
 </pre>
 
-<p>
+</p><p>
 Note that for each survey (agnostic of platform) some of the 'a' field values will
 occasionally fail to correspond with any platform identifier.
 
 <hr>
 
-<p>
+</p><p>
 All <b>Forum post</b> entries are scrubbed of personally identifiable
 information. The following are redacted: phone numbers, zip codes,
 email addresses, and the poster's name. In each case the type of
@@ -1018,23 +975,23 @@ you do find one of the rare cases where identification is
 possible. Keep the information to yourself,
 and <a href="mailto://paepcke@cs.stanford.edu">report it to us</a> so
 that we can fix the problem.
-<p>
+</p><p>
 Here is a complication stemming from privacy protection: you will find
 the anon_screen_name column filled with the single value
 'anon_screen_name_redacted'. You can therefore not use this column to
 select by participant as you do on all the other tables. Instead, when
 selecting from the EdxForum.contents table, you need to use
 column <i>forum_uid</i>.
-<p>
+</p><p>
 This approach works fine while working within the Forum table
 only. But the setup prevents you from relating Forum posts to other
 tables to find correlations between Forum postings and, say, grade
 outcomes.
-<p>
+</p><p>
 The reason for this separation is a known attack onto the privacy in
 the non-Forum tables when the same participant code is used in both
 worlds. We call the fully redacted Forum table <i>non-relatable</i>.
-<p>
+</p><p>
 To explore correlations you need a translation from
 the <i>forum_uid</i> in the Forum table to the <i>anon_screen_name</i>
 used in all other tables. To receive that translation,
@@ -1043,7 +1000,7 @@ application form</a> that you filled out before to gain access to the
 data. This time, please make very clear in the free-form text field
 that you already have access to the data, and that you just need the
 additional Forum translation information.
-<p>
+</p><p>
 Forum posts contain a number of identifiers. Here is an explanation of
 relationships between these identifies. This explanation is based on
 observation, not on documentation from the original software; the
@@ -1061,9 +1018,9 @@ information may therefore be incorrect or incomplete:
    thread-originating post to the current comment/reply.</li>
 </ul>
 
-<p>
+</p><p>
 Each Forum post is contained in one row:
-<p>
+</p><p>
 <div align="center">
 <style>
     .data-table {
@@ -1193,7 +1150,7 @@ Each Forum post is contained in one row:
 </table>
 </div>
 
-<p>
+</p><p>
 <b>EdxForum Example Rows:</b><br>
 
 <pre>
@@ -1243,7 +1200,7 @@ Each Forum post is contained in one row:
 
 The <b>CourseInfo</b> table is constructed from the
 OpenEdX <i>modulestore</i> MongoDB structure.
-<p>
+</p><p>
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 8px;border-style:solid;border-width:1px;}
@@ -1307,7 +1264,7 @@ OpenEdX <i>modulestore</i> MongoDB structure.
 </table>
 </pre>
 </div>
-<p>
+</p><p>
 Example rows:
 <pre>
 +----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -1329,16 +1286,16 @@ participants' weekly median session length was between 1 and 20
 minutes, the number of times participants' weekly median session
 length was 21 minutes to 1hr, and the number of times their weekly
 median session length was greater than one hour.
-<p>
+</p><p>
 For example, say a course with 3 learners lasts for two weeks.  The
 first week two learners had an observed median session length of 15
 minutes. One learner's median was 2hrs. The second week of the course
 one learner's median was 25 minutes, and the other two learners
 engaged for a median of 13 minutes.
-<p>
+</p><p>
 The Median1-20 would be (2 + 2 = 4), the Median21-1hr would be 1, and
 the Median>1hr would be 1.
-<p>
+</p><p>
 Notice that the median statistically dampens the impact of
 outliers. For example, say one learner has all course materials
 available from an earlier course offering. The eager participant runs
@@ -1349,7 +1306,7 @@ answer depends on what the other learners were doing. If no learner
 touched the course during the first week, the median will be dominated
 by the eager learner, and the number of weeks during which the median
 was greater than one hour will be incremented.
-<p>
+</p><p>
 If instead many learners are active during the first week, but they
 all only put in very short sessions, then the median will favor those
 short sessions, and instead of incrementing the number of weeks in
@@ -1359,7 +1316,7 @@ instead. Thus, the week counts by median communicate a <i>typical</i>
 level of engagement. If your research goal calls for a more fine
 grained analysis, the first of the three tables is for you. As
 explained, that table lists all sessions.
-<p>
+</p><p>
 The first table in this group is usually large, because it lists
 each <i>session</i> of each participant in a class. A session is
 defined as a series of actions a participant undertook on the computer
@@ -1378,14 +1335,14 @@ event. Another option is to apportion the median inter-event time
 lapse (which is 500sec). To be conservative we have settled on
 apportioning 1sec to the last event. This decision implies that
 the engagement computation underestimates the true result.
-<p>
+</p><p>
 Note that this accounting of time engagement is quite approximate even
 disregarding the decision about the last event's duration. For
 example, participants might read course related materials for an hour
 without generating a platform event. No event: no accounting for that
 time. A similar short change occurs when participants work on a
 paper-and-pencil assignment.
-<p>
+</p><p>
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
@@ -1424,10 +1381,10 @@ paper-and-pencil assignment.
     <td class="tg-031e">Number of events that comprise this row's session</td>
   </tr>
 </table>
-<p>
+</p><p>
 A few example lines from an engagement_allData table:
 <center><img src="figs/engagement_alldata.png"/></center>
-<p>
+</p><p>
 
 The engagement_weeklyEffort table lists the sum of session lengths for
 each participant for each week.
@@ -1462,16 +1419,16 @@ each participant for each week.
     <td class="tg-031e">Number of minutes expended by the row's participant during the row's week<br></td>
   </tr>
 </table>
-<p>
+</p><p>
 A typical row in engagement_weeklyEffort looks like this:
 <center><img src="figs/engagement_weeklyEffort.png"/></center>
 
-<p>
+</p><p>
 The final table in the engagement group is a single row for each
 course. The row summarizes the efforts across all weeks in one
 course. If a single course is being exported, then the table will
 contain only one line.
-<p>
+</p><p>
 This table provides an overview of session lengths that learners tended to
 invest in a course. For example, if the number of weeks in which the median
 session length exceeded one hour is high, then learners had to invest
@@ -1479,7 +1436,7 @@ long, contiguous studying times throughout most of the course. In contrast,
 if the number of weeks in which the median session length was 1-20min
 is high, then the course tended to have students frequently engage
 for short periods of time.
-<p>
+</p><p>
 As an extreme, consider a learner who works through an entire course
 in the first week, then sits out the remaining time. (This example
 would require all course materials to be available from the start.)
@@ -1489,12 +1446,12 @@ behavior of other learners during that same week. If everyone else
 only spent 1 minute during that week, the median would be 1-20min for
 that week, and the corresponding 1-20min count would be incremented
 instead of the greater-than-one-hour count.
-<p>
+</p><p>
 This summary measure is therefore not sensitive to extreme
 behaviors by individual learners. Such learners do not unduly distort
 the result. Note, however, that the summary measure does not
 tell us <i>when</i> in a course long sessions prevailed.
-<p>
+</p><p>
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
@@ -1536,13 +1493,13 @@ tell us <i>when</i> in a course long sessions prevailed.
          larger than one hour.<br></td>
   </tr>
 </table>
-<p>
+</p><p>
 A typical row in engagement_summary looks like this:
 <center><img src="figs/engagement_summary.png"/></center>
 
-<p>
+</p><p>
 <hr>
-<p>
+</p><p>
 The following tables are only available.
 by <a href="#accessProcedure">special arrangement</a>
 
@@ -1605,7 +1562,7 @@ by <a href="#accessProcedure">special arrangement</a>
     </td>
   </tr>
 </table>
-<p>
+</p><p>
 
 <h3 id="mirrors">Platform tables mirrored on Datastage</h3>
 
@@ -1623,7 +1580,7 @@ Documentation for these tables</a> is provided by the EdX consortium.
 <li>student_anonymoususerid</li>
 <li>student_courseenrollment</li>
 </ul>
-<p>
+</p><p>
 <h3 id="functions">Useful MySQL Functions</h3>
 
 If you query the database directly, the following stored functions and procedures
@@ -1653,22 +1610,22 @@ statement, and a return variable must be provided. The idiom is:
 CALL computeEnrollmentCoursera('antimicrobial-001', @theEnrollment);
 SELECT @theEnrollment;
 </pre>
-<p>
+</p><p>
 A word about the functions that begin with 'id', such as idAnon2Ext().
 These are functions that convert between a number of learner IDs that
 are used (i) in Datastage's tables, (2) in tables created by the EdX
 platform, and (3) as learner IDs given to outside learning tool
 vendors.
-<p>
+</p><p>
 Instead of personally identifiable learner names, Datastage uses in
 its tables a 20-byte hash, which is always in column
 anon_screen_name. This ID shows up as the <i>Anon</i> in the above
 conversion function name.
-<p>
+</p><p>
 Meanwhile, the OpenEdX platform code uses a different integer ID for
 each learner. We call those IDs a learner's <i>Int</i> id. You will
 see functions with embedded <i>Int</i>, such as idAnon2Int().
-<p>
+</p><p>
 A third source of IDs for any given learner are 16-byte hashes that
 OpenEdX produces in line with the Learning Technology Interchange
 (LTI) method of generating IDs. OpenEdX assigns each learner a
@@ -1678,7 +1635,7 @@ course: the learner's <i>Global LTI ID</i>.  For historic reasons, we
 call a learner's LTI IDs their <i>External</i> IDs. You will see
 function names that include the letters <i>Ext</i>, which stands for
 external (e.g. idAnon2Ext())
-<p>
+</p>
 
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
