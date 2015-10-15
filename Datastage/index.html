@@ -934,13 +934,14 @@ the following information explains some idiosyncrasies that may make analysis sl
   </tr>
 </table>
 
-</p><p>
+<p>
 For users working with data from Coursera courses: it's possible to link survey
 responses to Coursera data by joining the 'a' ID field with the session_user_id field
 contained in the ID map from Coursera's data export. You need to know which Coursera
 database corresponds to which SurveyID; this data can be looked up manually in the
 Podio database. For example (replacing `COURSERA_DB_NAME` and `SURVEYID` with a matching
 pair as designated in Podio.CourseIDMap):
+</p>
 
 <pre>
   SELECT *
@@ -953,6 +954,70 @@ pair as designated in Podio.CourseIDMap):
 </p><p>
 Note that for each survey (agnostic of platform) some of the 'a' field values will
 occasionally fail to correspond with any platform identifier.
+
+<hr>
+
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">OpenAssessment</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">event_table_id</td>
+    <td class="tg-031e">UUID for tracking log event. Links to EdxTrackEvent table.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">event_type</td>
+    <td class="tg-031e">Description of event type. Indicates whether row describes peer assessment, self assessment, etc.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">anon_screen_name</td>
+    <td class="tg-031e">Learner's anonymized screen name.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">score_type</td>
+    <td class="tg-031e">PE if peer assessment, or SE if self assessment, else empty for other event types</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">submission_uuid</td>
+    <td class="tg-031e">UUID for submission being assessed. Join with edxprod.submissions_submission column 'uuid'.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">edx_anon_id</td>
+    <td class="tg-031e">Anonymized screen name for learner who is being assessed.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">time</td>
+    <td class="tg-031e">When assessment was submitted.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">course_display_name</td>
+    <td class="tg-031e">Course context for assessment.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">resource_display_name</td>
+    <td class="tg-031e">Label for assessment in course.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">resource_id</td>
+    <td class="tg-031e">Resource identifier from platform.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">feedback_text</td>
+    <td class="tg-031e">Instructions for learners giving feedback/assessing peer work.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">comment_text</td>
+    <td class="tg-031e">Content of assessment.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">options</td>
+    <td class="tg-031e">Captures learner assessments when rubric is used.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">corrections</td>
+    <td class="tg-031e">Captures instructor assessments when rubric is used.</td>
+  </tr>
+</table>
 
 <hr>
 
