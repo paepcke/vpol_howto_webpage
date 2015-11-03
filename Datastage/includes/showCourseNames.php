@@ -8,6 +8,7 @@ function printCourseNames($platform) {
     if ($platform != 'coursera' &&
         $platform != 'openedx' &&
         $platform != 'moocdb' &&
+        $platform != 'suclass' &&
         $platform != 'novoed')
         die("Only courses for platforms coursera, openedx, and moocdb are available on datastage.stanford.edu");
 
