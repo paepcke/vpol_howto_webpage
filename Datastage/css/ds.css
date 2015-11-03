@@ -38,3 +38,7 @@ a:visited {
 span.sharable {
     color: green;
 }
+
+span.hidden {
+  visibility: hidden;
+}
