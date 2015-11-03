@@ -46,10 +46,10 @@ OpenEdX course listings</a>.</i></br></br>";
 
     } elseif ($platform == 'suclass') {
         $strSQL = "SELECT course_display_name AS courseName,
-                    enrollment(course_display_name AS enrollment,
+                    enrollment(course_display_name) AS enrollment,
                     start_date,
                     is_internal,
-                    if (start_date > '2014-06-14', 1, 0) as date_sharable
+                    if(start_date > '2014-06-14', 1, 0) as date_sharable
                     FROM CourseInfo
                     WHERE is_internal = 1
                     ORDER BY courseName;";
