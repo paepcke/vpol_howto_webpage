@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <title>Course List</title>
-  <link href="https://datastage.stanford.edu/css/ds.css>" rel="stylesheet">
+  <link href="css/ds.css>" rel="stylesheet">
 </head>
 
 <body>
