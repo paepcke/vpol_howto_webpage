@@ -101,7 +101,7 @@ OpenEdX course listings</a>.</i></br></br>";
              ) {
               echo '<span class="sharable">' . $row['courseName'] . ' (enrollment: ' . $row['enrollment'] . ')</span><br />';
           } else {
-              echo '<span class="hidden">' . $row['courseName'] . ' (enrollment: ' . $row['enrollment'] . ")<br></span>";
+              echo '<span class="hidden">' . $row['courseName'] . ' (enrollment: ' . $row['enrollment'] . ")</span>";
           }
       }
     }
