@@ -40,5 +40,5 @@ span.sharable {
 }
 
 span.hidden {
-  visibility: hidden;
+  display: none;
 }
