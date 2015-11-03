@@ -41,15 +41,26 @@ OpenEdX course listings</a>.</i></br></br>";
                    ORDER BY courseName;";
 
         echo "<b>OpenEdX courses archived on Datastage</b></br>";
-	echo "<i>Courses in <span class=sharable>green</span> may be shared with researchers outside of Stanford</i></br></br>";
+        echo "<i>Courses in <span class=sharable>green</span> may be shared with researchers outside of Stanford</i></br></br>";
 
+    } elseif ($platform == 'suclass') {
+        $strSQL = "SELECT course_display_name AS courseName,
+                    enrollment(course_display_name AS enrollment,
+                    start_date,
+                    is_internal,
+                    if (start_date > '2014-06-14', 1, 0) as date_sharable
+                    FROM CourseInfo
+                    WHERE is_internal = 1
+                    ORDER BY courseName;";
+        echo "<b>SUClass courses archived on Datastage</b><br>";
+        echo "<i>Courses listed here are not available for data sharing except by special arrangement.</i><br><br>";
 
     } elseif ($platform == 'novoed') {
         $strSQL = "SELECT DISTINCT extractNovoEdCourseName(SCHEMA_NAME) AS courseName
                    FROM information_schema.SCHEMATA
                    WHERE schema_name LIKE 'novoed%' ORDER BY courseName;";
         echo "<b>NovoEd courses archived on Datastage</b></br>";
-	echo "<i>NovoEd courses can unfortunately currently only be shared with researchers within Stanford University</i></br></br>";
+	      echo "<i>NovoEd courses can unfortunately currently only be shared with researchers within Stanford University</i></br></br>";
     }
 
     // Execute the query (the recordset $result contains the result
