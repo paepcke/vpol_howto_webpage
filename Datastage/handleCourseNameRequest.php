@@ -5,19 +5,6 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <title>Course List</title>
   <link href="css/ds.css" rel="stylesheet">
-  <!-- <style>
-    body
-    {
-    background-color:#b0c4de;
-    }
-    #spanhand
-    {
-    font-weight: bold;
-    font-size: 150%;
-    display: inline-block;
-    }
-    span.sharable {color: green;}
-  </style> -->
 </head>
 
 <body>
