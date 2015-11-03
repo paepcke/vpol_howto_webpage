@@ -106,9 +106,9 @@ OpenEdX course listings</a>.</i></br></br>";
       }
     }
 
-    // if ($platform == 'openedx') {
-    //   echo '<br><i>Course listings for SUClass courses available <a href=\"http://datastage.stanford.edu/handleCourseNameRequest.php?platform=suclass\">hgere</a>.</i>'
-    // }
+    if ($platform == 'openedx') {
+      echo '<br><i>Course listings for SUClass courses available <a href=\"http://datastage.stanford.edu/handleCourseNameRequest.php?platform=suclass\">here</a>.</i>';
+    }
 
     // Close the database connection
     $mySQLDb->close();
