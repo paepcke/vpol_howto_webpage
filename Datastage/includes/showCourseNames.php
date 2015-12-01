@@ -98,7 +98,7 @@ OpenEdX course listings</a>.</i></br></br>";
              && (strpos(strtolower($row['courseName']), 'ohsx') === false)
              && ($row['enrollment'] > 100)
              && ($row['date_sharable'] == 1)
-             && (!excluded(row['courseName']))
+             && (!excluded($row['courseName']))
              ) {
               echo '<span class="sharable">' . $row['courseName'] . ' (enrollment: ' . $row['enrollment'] . ')</span><br />';
           } else {
@@ -121,8 +121,6 @@ function excluded($course_name) {
   $exclude_courses = array_map(function($arr) {
     return (string) trim($arr);
   }, $exclude_raw);
-
-  echo $exclude_courses[0]
 
   return in_array($course_name, $exclude_courses);
 }
