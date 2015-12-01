@@ -116,7 +116,7 @@ OpenEdX course listings</a>.</i></br></br>";
 }
 
 function excluded($course_name) {
-  $exclude_raw = file('excluded_courses.txt');
+  $exclude_raw = file('/home/dataman/Code/vpol_howto_webpage/Datastage/includes/excluded_courses.txt');
 
   $exclude_courses = array_map(function($arr) {
     return (string) trim($arr);
