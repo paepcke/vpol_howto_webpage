@@ -122,7 +122,7 @@ function excluded($course_name) {
     return (string) trim($arr);
   }, $exclude_raw);
 
-  die($exclude_courses)
+  echo $exclude_courses[0]
 
   return in_array($course_name, $exclude_courses);
 }
