@@ -98,6 +98,7 @@ OpenEdX course listings</a>.</i></br></br>";
              && (strpos(strtolower($row['courseName']), 'ohsx') === false)
              && ($row['enrollment'] > 100)
              && ($row['date_sharable'] == 1)
+             && (!excluded(row['courseName']))
              ) {
               echo '<span class="sharable">' . $row['courseName'] . ' (enrollment: ' . $row['enrollment'] . ')</span><br />';
           } else {
@@ -112,6 +113,16 @@ OpenEdX course listings</a>.</i></br></br>";
 
     // Close the database connection
     $mySQLDb->close();
+}
+
+function excluded($course_name) {
+  $exclude_raw = file('excluded_courses.txt');
+
+  $exclude_courses = array_map(function($arr) {
+    return (string) trim($arr);
+  }, $exclude_raw);
+
+  return in_array($course_name, $exclude_courses);
 }
 
 // The '&' in the following function def indicates that a pointer (to an object)
