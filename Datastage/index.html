@@ -844,11 +844,11 @@ the following information explains some idiosyncrasies that may make analysis sl
     <th colspan="2" class="tg-s6z2">Survey</th>
   </tr>
   <tr class="tg-even">
-    <td class="tg-031e">SurveyID</td>
+    <td class="tg-031e">SurveyId</td>
     <td class="tg-031e">Qualtrics-assigned unique identifier for a survey, e.g. "SV_XXXXXXXXXXXXXXX"</td>
   </tr>
   <tr class="tg-even">
-    <td class="tg-031e">QuestionID</td>
+    <td class="tg-031e">QuestionId</td>
     <td class="tg-031e">Qualtrics-assigned ID for a given question, e.g. "QID3".</td>
   </tr>
   <tr class="tg-even">
@@ -861,17 +861,17 @@ the following information explains some idiosyncrasies that may make analysis sl
     of what individual codes mean.</td>
   </tr>
   <tr class="tg-even">
-    <td class="tg-031e">QuestionText</td>
+    <td class="tg-031e">QuestionDescription</td>
     <td class="tg-031e">Text of the question as displayed to users.</td>
   </tr>
   <tr class="tg-even">
-    <td class="tg-031e">ChoiceID</td>
+    <td class="tg-031e">ChoiceId</td>
     <td class="tg-031e">ID for a given choice. Unique within a given question, but not between questions; i.e. there is only one
     choice marked '1' per question, but most questions have their own choice '1'. Combined with a QuestionNumber and SurveyID, this
     field links survey data to response data.</td>
   </tr>
   <tr class="tg-even">
-    <td class="tg-031e">Description</td>
+    <td class="tg-031e">ChoiceDescription</td>
     <td class="tg-031e">Text of the choice presented to users.</td>
   </tr>
 </table>
@@ -880,14 +880,14 @@ the following information explains some idiosyncrasies that may make analysis sl
 
 <table class="tg">
   <tr>
-    <th colspan="2" class="tg-s6z2">Response</th>
+    <th colspan="2" class="tg-s6z2">response</th>
   </tr>
   <tr class="tg-even">
-    <td class="tg-031e">SurveyID</td>
+    <td class="tg-031e">SurveyId</td>
     <td class="tg-031e">Qualtrics-assigned unique identifier for a survey, e.g. "SV_XXXXXXXXXXXXXXX"</td>
   </tr>
   <tr class="tg-even">
-    <td class="tg-031e">ResponseID</td>
+    <td class="tg-031e">ResponseId</td>
     <td class="tg-031e">Qualtrics-assigned unique identifier for a given response.</td>
   </tr>
   <tr class="tg-even">
@@ -895,7 +895,7 @@ the following information explains some idiosyncrasies that may make analysis sl
     <td class="tg-031e">Surveymaker-assigned ID for a given question, e.g. "Q3.2" or "gender".</td>
   </tr>
   <tr class="tg-even">
-    <td class="tg-031e">AnswerChoiceID</td>
+    <td class="tg-031e">AnswerChoiceId</td>
     <td class="tg-031e">Identifier for a particular choice within a question and a survey. Corresponds to ChoiceID in Survey view.</td>
   </tr>
   <tr class="tg-even">
