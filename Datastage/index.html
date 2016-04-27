@@ -168,8 +168,10 @@ of actual course behavior.</p>
    different from the hashes used in other tables, and anonymized
    using the same hashes.</li>
 
- <li> <b>EdxQualtrics.Survey</b>:Information about surveys
-   administered via the Qualtrics service.</li>
+ <li> <b>EdxQualtrics.question</b>: Survey questions administered
+    via the Qualtrics service.</li>
+
+ <li> <b>EdxQualtrics.choice</b>: Choices for multiple choice questions above.</li>
 
  <li> <b>EdxQualtrics.Response</b>: Learner responses to survey
    questions.</li>
@@ -841,75 +843,22 @@ The <b>EdxQualtrics</b> set of tables contains data from pre-course and
 post-course surveys. Qualtrics maintains detailed documentation <a href="http://www.qualtrics.com/university/researchsuite/reporting/download-data/understanding-data-set/">here</a>;
 the following information explains some idiosyncrasies that may make
 analysis slightly easier. <span class="code">Survey</span>
-and <span class="code">ResponseMetadata</span> below are views, rather 
+and <span class="code">ResponseMetadata</span> below are views, rather
 than tables. The <span class="code">response</span> is base tables. The
 underlying survey data structures that we get from Qualtrics are
 messy. The views/tables below are an attempt to pull out the most
 important attributes from the tangle. We
-add <a href="#surveyExamples">example</a> queries after the 
-table/view list. 
+add <a href="#surveyExamples">example</a> queries after the
+table/view list.
 <p>
-The <span class="code">Survey</span> view provides information about a survey as a
+The <span class="code">question</span> and <span class="code">choice</span> tables provide information about a survey as a
 whole. The <span class="code">QuestionNumber</span> is used in
 the <span class="code">response</span> table to identify which question is being
 answered. If you are looking for the <span class="code">QuestionNumber</span> that
 corresponds to a particular question, search on
 the <span class="code">QuestionDescription</span> field. See <a href="#surveyExamples">example</a> below.
 
-<table class="tg">
-  <tr>
-    <th colspan="2" class="tg-s6z2">Survey</th>
-  </tr>
-  <tr class="tg-even">
-    <td class="tg-031e">SurveyId</td>
-    <td class="tg-031e">Qualtrics-assigned unique identifier for a survey, e.g. "SV_XXXXXXXXXXXXXXX"</td>
-  </tr>
-  <tr class="tg-even">
-    <td class="tg-031e">QuestionId</td>
-    <td class="tg-031e">Qualtrics-assigned ID for a given question, e.g. "QID3".</td>
-  </tr>
-  <tr class="tg-even">
-    <td class="tg-031e">QuestionNumber</td>
-    <td class="tg-031e">Surveymaker-assigned ID for a given question, e.g. "Q3.2" or "gender". Note that this field is distinct from QuestionID.</td>
-  </tr>
-  <tr class="tg-even">
-    <td class="tg-031e">QuestionType</td>
-    <td class="tg-031e">Question type code from
-    Qualtrics. See <a href="http://www.qualtrics.com/university/researchsuite/reporting/download-data/understanding-data-set/">
-    Qualtrics documentation</a> for a detailed explanation of what individual codes mean.</td>
-  </tr>
-  <tr class="tg-even">
-    <td class="tg-031e">QuestionDescription</td>
-    <td class="tg-031e">Text of the question as displayed to users.</td>
-  </tr>
-  <tr class="tg-even">
-    <td class="tg-031e">ChoiceId</td>
-    <td class="tg-031e">ID for a given choice. Unique within a given question, but not between questions; i.e. there is only one
-    choice marked '1' per question, but most questions have their own choice '1'. Combined with a QuestionNumber and SurveyID, this
-    field links survey data to response data.</td>
-  </tr>
-  <tr class="tg-even">
-    <td class="tg-031e">ChoiceDescription</td>
-    <td class="tg-031e">Text of the choice presented to users.</td>
-  </tr>
-</table>
-
 <br>
-
-<pre>
-+--------------------+------------+----------------+--------------+----------------------------------------------------------------------+----------+------------------------+
-| SurveyId           | QuestionId | QuestionNumber | QuestionType | QuestionDescription                                                  | ChoiceId | ChoiceDescription      |
-+--------------------+------------+----------------+--------------+----------------------------------------------------------------------+----------+------------------------+
-| SV_03AMgycoJ4XSIvz | QID1       | Q1.1           | MC           | How good or bad was your overall experience with the course?         | 1        | Extremely Bad          |
-| SV_03AMgycoJ4XSIvz | QID1       | Q1.1           | MC           | How good or bad was your overall experience with the course?         | 2        | Very Bad               |
-| SV_03AMgycoJ4XSIvz | QID1       | Q1.1           | MC           | How good or bad was your overall experience with the course?         | 3        | Mostly Bad             |
-| SV_03AMgycoJ4XSIvz | QID1       | Q1.1           | MC           | How good or bad was your overall experience with the course?         | 4        | Neutral                |
-| SV_03AMgycoJ4XSIvz | QID1       | Q1.1           | MC           | How good or bad was your overall experience with the course?         | 5        | Mostly Good            |
-| SV_03AMgycoJ4XSIvz | QID1       | Q1.1           | MC           | How good or bad was your overall experience with the course?         | 6        | Very Good              |
-| SV_03AMgycoJ4XSIvz | QID1       | Q1.1           | MC           | How good or bad was your overall experience with the course?         | 7        | Extremely Good         |
-| SV_03AMgycoJ4XSIvz | QID16      | Q3.1           | Matrix       | How much did you know about each topic before the course started?    | 1        | descriptive statistics |
-+--------------------+------------+----------------+--------------+----------------------------------------------------------------------+----------+------------------------+
-</pre>
 
 <p>
 
@@ -934,7 +883,7 @@ the <span class="code">QuestionDescription</span> field. See <a href="#surveyExa
   <tr class="tg-even">
     <td class="tg-031e">ForceResponse</td>
     <td class="tg-031e">Whether or not Qualtrics was programmed to
-    insist on a response to this question.</td> 
+    insist on a response to this question.</td>
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">QuestionType</td>
@@ -946,7 +895,7 @@ the <span class="code">QuestionDescription</span> field. See <a href="#surveyExa
     <td class="tg-031e">QuestionNumber</td>
     <td class="tg-031e">Surveymaker-assigned ID for a given question,
     	   e.g. "Q3.2" or "gender". Note that this field is distinct from
-    	   QuestionID.</td>  
+    	   QuestionID.</td>
   </tr>
 </table>
 
@@ -986,14 +935,14 @@ the <span class="code">QuestionDescription</span> field. See <a href="#surveyExa
     <td class="tg-031e">Identifier for a particular choice within a
     question and a survey. Corresponds to ChoiceID in Survey
     view.  You need to know your survey to know whether your respondent answer is in this field,
-    or in the Description field below.</td> 
+    or in the Description field below.</td>
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">Description</td>
     <td class="tg-031e">Contains learner response to this combination of Survey-Question-Choice IDs. May contain short-answer responses,
     	    boolean values, browser metadata, responses on a value
     	    scale (e.g. between 1-7), or randomzization data (e.g. if
-    	    choices for a given question were presented 
+    	    choices for a given question were presented
     	    in random order).  You need to know your survey to know whether
     	    your respondent answer is in this field, or in the ChoiceId above.
     </td>
@@ -1049,7 +998,7 @@ to identify learners in all the other tables.
     	links <span class="code">ResponseId</span> values to course data
     	from the LMS. This column is currently only available for
     	surveys embedded in Lagunita courses.
-    </td> 
+    </td>
   </tr>
   <tr class="tg-even">
     <td class="tg-031e">Country</td>
@@ -1078,75 +1027,18 @@ to identify learners in all the other tables.
 
 </pre>
 <br>
-The <span class="code">course_survey</span> lets you find out the course to which a
-given survey belongs. The <span class="code">SurveyId</span> let's you join over to
-the other survey tables above. However, if you are interested in
-surveys of a particular course run, it's easier to find
-the <span class="code">SurveyId</span> in this table, and hard-code it into your
-queries over the tables and views above. But if you are looking for
-surveys that ran during a particular time span, then you may wish to
-join. 
-<p>
-Some courses have several <span class="code">SurveyId</span>s, if they ran multiple
-times. 
-<table class="tg">
-  <tr>
-    <th colspan="2" class="tg-s6z2">course_survey</th>
-  </tr>
-  <tr class="tg-even">
-    <td class="tg-031e">SurveyId</td>
-    <td class="tg-031e">Qualtrics-assigned unique identifier for a survey, e.g. "SV_XXXXXXXXXXXXXXX"</td>
-  </tr>
-  <tr class="tg-even">
-    <td class="tg-031e">CourseNum</td>
-    <td class="tg-031e">Catalog number, such as 'CS 144'</td>
-  </tr>
-  <tr class="tg-even">
-    <td class="tg-031e">Quarter</td>
-    <td class="tg-031e">Quarter and year when course of offered; e.g.
-               'Fall 2015'</td>
-  </tr>
-  <tr class="tg-even">
-    <td class="tg-031e">CourseDescription</td>
-    <td class="tg-031e">Description of course as assigned by the
-                        Stanford instructional design team.
-                        Example: 'F15_SI_Introduction to Computer Networking'
-    </td>
-  </tr>
-  <tr class="tg-even">
-    <td class="tg-031e">RunType</td>
-    <td class="tg-031e">One of 'Repeat', 'Derivative', and 'First Run'.</td>
-  </tr>
-</table>
 
-<br>
-<p>
-<pre>
-+--------------------+-----------+-------------+----------------------------------------+-----------+--------------------------------------------+
-| SurveyId           | CourseNum | Quarter     | CourseDescription                      | RunType   | SurveyName                                 |
-+--------------------+-----------+-------------+----------------------------------------+-----------+--------------------------------------------+
-| SV_819p34oVemJmsTz | NULL      | Spring 2015 | Sp15_PI_10 Pre-Modern Poems by Women   | First Run | Post-Sp15_001_PI_10PreModernPoemsbyWomen   |
-| SV_6EkhrDQlyeMDGex | NULL      | Spring 2015 | Sp15_PSP_Language, Proof and Logic     | Derivative| pre_F14_001_PI_Language_Proof_and_Logic    |
-| SV_4G7K64ey3gijcUJ | ECON 1V   | Summer 2014 | Su14_SI_Principles of Economics        | Repeat    | post_Su14_001_PI_Economics                 |
-| SV_8wsHshcRFdfvIz3 | QMSE02    | Winter 2016 | W16_PI_Quantum Mechanics for ...       | Repeat    | pre_W15_PI_Quantum_Mechanics_for_...       |
-+--------------------+-----------+-------------+----------------------------------------+-----------+--------------------------------------------+
-</pre>
 <p>
 <b><span id="surveyExamples">Examples:</span></b><p>
 <ul>
 <li>
-Find surveys for the course Pre-Modern Poems by Women:
-<pre>
-SELECT * FROM course_survey WHERE SurveyName LIKE '%Poems%Women';
-</pre>
-<li>
-Get all Survey IDs, and (answer) Description 
-values for a survey question that matches: 
+Get all Survey IDs, and (answer) Description
+values for a survey question that matches:
 'How likely is it that you would recommend an online course taught
 by Stanford University faculty...':
 <pre>
-SELECT SurveyId, Description 
-  FROM (SELECT QuestionNumber 
+SELECT SurveyId, Description
+  FROM (SELECT QuestionNumber
           FROM question
           WHERE MATCH(QuestionDescription) AGAINST ('recommend*faculty')) AS QuestionNumbers
        LEFT JOIN response
@@ -1164,8 +1056,8 @@ is marked as 'nps'.
 <p>Count number of responses to the Net Promoter
 Score question for each survey:
 <pre>
-SELECT SurveyId, COUNT(*) AS NumResponses 
-  FROM response 
+SELECT SurveyId, COUNT(*) AS NumResponses
+  FROM response
  WHERE QuestionNumber = 'nps'
  GROUP BY SurveyId;
 </pre>
@@ -1174,35 +1066,21 @@ SELECT SurveyId, COUNT(*) AS NumResponses
 Given a survey id, get a histogram of its Net Promoter Question:
 <pre>
 SELECT Description, COUNT(*) AS Frequency
-  FROM response 
+  FROM response
  WHERE QuestionNumber = 'nps'
    AND SurveyId = 'SV_aatmUGYOCSgpAk5'
  GROUP BY Description
  ORDER BY CAST(Description AS SIGNED INTEGER) ASC;
 </pre>
 </Li>
-<li>
-Get all QuestionNumber and (answer) Description values for a known
-course's survey(s) (in this case CS 144). Replace empty
-answers with 'n/a':
 
-<pre>
-SELECT QuestionNumber, 
-       if(LENGTH(Description) = 0, 'n/a', Description) AS Answer
-  FROM (SELECT SurveyId
-          FROM course_survey
-         WHERE CourseNum = 'CS 144') AS CS144Surveys
-       LEFT JOIN response
-       ON response.SurveyId = CS144Surveys.SurveyId;
-</pre>
-</li>
 <li>
 
 How many surveys asked
 <p class='quote'>How many open online courses have you started before
   this one?</p>
 Since QuestionDescription has a fulltext index, you can use regular
-  expressions: 
+  expressions:
 <pre>
 SELECT COUNT(DISTINCT SurveyId)
   FROM question
@@ -1215,14 +1093,7 @@ How many responses did each survey receive?
 SELECT SurveyId, COUNT(*) AS NumResponses FROM response GROUP BY SurveyId;
 </pre>
 </li>
-<li>
-Find all the surveys given at the end of a MOOC:
-<pre>
-SELECT SurveyId, CourseDescription, SurveyName 
-  FROM course_survey 
- WHERE SurveyName LIKE '%post%';
-</pre>
-</li>
+
 </ul>
 
 <p>
