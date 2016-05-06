@@ -183,6 +183,8 @@ of actual course behavior.</p>
  <li> <b>CourseInfo</b>: Facts about courses, such as start/end dates,
    academic year and quarter in which a course was offered. </li>
 
+ <li> <b>EdxProblem</b>: Data on problems offered to learners in courses.</li>
+
 </ul>
 
 <h3>Infrequently shared tables</h3>
@@ -1425,7 +1427,7 @@ Each Forum post is contained in one row:
     +----------------------------------------------------------------------------
 </span>
 
-The <b>CourseInfo</b> table is constructed from the
+The <b>CourseInfo</b> and <b>EdxProblem</b> tables are constructed from the
 OpenEdX <i>modulestore</i> MongoDB structure.
 </p><p>
 <style type="text/css">
@@ -1485,10 +1487,120 @@ OpenEdX <i>modulestore</i> MongoDB structure.
     <td class="tg-031e">Date when instruction began.</td>
   </tr>
   <tr class="tg-even">
+    <td class="tg-031e">enrollment_end</td>
+    <td class="tg-031e">Date at which the platform closed this course
+        for enrollment.</td>
+  </tr>
+  <tr class="tg-even">
     <td class="tg-031e">end_date</td>
     <td class="tg-031e">Date when instruction ended.</td>
   </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">grade_policy</td>
+    <td class="tg-031e">Excerpt from course module. Contains data on weight
+        given to types of assignments when scoring learners.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">certs_policy</td>
+    <td class="tg-031e">Excerpt from course module. Specifies grade cutoffs
+        for giving a statement of accomplishment with/without distinction.</td>
+  </tr>
 </table>
+
+Example rows in CourseInfo:
+<pre>
+  +--------------------------------+--------------------------------------------------+---------------+---------+-------------+---------------------+---------------------+---------------------+---------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+
+  | course_display_name            | course_catalog_name                              | academic_year | quarter | is_internal | enrollment_start    | start_date          | enrollment_end      | end_date            | grade_policy                                                                                                                                                                                                                                                                                                  | certs_policy                        |
+  +--------------------------------+--------------------------------------------------+---------------+---------+-------------+---------------------+---------------------+---------------------+---------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+
+  | Engineering/QMSE-02/Winter2015 | Quantum Mechanics for Scientists and Engineers 2 |          2014 | winter  |           0 | 2014-11-16 00:00:00 | 2015-01-15 01:00:00 | 2015-03-01 00:00:00 | 2015-03-20 00:00:00 | [{u'short_label': u'Quiz', u'min_count': 26, u'type': u'Quizzes', u'drop_count': 4, u'weight': 0.2}, {u'short_label': u'Assignment', u'min_count': 9, u'type': u'Assignments', u'drop_count': 1, u'weight': 0.8}]                                                                                             | {u'Distinction': 0.9, u'Pass': 0.7} |
+  | Medicine/MedStats-SP/SelfPaced | Statistics in Medicine                           |          2015 | winter  |           0 | 2015-11-24 19:00:00 | 2016-02-28 00:00:00 | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 | [{u'min_count': 9, u'weight': 0.45, u'type': u'Homework', u'drop_count': 1, u'short_label': u'HW'}, {u'min_count': 53, u'weight': 0.1, u'type': u'Quiz', u'drop_count': 0, u'short_label': u'Quiz'}, {u'min_count': 26, u'weight': 0.45, u'type': u'Final Exam', u'drop_count': 1, u'short_label': u'Final'}] | {u'Distinction': 0.9, u'Pass': 0.6} |
+  +--------------------------------+--------------------------------------------------+---------------+---------+-------------+---------------------+---------------------+---------------------+---------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+
+</pre>
+
+<br>
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">EdxProblem</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">problem_id</td>
+    <td class="tg-031e">Unique identifier for this problem in this course. Identifiers
+        may be repeated between courses as an artifact of how OpenEdX stores problems.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">problem_display_name</td>
+    <td class="tg-031e">User-facing label for this problem.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">course_display_name</td>
+    <td class="tg-031e">Course name as used in other tables of the archive.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">problem_text</td>
+    <td class="tg-031e">Full text of problem. May contain XML, HTML, LaTeX, or other markup language.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">date</td>
+    <td class="tg-031e">Creation date for this problem.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">weight</td>
+    <td class="tg-031e">Number of points available for this problem.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">revision</td>
+    <td class="tg-031e">Number of prior edits. Not used.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">max_attempts</td>
+    <td class="tg-031e">Number of attempts permitted.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">trackevent_hook</td>
+    <td class="tg-031e">Platform URI for this problem. Joins with Edx.EdxTrackEvent.problem_id.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">vertical_uri</td>
+    <td class="tg-031e">Platform URI of enclosing 'vertical' module.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">problem_idx</td>
+    <td class="tg-031e">Index of this problem in the submodule list of enclosing vertical.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">sequential_uri</td>
+    <td class="tg-031e">Platform URI of enclosing 'sequential' module. Joins with Edx.EdxTrackEvent.sequence_id.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">vertical_idx</td>
+    <td class="tg-031e">Index of this vertical in the submodule list of enclosing sequential. Joins with Edx.EdxTrackEvent.goto_dest.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">chapter_uri</td>
+    <td class="tg-031e">Platform URI of enclosing 'chapter' module.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">sequential_idx</td>
+    <td class="tg-031e">Index of this sequential in the submodule list of enclosing chapter.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">chapter_idx</td>
+    <td class="tg-031e">Index of this chapter in the submodule list of enclosing course.</td>
+  </tr>
+</table>
+
+<p>Note that the *_idx fields in EdxProblem can be used together to obtain a total ordering of problems
+in a given course, as follows:
+
+<pre>
+  SELECT problem_id, problem_display_name, chapter_idx, sequential_idx, vertical_idx, problem_idx
+  FROM Edx.EdxProblem
+  WHERE course_display_name = '{{COURSE}}'
+  ORDER BY chapter_idx, sequential_idx, vertical_idx, problem_idx;
+<br>
+
+</p>
+
 </pre>
 </div>
 </p><p>
