@@ -1426,6 +1426,7 @@ Each Forum post is contained in one row:
     | None      | []         | 123456789012345678901236 |           |           |
     +----------------------------------------------------------------------------
 </span>
+</pre>
 
 The <b>CourseInfo</b> and <b>EdxProblem</b> tables are constructed from the
 OpenEdX <i>modulestore</i> MongoDB structure.
@@ -1506,7 +1507,7 @@ OpenEdX <i>modulestore</i> MongoDB structure.
         for giving a statement of accomplishment with/without distinction.</td>
   </tr>
 </table>
-
+<br>
 Example rows in CourseInfo:
 <pre>
   +--------------------------------+--------------------------------------------------+---------------+---------+-------------+---------------------+---------------------+---------------------+---------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+
@@ -1597,21 +1598,8 @@ in a given course, as follows:
   FROM Edx.EdxProblem
   WHERE course_display_name = '{{COURSE}}'
   ORDER BY chapter_idx, sequential_idx, vertical_idx, problem_idx;
-<br>
-
-</p>
-
 </pre>
-</div>
 </p><p>
-Example rows:
-<pre>
-+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| course_display_name                          | course_catalog_name              | academic_year | quarter | num_quarters | is_internal | enrollment_start    | start_date          | end_date            |
-| HumanitiesSciences/Physics101E/Spring2014    | The Special Theory of Relativity |          2012 | summer  |           -1 |           0 | 0000-00-00 00:00:00 | 2013-08-18 00:00:00 | 0000-00-00 00:00:00 |
-| Medicine/HRP258/Statistics_in_Medicine       | Statistics in Medicine           |          2012 | summer  |            1 |           0 | 2013-05-10 00:00:00 | 2013-06-11 00:00:00 | 2013-08-18 00:00:00 |
-+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-</pre>
 
 <h3  id="engageDetail">Engagement Export Tables</h3>
 
