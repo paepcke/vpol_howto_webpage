@@ -183,7 +183,9 @@ of actual course behavior.</p>
  <li> <b>CourseInfo</b>: Facts about courses, such as start/end dates,
    academic year and quarter in which a course was offered. </li>
 
- <li> <b>EdxProblem</b>: Data on problems offered to learners in courses.</li>
+ <li> <b>EdxProblem</b>: Metadata on problems offered to learners in courses.</li>
+
+ <li> <b>EdxVideo</b>: Metadata on videos in courses.</li>
 
 </ul>
 
@@ -1428,7 +1430,7 @@ Each Forum post is contained in one row:
 </span>
 </pre>
 
-The <b>CourseInfo</b> and <b>EdxProblem</b> tables are constructed from the
+The <b>CourseInfo</b>, <b>EdxProblem</b> and <b>EdxVideo</b> tables are constructed from the
 OpenEdX <i>modulestore</i> MongoDB structure.
 </p><p>
 <style type="text/css">
@@ -1599,6 +1601,36 @@ in a given course, as follows:
   WHERE course_display_name = '{{COURSE}}'
   ORDER BY chapter_idx, sequential_idx, vertical_idx, problem_idx;
 </pre>
+</p><p>
+
+<br>
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">EdxVideo</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_id</td>
+    <td class="tg-031e">Unique identifier for this video in this course. Identifiers
+        may be repeated between courses, as an artifact of how OpenEdX stores problems.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_display_name</td>
+    <td class="tg-031e">User-facing title for this video.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">course_display_name</td>
+    <td class="tg-031e">Course name as used in other tables of the archive.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_uri</td>
+    <td class="tg-031e">URL to video content hosted on AWS.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_code</td>
+    <td class="tg-031e">ID for video content hosted on Youtube.</td>
+  </tr>
+</table>
+
 </p><p>
 
 <h3  id="engageDetail">Engagement Export Tables</h3>
