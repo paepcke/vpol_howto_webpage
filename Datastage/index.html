@@ -1,859 +1,2135 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-   "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8"/>
-<title>README</title>
-<LINK href="README.css" rel="stylesheet" type="text/css">
-</head>
+  <head>
 
-<body>
-<h1>The Stanford MOOCPosts Data Set</h1>
-<h1 id="byline">Created by nine ODesk Consultants<br>
-under direction of<br>
-<a href="mailto:akshayka@stanford.edu">Akshay Agrawal</a> and <a href="mailto:paepcke@cs.stanford.edu">Andreas Paepcke</a>
-</h1>
+  <title>Datastage | Documentation</title>
+  <link href="css/ds.css" rel="stylesheet">
+  <link href="css/datastage.css" rel="stylesheet">
 
-The Stanford MOOCPosts dataset contains 29,604 anonymized learner
-forum posts from eleven Stanford University public online classes. The
-purpose of this collection is to serve as a foundation for testing
-computational algorithms that process forum posts. You are free to use
-the corpus for academic studies. Please credit the corpus in any
-publications for which it proved useful.
+  </head>
+
+  <body>
+
+<center><h1>CAROL Learner Data Documentation</h1></center>
+
+<h3>Contents</h3>
+<ul>
+  <li><a href="#access">Protocols for access</a></li>
+  <li><a href="#summary">Summary of available data</a></li>
+  <li><a href="#search">List of available data sets</a></li>
+  <li><a href="#appB">Explanation of OpenEdX data fields</a></li>
+  <li><a href="#mirrors">OpenEdX platform tables mirrored on datastage</a></li>
+  <li><a href="#functions">Handy MySQL functions and procedures</a></li>
+</ul>
+
+<h3>Additional information</h3>
+<ul>
+  <li><a href="accessMechanics.html">Database connection instructions</a>
+  <li><a href="https://docs.google.com/document/d/1WlWkaFkpzt9i3zGVqGYAnxK_wdklUncOnh4A0T5yeJs/edit?pli=1">Example queries</a></li>
+  <li><a href="http://www.tableausoftware.com/public/gallery">Gallery
+  of example data visualizations</a></li>
+</ul>
+
+<p>The Center for Advanced Research through Online Learning facilitates research
+using data from online courses. Stanford's instructional environments are instrumented
+to collect a variety of data around participants' interaction with each other and
+with course material. For example, we collect data on learners manipulating controls
+on video players as they view portions of a class, solution submissions to problem
+sets, posts on course message boards, peer grading activities, and some demographic
+data. The type of data that is collected depends on the delivery platform used for
+a particular class.</p>
+
+<p>CAROL makes some of this data available for use by researchers and instructors,
+both to improve instructional delivery and as the basis for more general insights into
+teaching and learning in digital environments.</p>
+
+<p>All data that CAROL shares is available on machine <i>datastage.stanford.edu</i>.
+This page documents protocols for accessing learner data, describes technical details
+about table schemas and other metadata useful for data analysis, and provides
+practical guidance on using analysis tools with our system.</p>
+
+<p>Data viewing programs for MAC and Windows allow you to
+browse through our content. Going further, most analysis tools, like
+R, SPSS, and Excel can connect directly to our databases. Similarly,
+visualization tools are available that allow you to create static, or
+interactive charts of data directly from our sources. We run a
+<a href="http://www.tableausoftware.com/products/server">Tableau Server</a>
+to which you can publish visualizations you create with the Tableau
+Desktop visualization tool. Visitors can manipulate these
+visualizations to the degree you provide for. A comment area is
+available for each view to discuss the information. If desired, access
+to the views can be limited.</p>
+
+<h2 id="access">Protocols for accessing learner data</h2>
+
+<p>Although we do not keep highly sensitive information on this
+server, we do need to protect the data from malicious intrusion. If
+you are interested in studying the data, please fill out
+<a href="http://carol.stanford.edu/research">our request form</a>.</p>
+
+<p>While the form accommodates requests for data with personally
+identifiable information, we can only provide such access in special
+cases. However, the data from which personalized information has been removed
+is quite rich, so we anticipate that most users will not need access to
+sensitive information.</p>
+
+<p>If you are the instructor of a class, and you need the data to improve
+future runs of your course, the personally identifiable data is more
+freely available than if the data is used for research.</p>
+
+<p>Note that all researchers must demonstrate completion of training in human
+subjects research ethics prior to receiving learner data.</p>
+
 <p>
-<div id="downloadLink">
-   <a href="http://iriss.stanford.edu/carol/resources-researchers">Data application</a><br>
+If your results are published in a paper, we appreciate credit for the data,
+as well as a note telling us about how you used the material. Both of these steps
+help us justify the cost of data collection and provide us with more information
+on the development of science using online learner data.
+</p>
+
+
+<br><hr>
+
+
+<h2 id="summary">Summary of Available Data</h2>
+
+<p>Datastage holds learning research data derived from courses offered on
+three platforms: NovoEd, Coursera, and Lagunita, a Stanford instance of the
+OpenEdX platform.</p>
+
+<p>Documentation on Coursera export formats are described in
+<a href="https://spark-public.s3.amazonaws.com/mooc/data_exports.pdf">this document</a>.</p>
+
+<p>No detailed documentation is available for NovoEd tables. Please contact us if you
+plan to use NovoEd data; we are happy to advise on what is possible with the NovoEd
+course data.</p>
+
+<p>We have developed a local system for ingesting and structuring data from Stanford
+courses taught using the OpenEdX platform. These data include raw events taken
+directly from the course tracking logs and instructional data, as well as secondary
+computations and other derived datasets. More detailed information on table schemas
+can be found below.</p>
+
+<p>Note that the tracking log data collected from the OpenEdX platform is known to
+be incomplete. These logs are intended to list each interaction between the platform
+and each learner as they progress through a course. For example, the tracking logs
+capture video playback control interactions as well as assignment submissions. The
+platform currently misses approximately 1% of these events. Users of data from
+Coursera have reported similar issues. The EdX consortium is working on fixing this
+issue; meanwhile, consider data based on tracking logs to be conservative estimates
+of actual course behavior.</p>
+
+<h3>Stored tables and associated views</h3>
+
+<ul>
+  <li><b>EventXtract</b>: A much slimmed view of the OpenEdX tracking log
+    events. The view only includes fields that are currently in use by
+    the platform. </li>
+
+ <li> <b>ActivityGrade</b>: Assignment grades; includes right/wrong for each
+   problem part, the learners' solution choice for each answer pard,
+   and the first and last solution submission times. Constructed from platform table
+   courseware_studentmodule.</li>
+
+ <li> <b>VideoInteraction</b>: An excerpt from tracking logs, focusing on
+   participants' interactions with video.</li>
+
+ <li> <b>Performance</b>: Daily cumulative assignment performance per
+   learner. This is the average grade over all assignments up to the
+   day before the query. A view onto ActivityGrade.</li>
+
+ <li> <b>Demographics</b>: Combines learner self-reported demographic
+   information across multiple tables. Does not contain PII.</li>
+
+ <li> <b>FinalGrade</b>: Final grade is an anonymized view onto the private table UserGrade (see below). FinalGrade
+contains the learners' grades as computed by the platform at the end of the course. Unless instructors
+change grading policies after the course ends, grades in this view reflect what learners take
+home as the overall course grade. In contrast, grades in the Performance table are the average of a learner's grades received in all assignments submitted to date. This average for one learner is
+the average of all ActivityGrade <i>percent_grade</i> numbers of that learner.</li>
+
+ <li> <b>ABExperiment</b>: Data resulting from the use of the OpenEdX AB
+   testing facilities.</li>
+
+ <li> <b>OpenAssessment</b>: Data resulting from the use of the OpenEdX
+   peer grading facilities.</li>
+
+ <li> <b>UserCountry</b>: country of origin by IP address. Each row is a tuple
+   consisting of one anonymous user id, the two-letter country code,
+   the three-letter country code, and the spelled-out country. If a
+   participant accesses the platform from different IP addresses,
+   each IP address has its own row in the table. Multiple accesses
+   from the same IP generate just one row.</li>
+
+ <li> <b>EdxForum.contents</b>: Forum entries since about June
+   2013. The entries are in relational form. Two versions can be
+   generated: anonymized with hashed user ids
+   different from the hashes used in other tables, and anonymized
+   using the same hashes.</li>
+
+ <li> <b>EdxQualtrics.question</b>: Survey questions administered
+    via the Qualtrics service.</li>
+
+ <li> <b>EdxQualtrics.choice</b>: Choices for multiple choice questions above.</li>
+
+ <li> <b>EdxQualtrics.Response</b>: Learner responses to survey
+   questions.</li>
+
+ <li> <b>EdxQualtrics.ResponseMetadata</b>: Information about the
+   learner behind each survey response. This table can be used to
+   link survey responses to learners in the course.</li>
+
+ <li> <b>CourseInfo</b>: Facts about courses, such as start/end dates,
+   academic year and quarter in which a course was offered. </li>
+
+ <li> <b>EdxProblem</b>: Metadata on problems offered to learners in courses.</li>
+
+ <li> <b>EdxVideo</b>: Metadata on videos in courses.</li>
+
+</ul>
+
+<h3>Infrequently shared tables</h3>
+
+<ul>
+
+ <li><b>LoadInfo</b>: Information about archive updates.</li>
+
+ <li> <b>UserGrade</b>: Raw grades as recorded by the platform. An
+   amalgam of the platform tables auth_user and
+   certificates_generatedcertificate. This table is not normally
+   shared, as it includes personally identifiable
+   information. However, the anonymized view onto UserGrade:
+   FinalGrade (see above) is the table to use for anonymized grade and
+   distinction information.</li>
+
+ <li><b>EdxPrivate.EventIp</b>:IP addresses for each event. This table
+     is only available by special arrangement.</li>
+
+ <li><b>State, InputState, Answer, and CorrectMap</b>: These tables are
+     subsumed by the above tables. If you are familiar with the OpenEdX
+     tracking logs, you will recognize the names and can use these tables
+     individually as needed.</li>
+
+</ul>
+
+<h3>Computed tables</h3>
+
+<ul>
+ <li> <b>Time-on-task</b>: Estimate for how long participants worked online on
+   their courses. Computed from tracking log events, and partitioned
+   into 30 minute sessions. Available: every session for every participant
+   and course, weekly aggregates of the sessions, and course level
+   aggregates. Session length for the computations can be customized
+   on request, but this is a manual process. This table is computed on-demand
+   and is not stored in our database.</li>
+
+</ul>
+
+<h3>Mirrored platform tables from OpenEdX</h3>
+
+<p>In addition to the above tables, a number of <a href="#mirrors">tables
+are mirrored</a> directly from the Stanford OpenEdX platform, with some delay.
+This collection can be extended as needed.</p>
+
+
+<br><hr>
+
+
+<h2 id="search">Available data</h2>
+
+<h3>Search all courses</h3>
+
+<p>The archive includes data from the following Stanford courses:
+<ul>
+  <li>Courses that were offered using Stanford's
+  <a href="handleCourseNameRequest.php?platform=openedx"
+     target="_blank">OpenEdX platform.</a></li>
+  <li>Courses delivered on the
+  <a href="handleCourseNameRequest.php?platform=coursera"
+     target="_blank">Coursera platform.</a></li>
+  <li>Courses that utilized the
+  <a href="handleCourseNameRequest.php?platform=novoed"
+     target="_blank">NovoEd platform.</a></li>
+</ul></p>
+
+<p>In addition, the archive includes <a href="handleCourseNameRequest.php?platform=moocdb"
+target="_blank">MOOCDb versions</a> for many of the above courses. MOOCDb is a relational
+<a href="http://edf.stanford.edu/readings/moocdb-developing-data-standards-mooc-data-science"
+target="_blank"> format that aims to combine schemas</a> from multiple online
+learning platforms.</p>
+
+<p>The archive also includes the <a href="http://datastage.stanford.edu/StanfordMoocPosts/">
+Stanford MOOCPosts dataset</a>, a corpus of forum posts sampled from
+Stanford's public MOOC offerings.</p>
+
+
+
+
+
+<h3>Resources beyond this document</h3>
+
+Data from Stanford courses offered via the OpenEdX platform software
+by Stanford includes the above mentioned <i>events</i>, which document
+how participants interacted with the platform. Forum posts are
+available as well. All data has personally identifiable information
+removed.
+</p><p>
+For <a href="#appB">schema details of each OpenEdX table</a>, see
+below. Meanings of OpenEdX data fields are also explained at
+the <a href="http://edx.readthedocs.org/en/latest/">OpenEdX Consortium
+Tracking Log documentation</a>
+</p><p>
+Forum data is explained in the <a href="http://devdata.readthedocs.org/en/latest/internal_data_formats/discussion_data.html">
+OpenEdX Consortium</a> documentation.
+</p><p>
+Coursera <a href="https://spark-public.s3.amazonaws.com/mooc/20130414_data_exports.pdf">export
+ format information</a> is a useful resource for understanding formats
+ in the Coursera archives.</p>
+
+
+<br><hr>
+
+
+<h2 id="appB">Explanation of OpenEdX data fields</h2>
+
+<p>The Edx and EdxPrivate databases provide a lossless translation from
+the OpenEdX platform tracking logs to relational tables. The
+translation was constructed based on tracking logs of Stanford's
+OpenEdX classes.</p>
+
+<p>Each entry in a tracking log contains information about one small
+interaction that one participant undertook with the learning
+platform. Examples are the submission of a problem solution, a video
+control action, like starting a video, or the initial creation of an
+account. Note that the event handling and collection facilities in the OpenEdX
+platform are not perfect yet. Events do get lost on the way. The EdX
+consortium is working on this issue; in the meanwhile it is important to
+consider computations based on track logs as lower bounds.</p>
+
+<p><b>Beware 9c1185a5c5e9fc54612808977ee8f548b2258d31</b>: One event
+track failure is that some screen names show up as empty strings. When
+we anonymize these empty screen names, they all come to look like the
+same anonymized person, the above ugly string. When we export tables
+for you, we filter these duds out. But if you work on the database
+tables themselves, you need to take of it yourself.</p>
+
+<p>The logs were designed to hold every piece of information that might
+need to be captured now or in the future. Not all of the log fields
+are currently in use. Of the many columns in the relational tables
+only some therefore need to be considered at this point. We therefore
+created some tables that allow you to focus:</p>
+
+<ul>
+  <li>EventXtract</li>
+  <li>VideoInteraction</li>
+  <li>ActivityGrade</li>
+</ul>
+
+<p>We call these the <i>basic</i> tables.  During export, we partition the
+tables into groups that correspond to the analysis purposes for which
+they are intended. The <b>Basic Tables</b> are meant for everyday
+use. Those tables exist in the database on Datastage, and we can
+export extracts of the three tables for individual classes as well.</p>
+
+<p>Export table group <b>Engagement</b> are tables that approximate how
+much time course participants spent interacting with a course on their
+computer. These tables are only available as per-course exports. They
+do not exist in the database, but are computed when we export.  We
+will add more table groups as we go along.</p>
+
+<hr>
+<h3 id="basicTables">Basic Export Tables</h3>
+
+The first of the basic export tables is the main table, which contains
+all the events: <i>EventXtract</i>. NOTE: the <i>event_type</i> field
+is the key to interpreting the remaining columns. Please see the
+<a href="http://edx.readthedocs.org/en/latest/">OpenEdX
+Tracking Log documentation</a> of the original JSON formatted
+fields. Those descriptions are authoritative.
+</p><p>
+<style type="text/css">
+.tg  {margin-left: auto; margin-right: auto}
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 8px;border-style:solid;border-width:1px;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;}
+</style>
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">EventXtract</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">anon_screen_name</td>
+    <td class="tg-031e">Anonymized participant identifier</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">event_type</td>
+    <td class="tg-031e">Type of action the participant took
+                        See <a href="http://edx.readthedocs.org/en/latest/">OpenEdX
+                        Tracking Log documentation</a>
+  </td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">ip_country</td>
+    <td class="tg-031e">Participant's country of origin based on IP
+      address from which the action was performed. The field uses the
+      standard three-letter country code (http://countrycode.org/). If
+      country of origin is of special interest, consider table
+      UserCountry, which contains every participant's action country
+      of origin in two and three letter code, plus full name. IP addresses
+      themselves are considered personally identifiable information, but are
+      available by special request in the private table EdxPrivate.EventIp.
+      </td>
+  </tr>
+  <tr>
+    <td class="tg-031e">time</td>
+    <td class="tg-031e">Date and time when action was taken</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">quarter</td>
+    <td class="tg-031e">The academic during which the event occurred.
+       Format is &lt;quarterName&gt;&lt;academicYear&gt;, such as
+       <i>summer2014</i>. Using this field in your query significantly
+       accelerates processing, because all events of one quarter are
+       internally stored in a separate table. If you do not know a
+       course quarter, you get it via:<b>
+	 <pre>
+    	   SELECT academic_year, quarter
+    	     FROM CourseInfo
+    	    WHERE course_display_name
+    	     LIKE '%HRP258%';
+	 </pre>
+
+       </td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">course_display_name</td>
+    <td class="tg-031e">Name of course for which action was taken</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">resource_display_name</td>
+    <td class="tg-031e">Name of video, assignment, or teaching module
+        associated with the action. This information is only as good
+        as what instructors provided when constructing their course. </td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">success</td>
+    <td class="tg-031e">Whether the participant succeeded, or not (context dependent)</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">video_code</td>
+    <td class="tg-031e">Machine name of video, (video actions only)
+                        For YouTube videos this column allows you
+                        to find the video itself. For example,
+                        if this column contains '6Tnr8OL-9So'
+                        you can google that code, and will find
+                        the video.
+    </td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_current_time</td>
+    <td class="tg-031e">Video player's current playhead time</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">video_speed</td>
+    <td class="tg-031e">Video player's current speed</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_old_time</td>
+    <td class="tg-031e">For video_seek action: original playhead time</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">video_new_time</td>
+    <td class="tg-031e">For video_seek action: new playhead time</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_seek_type</td>
+    <td class="tg-031e">Control used for a video seek action</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">video_new_speed</td>
+    <td class="tg-031e">For video speed change action: new speed</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_old_speed</td>
+    <td class="tg-031e">For video speed change action: original speed</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">goto_from</td>
+    <td class="tg-031e">Teaching sequence change: origin</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">goto_dest</td>
+    <td class="tg-031e">Teaching sequence change: destination</td>
+  </tr>
+</table>
+</p><p>
+
+Here are a couple of example rows, with most of the video related
+columns skipped. Those are more easily accessed using the
+VideoInteraction table (see below):<br>
+
+<b>EventXtract Example Rows:</b><br>
+<pre>
++------------------------------------------+---------------+----------------+---------------------+---------------------------------------------+-----------------------+---------+------------+-|
+| anon_screen_name | event_type    | ip_country            | time                | course_display_name   | resource_display_name | success | video_code |... more video cols... | goto_from | goto_dest |
++------------------------------------------+---------------+----------------+---------------------+---------------------------------------------+-----------------------+---------+------------+--
+| 3fc...           | book          | USA                   | 2013-11-10 06:43:10 | Engineering/EE264/DSP |                       |         |            |                       |           |           |
+| 6e9...           | problem_check | BEL                   | 2013-11-10 06:43:10 | Engineering/Solar/2013| I-V curve             |         |            |                       |           |           |
++------------------------------------------+---------------+----------------+---------------------+---------------------------------------------+-----------------------+---------+------------+--
+</pre>
+</p><p>
 <!--
-   <a href="MoocPosts/stanfordMOOCForumPostsSet.xlsx">Download Excel 2010 File</a><br>
-   <a href="MoocPosts/stanfordMOOCForumPostsSet.txt">Download
-   Tab-Separated Values File</a><br>
+EventXtract AS
+   SELECT anon_screen_name,
+	  event_type,
+	  ip,
+	  time,
+	  course_display_name,
+	  resource_display_name,
+	  success,
+	  video_code,
+	  video_current_time,
+	  video_speed,
+	  video_old_time,
+	  video_new_time,
+	  video_seek_type,
+	  video_new_speed,
+	  video_old_speed,
+	  goto_from,
+	  goto_dest
+  FROM Edx.EdxTrackEvent
 -->
+
+<hr>
+If your focus is video behavior analysis, then the <b>VideoInteraction</b>
+table is the easiest to use. It just extracts the video events from
+the EventXtract table; the video related information is the same in
+both tables.
+</p><p>
+Note that participants can download videos, and subsequently use their
+own, local player. The platform software will not 'see' such local
+activities, so this table can underestimate video activity frequency.
+</p><p>
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 8px;border-style:solid;border-width:1px;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;}
+</style>
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">VideoInteraction</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">event_type</td>
+    <td class="tg-031e">Type of video action the participant took</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">resource_display_name</td>
+    <td class="tg-031e">Name of video</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_current_time</td>
+    <td class="tg-031e">Video player's current playhead
+    time. <b>Note:</b> we have observed that this time
+    is in some records incorrectly large, or negative.
+    You'll want to do bound checking when using this column.</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">video_speed</td>
+    <td class="tg-031e">Video player's current speed</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_new_speed</td>
+    <td class="tg-031e">For video speed change: new speed</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">video_old_speed</td>
+    <td class="tg-031e">For video speed change: old speed</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_new_time</td>
+    <td class="tg-031e">For video seek: new playhead time.
+      <b>Note:</b> we have observed that this time
+      is in some records incorrectly large, or negative.
+      You'll want to do bound checking when using this column.</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">video_old_time</td>
+    <td class="tg-031e">For video seek: old playhead time.
+      <b>Note:</b> we have observed that this time
+      is in some records incorrectly large, or negative.
+      You'll want to do bound checking when using this column.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_seek_type</td>
+    <td class="tg-031e">Video control used for seek</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">video_code</td>
+    <td class="tg-031e">Machine code name for video.<br>
+                        For YouTube videos this column allows you<br>
+                        to find the video itself. For example,<br>
+                        if this column contains '6Tnr8OL-9So' <br>
+                        you can google that code, and will find<br>
+                        the video.
+  </td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">time</td>
+    <td class="tg-031e">Time the video action was taken</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">course_display_name</td>
+    <td class="tg-031e">Name of course for which action was taken</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">anon_screen_name</td>
+    <td class="tg-031e">Anonymized participant identifier</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">video_id</td>
+    <td class="tg-031e">a unique OpenEdX id for this video</td>
+  </tr>
+</table>
+</p><p>
+Here again some example rows:<br>
+
+<b>VideoInteraction Example Rows:</b><br>
+<pre>
++------------------------------------------+---------------+----------------+---------------------+---------------------------------------------+----------------
+| event_type  | resource_display_name | video_current_time |video_speed  | video_new_speed | video_old_speed | video_new_time | video_old_time | video_seek_type ...
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+| play_video  | Video 7.3.2: Hydrogen | 1244.047           | None        |                 |                 |                |                |
+| pause_video | Video 7.3.2: Hydrogen | 1217.389976        | None        |                 |                 |                |                |                 ...
+| play_video  | Video 7.2.2: Oxygen   | 101.046621         | None        |                 |                 |                |                |
++-------------+------------------------------------------------+--------------------+-------------+-----------------+-----------------+----------------+---------
+
+    -------+---------+------------+----------------------------------------------|
+... | video_code  | time                | course_display_name | anon_screen_name |
+    -----------------------------------------------------------------------------|
+    | ZO0_R5VAoG4 | 2013-11-10 06:43:12 | Eng/EE-222/ME_I     | ef04...          |
+... | ZO0_R5VAoG4 | 2013-11-10 06:43:42 | Eng/EE-222/ME_I     | 84fa...          |
+    | 6Tnr8OL-9So | 2013-11-10 06:43:43 | Eng/EE-222/ME_I     | 8998...          |
+    -------+-----------------+-------------+---------------------+----------------
+</pre>
+</p><p>
+<!--
+CREATE VIEW VideoInteraction AS
+SELECT event_type,
+       resource_display_name,
+       video_current_time,
+       video_speed,
+       video_new_speed,
+       video_old_speed,
+       video_new_time,
+       video_old_time,
+       video_seek_type,
+       video_code,
+       time,
+       course_display_name,
+       anon_screen_name
+FROM Edx.EdxTrackEvent
+WHERE  CHAR_LENGTH(video_code) > 0 OR
+       CHAR_LENGTH(video_current_time) > 0 OR
+       CHAR_LENGTH(video_speed) > 0 OR
+       CHAR_LENGTH(video_old_time) > 0 OR
+       CHAR_LENGTH(video_new_time) > 0 OR
+       CHAR_LENGTH(video_seek_type) > 0 OR
+       CHAR_LENGTH(video_new_speed) > 0 OR
+       CHAR_LENGTH(video_old_speed) > 0
+-->
+</p><p>
+The <b>ActivityGrade</b> table holds events that concern homework
+assignments. Each row in the table is one solution submission, or
+inspection of one assignment by one participant. The rows inform whether
+the solution was correct, in some parts, or in its entirety. If only
+parts were correct, the table shows which parts, and which incorrect
+answers the participant provided.
+</p><p>
+
+<b>Note 1:</b>For historical reasons the ActivityGrade table contains not only
+grade related activities, but also some activities like accesses to surveys
+or course chapters. You can filter out the true grade related items by
+considering only rows in which num_attempts is not -1.
+</p><p>
+
+<b>Note 2:</b>the ActivityGrade table is not constructed from EdX track
+event logs. Instead, this table is composited from information in
+the platform table courseware_studentmodule. In particular the
+infamous JSON encoded <i>state</i> field in that table is parsed and
+its JSON values are made accessible as columns in ActivityGrade.
+</p><p>
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 8px;border-style:solid;border-width:1px;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;}
+</style>
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">ActivityGrade</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">activity_grade_id</td>
+    <td class="tg-031e">A unique identifier for this row</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">student_id</td>
+    <td class="tg-031e">A numeric identifier used for participants in various other platform tables.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">course_display_name</td>
+    <td class="tg-031e">Name of course for which assignment was created</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">grade</td>
+    <td class="tg-031e">The grade the participant received for this
+                        assignment.<br>
+                        <img src="figs/expert.png" width="2%"> This
+                        quantity originates from a JOIN between
+                        auth_user and certificates_generatedcertificate.
+  </td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">max_grade</td>
+    <td class="tg-031e">The maximum grade possible for this assignment</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">percent_grade</td>
+    <td class="tg-031e">Percentage of grade from max_grade</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">parts_correctness</td>
+    <td class="tg-031e">Series of plus and minus chars indicating which problem parts were answered correctly</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">answers</td>
+    <td class="tg-031e">Answers the participant provided for the assignment.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">num_attempts</td>
+    <td class="tg-031e">Total number of participant's attempts at this<br>
+                       assignment at the time the event is
+                       received. <br>
+                       Note: each attempt generates an event, <br>
+                       only the last attempt has the correct number. <br>
+                       The number -1 stands for 'not applicable.'
+  </td>
+  </tr>
+  <tr>
+    <td class="tg-031e">first_submit</td>
+    <td class="tg-031e">This date is currently unreliable.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">last_submit</td>
+    <td class="tg-031e">This date is currently unreliable.</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">module_type</td>
+    <td class="tg-031e">The teaching module type</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">anon_screen_name</td>
+    <td class="tg-031e">Participant's anonymized name</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">resource_display_name</td>
+    <td class="tg-031e">Assignment name. This information is only as
+    good as what instructors entered when they created the
+    assignment. The module_id (next field) is a unique, automatically
+    assigned name for the assignment. </td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">module_id</td>
+    <td class="tg-031e">Internal platform ID of the row's module.</td>
+  </tr>
+</table>
+</pre>
+</p><p>
+<b>ActivityGrade Example Rows:</b><br>
+</p><p>
+<pre>
++------------------------------------------+---------------+----------------+---------------------+---------------------------------------------+-----------------------+---------+------------+------|
+| course_display_name | grade | max_grade | percent_grade | parts_correctness |     answers       | numAttempts | first_submit | last_submit | module_type | resource_display_name | anon_screen_name |
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|Medicine/101/Stats   |     2 |         2 |           100 | ++                | choice_1,choice_2 |           2 | 2013-05-13 12:42:40 | 2013-05-13 12:50:52 | problem     | Quiz   | 55e90...         |
+|Medicine/101/Stats   |     0 |         2 |             0 | --                | choice_0,choice_4 |           1 | 2013-05-13 13:23:57 | 2013-05-13 13:32:33 | problem     | Quiz   | 95d8b...         |
++-------------+------------------------------------------------+--------------------+-------------+-----------------+-----------------+----------------+----------------+-----------------+------------
+</pre>
+
+<hr>
+
+The <b>Demographics</b> view contains anonymized demographic data
+on participants. A major consideration when using this table that
+participants provide this information voluntarily. Some do, others
+don't; some lie, others tell the truth.
+</p><p>
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 8px;border-style:solid;border-width:1px;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;}
+</style>
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">Demographics</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">anon_screen_name</td>
+    <td class="tg-031e">Participant's anonymized name</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">gender</td>
+    <td class="tg-031e">Single letter: 'm' or 'f'. Blank if not provided.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">year_of_birth</td>
+    <td class="tg-031e">Year of participant's birth, if
+    provided. Else NULL</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">curr_age</td>
+    <td class="tg-031e">Current age, computed on the fly from the year
+       when the row producing SELECT is issued, and year_of_birth.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">level_of_education</td>
+    <td class="tg-031e">One of: Doctorate, Masters or professional
+                        degree, Bachelors, Associates, Secondary/High
+                        School, Junior secondary/junior high/middle
+                        School, Elementary/Primary School, None,
+                        Other, User withheld, Signup before level
+                        collected.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">country_three_letters</td>
+    <td class="tg-031e">Official three-letter code of country. If
+                        participant interacted with a course from
+                        multiple Internet addresses, Demographics
+                        will contain one entry for each distinct
+                        address, even if the countries are the same.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">country_name</td>
+    <td class="tg-031e">Full name of country. See
+                        country_three_letters for explanation of
+                        multiple entries.
+  </td>
+  </tr>
+</table>
+</pre>
 </div>
+</p><p>
+If participant interacted with a course from multiple Internet
+addresses, Demographics will contain one entry for each distinct
+address, even if the address' countries are the same. It is therefore
+wise to use DISTINCT when querying:
+
+<pre>
+mysql> SELECT DISTINCT Demographics.*, FinalGrade.grade
+       FROM Demographics, FinalGrade
+       WHERE Demographics.anon_screen_name = FinalGrade.anon_screen_name
+        AND  FinalGrade.course_id = 'Engineering/Solar/Fall2013'
+       LIMIT 4;
++------------------------------------------+--------+---------------+----------+--------------------+-----------------------+---------------+-------+
+| anon_screen_name                         | gender | year_of_birth | curr_age | level_of_education | country_three_letters | country_name  | grade |
++------------------------------------------+--------+---------------+----------+--------------------+-----------------------+---------------+-------+
+| 1234567890abcdefghijklmnopqrstuvwxyz1234 | m      |          1989 |       25 | User withheld      | BGR                   | Bulgaria      |     0 |
+| 234567890abcdefghijklmnopqrstuvwxyz12345 | m      |          1987 |       27 | Bachelors          | USA                   | United States |     0 |
+| 34567890abcdefghijklmnopqrstuvwxyz123456 | m      |          1990 |       24 | Bachelors          | USA                   | United States |     0 |
+| 4567890abcdefghijklmnopqrstuvwxyz1234567 |        |          NULL |     NULL | User withheld      | FRA                   | France        |     0 |
++------------------------------------------+--------+---------------+----------+--------------------+-----------------------+---------------+-------+
+</pre>
+
+<hr>
+
+</p><p>
+The <b>EdxQualtrics</b> set of tables contains data from pre-course and
+post-course surveys. Qualtrics maintains detailed documentation <a href="http://www.qualtrics.com/university/researchsuite/reporting/download-data/understanding-data-set/">here</a>;
+the following information explains some idiosyncrasies that may make
+analysis slightly easier. <span class="code">Survey</span>
+and <span class="code">ResponseMetadata</span> below are views, rather
+than tables. The <span class="code">response</span> is base tables. The
+underlying survey data structures that we get from Qualtrics are
+messy. The views/tables below are an attempt to pull out the most
+important attributes from the tangle. We
+add <a href="#surveyExamples">example</a> queries after the
+table/view list.
 <p>
-<h2>Table of Contents</h2>
+The <span class="code">question</span> and <span class="code">choice</span> tables provide information about a survey as a
+whole. The <span class="code">QuestionNumber</span> is used in
+the <span class="code">response</span> table to identify which question is being
+answered. If you are looking for the <span class="code">QuestionNumber</span> that
+corresponds to a particular question, search on
+the <span class="code">QuestionDescription</span> field. See <a href="#surveyExamples">example</a> below.
+
+<br>
+
+<p>
+
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">question</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">SurveyId</td>
+    <td class="tg-031e">Qualtrics-assigned unique identifier for a survey, e.g. "SV_XXXXXXXXXXXXXXX"</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">QuestionId</td>
+    <td class="tg-031e">Qualtrics-assigned ID for a given question, e.g. "QID3".
+  </td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">QuestionDescription</td>
+    <td class="tg-031e">Text of question as displayed to user. This
+    field has a fulltext search index. See <a href="#surveyExamples">Examples</a> for usage.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">ForceResponse</td>
+    <td class="tg-031e">Whether or not Qualtrics was programmed to
+    insist on a response to this question.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">QuestionType</td>
+    <td class="tg-031e">Question type code from
+    Qualtrics. See <a href="http://www.qualtrics.com/university/researchsuite/reporting/download-data/understanding-data-set/">
+    Qualtrics documentation</a> for a detailed explanation of what individual codes mean.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">QuestionNumber</td>
+    <td class="tg-031e">Surveymaker-assigned ID for a given question,
+    	   e.g. "Q3.2" or "gender". Note that this field is distinct from
+    	   QuestionID.</td>
+  </tr>
+</table>
+
+<br>
+<pre>
++--------------------+------------+----------------------------------------------------------------+---------------+--------------+----------------+
+| SurveyID           | QuestionID | QuestionDescription                                            | ForceResponse | QuestionType | QuestionNumber |
++--------------------+------------+----------------------------------------------------------------+---------------+--------------+----------------+
+| SV_3C2QzCfqkbDWnvT | QID28      | Welcome to Stanford Online's [course name here] course ...    | NULL          | DB           | txt1           |
+| SV_3C2QzCfqkbDWnvT | QID4       | How many hours are you planning to spend on this course...     | 0             | TE           | hours          |
+| SV_3C2QzCfqkbDWnvT | QID21      | Do you have any prior experience with the course topic?        | 0             | MC           | pri_exp        |
+| SV_3C2QzCfqkbDWnvT | QID6       | How many open online courses have you started before...        | 0             | TE           | crs_start      |
++--------------------+------------+----------------------------------------------------------------+---------------+--------------+----------------
+</pre>
+<br>
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">response</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">SurveyId</td>
+    <td class="tg-031e">Qualtrics-assigned unique identifier for a survey, e.g. "SV_XXXXXXXXXXXXXXX"</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">ResponseId</td>
+    <td class="tg-031e">Qualtrics-assigned unique identifier for a
+    given respondent. This value thus designates a person. It does not
+    identify an individual response to a particular question.
+  </td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">QuestionNumber</td>
+    <td class="tg-031e">Surveymaker-assigned ID for a given question, e.g. "Q3.2" or "gender".</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">AnswerChoiceId</td>
+    <td class="tg-031e">Identifier for a particular choice within a
+    question and a survey. Corresponds to ChoiceID in Survey
+    view.  You need to know your survey to know whether your respondent answer is in this field,
+    or in the Description field below.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">Description</td>
+    <td class="tg-031e">Contains learner response to this combination of Survey-Question-Choice IDs. May contain short-answer responses,
+    	    boolean values, browser metadata, responses on a value
+    	    scale (e.g. between 1-7), or randomzization data (e.g. if
+    	    choices for a given question were presented
+    	    in random order).  You need to know your survey to know whether
+    	    your respondent answer is in this field, or in the ChoiceId above.
+    </td>
+  </tr>
+</table>
+
+<br>
+<p>
+
+<pre>
++--------------------+-------------------+----------------+----------------+-------------+
+| SurveyId           | ResponseId        | QuestionNumber | AnswerChoiceId | Description |
++--------------------+-------------------+----------------+----------------+-------------+
+| SV_0pHbRnoX9R360Jv | R_e9d1WjMWaqfADTD | StudentID      | NULL           |             |
+| SV_0pHbRnoX9R360Jv | R_e9d1WjMWaqfADTD | idcond         | NULL           | 2           |
+| SV_0pHbRnoX9R360Jv | R_e9d1WjMWaqfADTD | condition      | NULL           | Blank       |
+| SV_0pHbRnoX9R360Jv | R_e9d1WjMWaqfADTD | Q5             | NULL           |             |
+| SV_0pHbRnoX9R360Jv | R_e9d1WjMWaqfADTD | 5.1sleep       | NULL           |             |
+| SV_0pHbRnoX9R360Jv | R_e9d1WjMWaqfADTD | 5.2submax      | NULL           |             |
+| SV_0pHbRnoX9R360Jv | R_e9d1WjMWaqfADTD | 5.3VO2max      | NULL           |             |
+| SV_0pHbRnoX9R360Jv | R_e9d1WjMWaqfADTD | 5.4timing      | 1              | 0           |
+| SV_0pHbRnoX9R360Jv | R_e9d1WjMWaqfADTD | 5.4timing      | 2              | 0           |
+| SV_0pHbRnoX9R360Jv | R_e9d1WjMWaqfADTD | 5.4timing      | 3              | 29.708      |
+| SV_0pHbRnoX9R360Jv | R_e9d1WjMWaqfADTD | 5.4timing      | 4              | 0           |
+| SV_0pHbRnoX9R360Jv | R_e9d1WjMWaqfADTD | 5.5meta        | 1              | Safari      |
+| SV_0pHbRnoX9R360Jv | R_e9d1WjMWaqfADTD | 5.5meta        | 2              | 535.19      |
+| SV_0pHbRnoX9R360Jv | R_e9d1WjMWaqfADTD | 5.5meta        | 3              | en-us       |
+| SV_0pHbRnoX9R360Jv | R_e9d1WjMWaqfADTD | 5.5meta        | 4              | 854x534     |
+| SV_0pHbRnoX9R360Jv | R_e9d1WjMWaqfADTD | 5.5meta        | 5              | -1          |
++--------------------+-------------------+----------------+----------------+-------------+
+16 rows in set (0.00 sec)
+
+</pre>
+
+<br>
+Use the following view to get a
+respondent's <span class="code">anon_screen_name</span>, which is used
+to identify learners in all the other tables.
+<p>
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">RespondentMetadata</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">ResponseId</td>
+    <td class="tg-031e">Qualtrics-assigned unique identifier for a
+    given respondent. This value thus designates a person. It does not
+    identify an individual response to a particular question.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">anon_screen_name</td>
+    <td class="tg-031e">Anonymized user ID;
+    	links <span class="code">ResponseId</span> values to course data
+    	from the LMS. This column is currently only available for
+    	surveys embedded in Lagunita courses.
+    </td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">Country</td>
+    <td class="tg-031e">Three letter country code for learner. Conversion from learner IP address as retrieved from Qualtrics.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">StartDate</td>
+    <td class="tg-031e">Date and time when learner began survey.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">EndDate</td>
+    <td class="tg-031e">Date and time when learner completed survey.</td>
+  </tr>
+</table>
+
+<br>
+<pre>
++--------------------+-------------------+------------------------------------------+---------+---------------------+---------------------+
+| SurveyId           | ResponseId        | anon_screen_name                         | Country | StartDate           | EndDate             |
++--------------------+-------------------+------------------------------------------+---------+---------------------+---------------------+
+| SV_0pHbRnoX9R360Jv | R_e9d1WjMWaqfADTD | e363742c43a94a371345bf07c21568bc07825cee | USA     | 2014-02-10 01:30:16 | 2014-02-10 01:30:53 |
+| SV_0pHbRnoX9R360Jv | R_24yF7965oG15uv3 | c955ee7b39ea3655454c59af4fe0297bc1f6ff9d | GBR     | 2014-02-10 02:11:02 | 2014-02-10 02:11:19 |
+| SV_0pHbRnoX9R360Jv | R_9QWJzk5fBZnThgF | e363742c43a94a371345bf07c21568bc07825cee | USA     | 2014-02-10 02:32:06 | 2014-02-10 02:32:15 |
+| SV_0pHbRnoX9R360Jv | R_6PdkikOwmbGRuHH | a66b3b69866cbd57badf766dc33b3e830d909aca | SWE     | 2014-02-10 03:20:17 | 2014-02-10 03:42:36 |
++--------------------+-------------------+------------------------------------------+---------+---------------------+---------------------+
+
+</pre>
+<br>
+
+<p>
+<b><span id="surveyExamples">Examples:</span></b><p>
 <ul>
-  <li><a href="#corpus">The corpus</a>
-  <li><a href="#schema">Corpus schema</a>
-  <li><a href="#demographics">Corpus demographics</a>
-  <li><a href="#procedures">Procedures</a>
-    <ul>
-      <li><a href="#anonymization">Anonymization</a>
-      <li><a href="#coding">Coding process</a>
-      <li><a href="#setgen">Corpus generation</a>
-      <li><a href="#coderinstructions">Coder instructions</a>
-    </ul>
-  <li><a href="#appendix1">Appendix: Corpus Learner Origins</a>
+<li>
+Get all Survey IDs, and (answer) Description
+values for a survey question that matches:
+'How likely is it that you would recommend an online course taught
+by Stanford University faculty...':
+<pre>
+SELECT SurveyId, Description
+  FROM (SELECT QuestionNumber
+          FROM question
+          WHERE MATCH(QuestionDescription) AGAINST ('recommend*faculty')) AS QuestionNumbers
+       LEFT JOIN response
+       ON response.QuestionNumber = QuestionNumbers.QuestionNumber;
+</pre>
+</li>
+<li>
+There is a special QuestionNumber value 'nps', which
+stands for <a href="https://www.netpromoter.com/know/">Net
+Promoter Score</a>. This is a standard question asked in marketing:
+<p class='quote'>"How likely is it that you would recommend [brand] to a friend or
+colleague?".</p>
+We asked this question in many surveys, and the question
+is marked as 'nps'.
+<p>Count number of responses to the Net Promoter
+Score question for each survey:
+<pre>
+SELECT SurveyId, COUNT(*) AS NumResponses
+  FROM response
+ WHERE QuestionNumber = 'nps'
+ GROUP BY SurveyId;
+</pre>
+</li>
+<li>
+Given a survey id, get a histogram of its Net Promoter Question:
+<pre>
+SELECT Description, COUNT(*) AS Frequency
+  FROM response
+ WHERE QuestionNumber = 'nps'
+   AND SurveyId = 'SV_aatmUGYOCSgpAk5'
+ GROUP BY Description
+ ORDER BY CAST(Description AS SIGNED INTEGER) ASC;
+</pre>
+</Li>
+
+<li>
+
+How many surveys asked
+<p class='quote'>How many open online courses have you started before
+  this one?</p>
+Since QuestionDescription has a fulltext index, you can use regular
+  expressions:
+<pre>
+SELECT COUNT(DISTINCT SurveyId)
+  FROM question
+  WHERE MATCH(QuestionDescription) AGAINST ('started*this one?');
+</pre>
+</li>
+<li>
+How many responses did each survey receive?
+<pre>
+SELECT SurveyId, COUNT(*) AS NumResponses FROM response GROUP BY SurveyId;
+</pre>
+</li>
+
 </ul>
+
 <p>
-<h2 id="corpus">The Corpus</h2>
-Each post was manually coded along six dimensions by three
-independent coders:
+For users working with data from Coursera courses: it's possible to link survey
+responses to Coursera data by joining the 'a' ID field with the session_user_id field
+contained in the ID map from Coursera's data export. You need to know which Coursera
+database corresponds to which SurveyID; this data can be looked up manually in the
+Podio database. For example (replacing `COURSERA_DB_NAME` and `SURVEYID` with a matching
+pair as designated in Podio.CourseIDMap):
+</p>
+
+<pre>
+  SELECT *
+  FROM EdxQualtrics.response_metadata as edxq
+  INNER JOIN `COURSERA_DB_NAME`.hash_mapping as hm
+	 ON edxq.a = hm.session_user_id
+  WHERE edxq.SurveyID = 'SURVEYID';
+</pre>
+
+</p><p>
+Note that for each survey (agnostic of platform) some of the 'a' field values will
+occasionally fail to correspond with any platform identifier.
+
+<hr>
+
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">OpenAssessment</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">event_table_id</td>
+    <td class="tg-031e">UUID for tracking log event. Links to EdxTrackEvent table.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">event_type</td>
+    <td class="tg-031e">Description of event type. Indicates whether row describes peer assessment, self assessment, etc.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">anon_screen_name</td>
+    <td class="tg-031e">Learner's anonymized screen name.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">score_type</td>
+    <td class="tg-031e">PE if peer assessment, or SE if self assessment, else empty for other event types</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">submission_uuid</td>
+    <td class="tg-031e">UUID for submission being assessed. Join with edxprod.submissions_submission column 'uuid'.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">edx_anon_id</td>
+    <td class="tg-031e">Anonymized screen name for learner who is being assessed.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">time</td>
+    <td class="tg-031e">When assessment was submitted.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">course_display_name</td>
+    <td class="tg-031e">Course context for assessment.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">resource_display_name</td>
+    <td class="tg-031e">Label for assessment in course.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">resource_id</td>
+    <td class="tg-031e">Resource identifier from platform.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">feedback_text</td>
+    <td class="tg-031e">Instructions for learners giving feedback/assessing peer work.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">comment_text</td>
+    <td class="tg-031e">Content of assessment.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">options</td>
+    <td class="tg-031e">Captures learner assessments when rubric is used.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">corrections</td>
+    <td class="tg-031e">Captures instructor assessments when rubric is used.</td>
+  </tr>
+</table>
+
+<hr>
+
+</p><p>
+All <b>Forum post</b> entries are scrubbed of personally identifiable
+information. The following are redacted: phone numbers, zip codes,
+email addresses, and the poster's name. In each case the type of
+redacted information can be determined by the redaction text. For
+example, you will see &lt;emailRedac&gt;, or &lt;zipRedac&gt;. For
+poster names you will see
+&lt;nameRedac_anon_screen_name_redacted&gt;. These replacements keep
+word count intact. Unfortunately, international zip codes are varied
+enough that detecting them results in many false positives. Some
+non-zip numeric information is therefore redacted for no good
+reason. Conversely you may find some text that does identify someone
+in the course directly or indirectly. We do the best we can at the
+scale of information. Human inspection of a 30,000 post samples
+revealed a scrubbing success rate of 98.4%. Please be respectful if
+you do find one of the rare cases where identification is
+possible. Keep the information to yourself,
+and <a href="mailto://paepcke@cs.stanford.edu">report it to us</a> so
+that we can fix the problem.
+</p><p>
+Here is a complication stemming from privacy protection: you will find
+the anon_screen_name column filled with the single value
+'anon_screen_name_redacted'. You can therefore not use this column to
+select by participant as you do on all the other tables. Instead, when
+selecting from the EdxForum.contents table, you need to use
+column <i>forum_uid</i>.
+</p><p>
+This approach works fine while working within the Forum table
+only. But the setup prevents you from relating Forum posts to other
+tables to find correlations between Forum postings and, say, grade
+outcomes.
+</p><p>
+The reason for this separation is a known attack onto the privacy in
+the non-Forum tables when the same participant code is used in both
+worlds. We call the fully redacted Forum table <i>non-relatable</i>.
+</p><p>
+To explore correlations you need a translation from
+the <i>forum_uid</i> in the Forum table to the <i>anon_screen_name</i>
+used in all other tables. To receive that translation,
+please <a href="http://CAROL.stanford.edu/research">fill out the
+application form</a> that you filled out before to gain access to the
+data. This time, please make very clear in the free-form text field
+that you already have access to the data, and that you just need the
+additional Forum translation information.
+</p><p>
+Forum posts contain a number of identifiers. Here is an explanation of
+relationships between these identifies. This explanation is based on
+observation, not on documentation from the original software; the
+information may therefore be incorrect or incomplete:
 <ul>
-<li>Is this post a question? (Yes/No)</li>
-<li>Is this post an answer? (Yes/No)</li>
-<li>Is this post an opinion? (Yes/No)</li>
-<li>What sentiment does this post express? (1-7)</li>
-<li>How much confusion does this post express? (1-7)</li>
-<li>How urgent is it that this post be seen by an instructor? (1-7)</li>
+
+<li><b>forum_post_id:</b> identifies the post in a given row. This is
+   usually a question, but could be a comment.</li>
+<li><b>comment_thread_id:</b> matches the original
+   <i>forum_post_id</i> that started the thread in which
+   the current post is a comment or reply.</li>
+<li><b>parent_id:</b> identifies the immediate predecessor of the
+   row's post in the thread of which the post is a part.</li>
+<li><b>parent_ids:</b> provides a full chain from the
+   thread-originating post to the current comment/reply.</li>
 </ul>
 
-In addition, coders were asked to flag posts in which our automated
-anonymization program had failed, and that therefore revealed any
-poster's identity. These posts were then manually
-anonymized. Intercoder reliability was computed, and separate 'gold'
-codings were derived for each of the dimensions. This procedure is
-described <a href="#procedures">below</a>.
-<p>
-The posts are organized into three sets of related courses:
-<p>
-<b>Humanities/Sciences:</b>
-<table class="table.readme">
-  <tr>
-    <th>Course Name</th>
-    <th>Number of Entries</th>
-  </tr>
-  <tr>
-    <td>GlobalHealth/WomensHealth/Winter2014</td>
-    <td>2,254 entries</td>
-  </tr>
-  <tr>
-    <td>HumanitiesScience/StatLearning/Winter2014</td>
-    <td>3,112 entries</td>
-  </tr>
-  <tr>
-    <td>HumanitiesScience/Stats216/Winter2014</td>
-    <td>341 entries</td>
-  </tr>
-  <tr>
-    <td>HumanitiesSciences/EP101/Environmental_Physiology</td>
-    <td>2,549 entries</td>
-  </tr>
-  <tr>
-    <td>HumanitiesSciences/Econ-1/Summer2014</td>
-    <td>1,584 entries</td>
-  </tr>
-  <tr>
-    <td>HumanitiesSciences/Econ1V/Summer2014</td>
-    <td>160 entries</td>
-  </tr>
-  <tr>
-    <td><b>Total:</b</td>
-    <td>10,000 entries</td>
-  </tr>
-</table>
-<p>
-<b>Medicine:</b>
-<table class="table.readme">
-  <tr>
-    <th>Course Name</th>
-    <th>Number of Entries</th>
-  </tr>
-  <tr>
-    <td>Medicine/HRP258/Statistics_in_Medicine</td>
-    <td>3,321 entries</td>
-  </tr>
-  <tr>
-    <td>Medicine/MedStats/Summer2014</td>
-    <td>1,218 entries</td>
-  </tr>
-  <tr>
-    <td>Medicine/SciWrite/Fall2013</td>
-    <td>5,184 entries</td>
-  </tr>
-  <tr>
-    <td>Medicine/SURG210/Managing_Emergencies_What_Every_Doctor_Must_Know</td>
-    <td>279 entries</td>
-  </tr>
-  <tr>
-    <td><b>Total:</b</td>
-    <td>10,002 entries</td>
-  </tr>
-</table>
-<p>
-<b>Education:</b>
-<table class="table.readme">
-  <tr>
-    <th>Course Name</th>
-    <th>Number of Entries</th>
-  </tr>
-  <tr>
-    <td>Education/EDUC115N/How_to_Learn_Math</td>
-    <td>10,000 entries</td>
-  </tr>
-</table>
-<p>
-The number of entries lists the posts that were presented to the
-coders. The final set is somewhat smaller, because missing data was
-removed from the coded results.
+</p><p>
+Each Forum post is contained in one row:
+</p><p>
+<div align="center">
+<style>
+    .data-table {
+        border-collapse: collapse;
+    }
+    .border-top {
+        border-top: 1px solid #000;
+    }
+    .border-bottom {
+        border-bottom: 1px solid #000;
+    }
+    .border-left {
+        border-left: 1px solid #000;
+    }
+    .border-right {
+        border-right: 1px solid #000;
+    }
+</style>
 
-<h2 id="schema">Corpus Schema</h2>
 
+<table class="data-table">
+    <tr>
+        <th colspan="2" class="border-top border-bottom border-left border-right">OpenEdX Forum Table</th>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">forum_post_id</td>
+        <td class="border-bottom border-right">unique id for this
+              post; used in other columns of other posts to refer to
+              this row. This ID is assigned by the OpenEdX
+             Forum software.
+	</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">anon_screen_name</td>
+        <td class="border-bottom border-right">anonymized participant ID (redacted unless table is relatable)</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">type</td>
+        <td class="border-bottom border-right">type of post: currently Comment or CommentThread</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">anonymous</td>
+        <td class="border-bottom border-right">whether post was submitted anonymously</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">anonymous_to_peers</td>
+        <td class="border-bottom border-right">anonymous to peers</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">at_position_list</td>
+        <td class="border-bottom border-right">apparently unused</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">forum_uid</td>
+        <td class="border-bottom border-right">anonymized poster ID;
+        different from anon_screen_name. <a href="http://CAROL.stanford.edu/research">Need
+        permission</a> to convert from <i>forum_uid</i>
+        to <i>anon_screen_name</i>. Use functions <code>idForum2Anon()/idAnon2Forum()</code> for conversion
+            between them.
+	</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">body</td>
+        <td class="border-bottom border-right">anonymized body of the post. Redacted: emails, phone numbers, zip codes, name of poster</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">course_display_name</td>
+        <td class="border-bottom border-right">name of course with which the entry is associated</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">created_at</td>
+        <td class="border-bottom border-right">date of creation</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">votes</td>
+        <td class="border-bottom border-right">original JSON that summarizes votes. It is recommended to instead use the broken out columns below</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">count</td>
+        <td class="border-bottom border-right">total number of votes: up or down</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">down_count</td>
+        <td class="border-bottom border-right">number of down votes</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">up_count</td>
+        <td class="border-bottom border-right">number of up votes</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">up</td>
+        <td class="border-bottom border-right">list of individual up votes</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">down</td>
+        <td class="border-bottom border-right">list of individual down votes</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">comment_thread_id</td>
+        <td class="border-bottom border-right">ID of thread. Refers
+                  to forum_post_id of ur-post.</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">parent_id</td>
+        <td class="border-bottom border-right">ID of parent post (see above).</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">parent_ids</td>
+        <td class="border-bottom border-right">chain of post IDs in
+           thread (see above).</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">sk</td>
+        <td class="border-bottom border-right">Used by Forum software
+        for caching</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">confusion</td>
+        <td class="border-bottom border-right">reserved for sentiment
+              analysis results.</td>
+    </tr>
+    <tr>
+        <td class="border-bottom border-left border-right">happiness</td>
+        <td class="border-bottom border-right">reserved for sentiment
+              analysis results.</td>
+    </tr>
+</table>
+</div>
+
+</p><p>
+<b>EdxForum Example Rows:</b><br>
+
+<pre>
++--------------------------+-----------------------------+---------------+-----------+--------------------+------------------+----------------------------------+
+| forum_post_id            | anon_screen_name            | type          | anonymous | anonymous_to_peers | at_position_list | forum_uid                        | ...
++--------------------------+-----------------------------+---------------+-----------+--------------------+------------------+----------------------------------+
+| 123456789012345678901234 | &lt;anon_screen_name_redacted> | CommentThread | False     | False              | []               | abcdefghijklmnopqrstuvwxyz123456 |
+| 123456789012345678901235 | &lt;anon_screen_name_redacted> | Comment       | False     | False              | []               | bcdefghijklmnopqrstuvwxyz1234567 | ...
+| 123456789012345678901236 | &lt;anon_screen_name_redacted> | Comment       | False     | False              | []               | cdefghijklmnopqrstuvwxyz12345678 |
++--------------------------+-----------------------------+---------------+-----------+--------------------+------------------+----------------------------------+
+
+
+    +--------------------------------------------------------------------
+... | body            | course_display_name      | created_at           | ...
+    +--------------------------------------------------------------------
+    | This is a post. | Engineering/CS144/Spring | 2013-05-16 04:32:20  |
+... | Another post    | MITx/6.002x/2012_Fall    | 2013-05-16 04:32:20  | ...
+    | Third post      | MITx/6.002x/2012_Fall    | 2013-05-16 04:32:21  |
+    +--------------------------------------------------------------------
+
+
+    +----------------------------------------------------------------------------------------------------------------------------------
+... | votes                                                                                                                           | ...
+    +----------------------------------------------------------------------------------------------------------------------------------
+    | {'count': 10, 'point': -6, 'down_count': 8, 'up': ['2', '10'], 'down': ['1', '3', '4', '5', '6', '7', '8', '9'], 'up_count': 2} |
+... | {'count': 10, 'point': 4, 'down_count': 3, 'up': ['1', '2', '5', '6', '7', '8', '9'], 'down': ['3', '4', '10'], 'up_count': 7}  | ...
+    | {'count': 10, 'point': -4, 'down_count': 7, 'up': ['6', '8', '10'], 'down': ['1', '2', '3', '4', '5', '7', '9'], 'up_count': 3} |
+    +----------------------------------------------------------------------------------------------------------------------------------
+
+    +--------------------------------------------------------------------------------+-----------------------+---------------------+-------------
+... | count | down_count | up_count | up                                  | down                                     | comment_thread_id        | ...
+    +--------------------------------------------------------------------------------------------------------------------------------------------
+    |    10 |          8 |        2 | ['2', '10']                         | ['1', '3', '4', '5', '6', '7', '8', '9'] | None                     |
+... |    10 |          3 |        7 | ['1', '2', '5', '6', '7', '8', '9'] | ['3', '4', '10']                         | 1234567890123456789012345| ...
+    |    10 |          7 |        3 | ['6', '8', '10']                    | ['1', '2', '3', '4', '5', '7', '9']      | 1234567890123456789012345|
+    +--------------------------------------------------------------------------------------------------------------------------------------------
+
+
+    +----------------------------------------------------------------------------
+... | parent_id | parent_ids | sk                       | confusion | happiness |
+    +----------------------------------------------------------------------------
+    | None      | None       | None                     |           |           |
+... | None      | []         | 123456789012345678901235 |           |           |
+    | None      | []         | 123456789012345678901236 |           |           |
+    +----------------------------------------------------------------------------
+</span>
+</pre>
+
+The <b>CourseInfo</b>, <b>EdxProblem</b> and <b>EdxVideo</b> tables are constructed from the
+OpenEdX <i>modulestore</i> MongoDB structure.
+</p><p>
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 8px;border-style:solid;border-width:1px;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;}
+</style>
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">CourseInfo</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">course_display_name</td>
+    <td class="tg-031e">Course name as used in other tables of the archive.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">course_catalog_name</td>
+    <td class="tg-031e">The course name as shown in the course catalog.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">academic_year</td>
+    <td class="tg-031e">The <b>academic</b> year in which this row's
+        course ran. For example, a course that ran in the Fall quarter
+        of 2013 will have 2013 in this field. If the course instead
+        ran in, say, the Spring quarter of that same academic year
+        (2013/2014), this field will again contain 2013, even though
+        the course would have run in the calendar year 2014.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">quarter</td>
+    <td class="tg-031e">The academic quarter in which the course was
+        offered. This value will be one of 'fall,', 'winter,',
+        'spring,' or 'summer.'</td>
+  </tr>
+  <!-- <tr class="tg-even">
+    <td class="tg-031e">num_quarters</td>
+    <td class="tg-031e">Duration of the course in academic
+        quarters. This number is computed from the start and end
+        dates in the OpenEdX platform table <i>modulestore</i>. When
+        that source does not provide an instruction end date, then
+        this field is set to -1, because the correct entry cannot be
+        computed. </td>
+  </tr> NOTE: Removed 5 May 2016 -->
+  <tr class="tg-even">
+    <td class="tg-031e">is_internal</td>
+    <td class="tg-031e">A 1 if the course was public. A 0 if the
+        course was either for Stanford students only, or was offered
+        for a fee. </td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">enrollment_start</td>
+    <td class="tg-031e">Date at which the platform opened this course
+        for enrollment.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">start_date</td>
+    <td class="tg-031e">Date when instruction began.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">enrollment_end</td>
+    <td class="tg-031e">Date at which the platform closed this course
+        for enrollment.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">end_date</td>
+    <td class="tg-031e">Date when instruction ended.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">grade_policy</td>
+    <td class="tg-031e">Excerpt from course module. Contains data on weight
+        given to types of assignments when scoring learners.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">certs_policy</td>
+    <td class="tg-031e">Excerpt from course module. Specifies grade cutoffs
+        for giving a statement of accomplishment with/without distinction.</td>
+  </tr>
+</table>
+<br>
+Example rows in CourseInfo:
+<pre>
+  +--------------------------------+--------------------------------------------------+---------------+---------+-------------+---------------------+---------------------+---------------------+---------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+
+  | course_display_name            | course_catalog_name                              | academic_year | quarter | is_internal | enrollment_start    | start_date          | enrollment_end      | end_date            | grade_policy                                                                                                                                                                                                                                                                                                  | certs_policy                        |
+  +--------------------------------+--------------------------------------------------+---------------+---------+-------------+---------------------+---------------------+---------------------+---------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+
+  | Engineering/QMSE-02/Winter2015 | Quantum Mechanics for Scientists and Engineers 2 |          2014 | winter  |           0 | 2014-11-16 00:00:00 | 2015-01-15 01:00:00 | 2015-03-01 00:00:00 | 2015-03-20 00:00:00 | [{u'short_label': u'Quiz', u'min_count': 26, u'type': u'Quizzes', u'drop_count': 4, u'weight': 0.2}, {u'short_label': u'Assignment', u'min_count': 9, u'type': u'Assignments', u'drop_count': 1, u'weight': 0.8}]                                                                                             | {u'Distinction': 0.9, u'Pass': 0.7} |
+  | Medicine/MedStats-SP/SelfPaced | Statistics in Medicine                           |          2015 | winter  |           0 | 2015-11-24 19:00:00 | 2016-02-28 00:00:00 | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 | [{u'min_count': 9, u'weight': 0.45, u'type': u'Homework', u'drop_count': 1, u'short_label': u'HW'}, {u'min_count': 53, u'weight': 0.1, u'type': u'Quiz', u'drop_count': 0, u'short_label': u'Quiz'}, {u'min_count': 26, u'weight': 0.45, u'type': u'Final Exam', u'drop_count': 1, u'short_label': u'Final'}] | {u'Distinction': 0.9, u'Pass': 0.6} |
+  +--------------------------------+--------------------------------------------------+---------------+---------+-------------+---------------------+---------------------+---------------------+---------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+
+</pre>
+
+<br>
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">EdxProblem</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">problem_id</td>
+    <td class="tg-031e">Unique identifier for this problem in this course. Identifiers
+        may be repeated between courses as an artifact of how OpenEdX stores problems.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">problem_display_name</td>
+    <td class="tg-031e">User-facing label for this problem.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">course_display_name</td>
+    <td class="tg-031e">Course name as used in other tables of the archive.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">problem_text</td>
+    <td class="tg-031e">Full text of problem. May contain XML, HTML, LaTeX, or other markup language.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">date</td>
+    <td class="tg-031e">Creation date for this problem.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">weight</td>
+    <td class="tg-031e">Number of points available for this problem.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">revision</td>
+    <td class="tg-031e">Number of prior edits. Not used.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">max_attempts</td>
+    <td class="tg-031e">Number of attempts permitted.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">trackevent_hook</td>
+    <td class="tg-031e">Platform URI for this problem. Joins with Edx.EdxTrackEvent.problem_id.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">vertical_uri</td>
+    <td class="tg-031e">Platform URI of enclosing 'vertical' module.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">problem_idx</td>
+    <td class="tg-031e">Index of this problem in the submodule list of enclosing vertical.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">sequential_uri</td>
+    <td class="tg-031e">Platform URI of enclosing 'sequential' module. Joins with Edx.EdxTrackEvent.sequence_id.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">vertical_idx</td>
+    <td class="tg-031e">Index of this vertical in the submodule list of enclosing sequential. Joins with Edx.EdxTrackEvent.goto_dest.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">chapter_uri</td>
+    <td class="tg-031e">Platform URI of enclosing 'chapter' module.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">sequential_idx</td>
+    <td class="tg-031e">Index of this sequential in the submodule list of enclosing chapter.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">chapter_idx</td>
+    <td class="tg-031e">Index of this chapter in the submodule list of enclosing course.</td>
+  </tr>
+</table>
+
+<p>Note that the *_idx fields in EdxProblem can be used together to obtain a total ordering of problems
+in a given course, as follows:
+
+<pre>
+  SELECT problem_id, problem_display_name, chapter_idx, sequential_idx, vertical_idx, problem_idx
+  FROM Edx.EdxProblem
+  WHERE course_display_name = '{{COURSE}}'
+  ORDER BY chapter_idx, sequential_idx, vertical_idx, problem_idx;
+</pre>
+</p><p>
+
+<br>
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2">EdxVideo</th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_id</td>
+    <td class="tg-031e">Unique identifier for this video in this course. Identifiers
+        may be repeated between courses, as an artifact of how OpenEdX stores problems.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_display_name</td>
+    <td class="tg-031e">User-facing title for this video.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">course_display_name</td>
+    <td class="tg-031e">Course name as used in other tables of the archive.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_uri</td>
+    <td class="tg-031e">URL to video content hosted on AWS.</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">video_code</td>
+    <td class="tg-031e">ID for video content hosted on Youtube.</td>
+  </tr>
+</table>
+
+</p><p>
+
+<h3  id="engageDetail">Engagement Export Tables</h3>
+
+Engagement data for one class consists of three tables. One lists all
+dates, times, and durations of each session by every participants in
+the class. The second lists the weekly number of minutes each
+participant spent on the course. The third shows a summary of how many
+minutes participants spent in the aggregate on the course, the total
+number of work sessions, and three counts: the number of times that
+participants' weekly median session length was between 1 and 20
+minutes, the number of times participants' weekly median session
+length was 21 minutes to 1hr, and the number of times their weekly
+median session length was greater than one hour.
+</p><p>
+For example, say a course with 3 learners lasts for two weeks.  The
+first week two learners had an observed median session length of 15
+minutes. One learner's median was 2hrs. The second week of the course
+one learner's median was 25 minutes, and the other two learners
+engaged for a median of 13 minutes.
+</p><p>
+The Median1-20 would be (2 + 2 = 4), the Median21-1hr would be 1, and
+the Median>1hr would be 1.
+</p><p>
+Notice that the median statistically dampens the impact of
+outliers. For example, say one learner has all course materials
+available from an earlier course offering. The eager participant runs
+through the entire course during the first week, staying up through
+long sessions all through the night. For the remaining weeks the
+learner rests. What is the effect on the weekly session length? The
+answer depends on what the other learners were doing. If no learner
+touched the course during the first week, the median will be dominated
+by the eager learner, and the number of weeks during which the median
+was greater than one hour will be incremented.
+</p><p>
+If instead many learners are active during the first week, but they
+all only put in very short sessions, then the median will favor those
+short sessions, and instead of incrementing the number of weeks in
+which the median was greater than one hour, the number of weeks in
+which the median was in the short session category will be incremented
+instead. Thus, the week counts by median communicate a <i>typical</i>
+level of engagement. If your research goal calls for a more fine
+grained analysis, the first of the three tables is for you. As
+explained, that table lists all sessions.
+</p><p>
+The first table in this group is usually large, because it lists
+each <i>session</i> of each participant in a class. A session is
+defined as a series of actions a participant undertook on the computer
+while interacting with the course such that:
+<ol>
+  <li>The actions were detectable by the platform software, i.e. the
+      actions triggered a logging event.</li>
+  <li>No two actions were more than 30 minutes apart.</li>
+</ol>
+</p><center><img src="figs/engagementSessionExplanation.png" width="20%"></center></p>
+When more than 30 minutes elapse between two events, the second event
+is considered part of a subsequent session. Since the last event's
+duration is not delimited by a follow-on action in the same session,
+the last event is special. One might apportion no time to that last
+event. Another option is to apportion the median inter-event time
+lapse (which is 500sec). To be conservative we have settled on
+apportioning 1sec to the last event. This decision implies that
+the engagement computation underestimates the true result.
+</p><p>
+Note that this accounting of time engagement is quite approximate even
+disregarding the decision about the last event's duration. For
+example, participants might read course related materials for an hour
+without generating a platform event. No event: no accounting for that
+time. A similar short change occurs when participants work on a
+paper-and-pencil assignment.
+</p><p>
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
 .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
 </style>
-<table class="tg" width="500px">
-<!-- <table class="table.readme"> -->
+<table class="tg">
   <tr>
-    <th class="tg-031e">ColumnName</th>
-    <th class="tg-031e">ValueDescription</th>
+    <th class="tg-s6z2" colspan="2"><b>Engagement_AllData</b></th>
   </tr>
   <tr>
-    <td class="tg-031e">Text</td>
-    <td class="tg-031e">Text of one post</td>
+    <td class="tg-031e">Platform</td>
+    <td class="tg-031e">Platform where course ran<br></td>
   </tr>
   <tr>
-    <td class="tg-031e">Opinion(1/0</td>
-    <td class="tg-031e">binary: post contains an opinion</td>
+    <td class="tg-031e">Course</td>
+    <td class="tg-031e">Name of course<br></td>
   </tr>
   <tr>
-    <td class="tg-031e">Question(1/0)</td>
-    <td class="tg-031e">binary: post contains a question</td>
+    <td class="tg-031e">anon_screen_name</td>
+    <td class="tg-031e">Hashed name of participant<br></td>
   </tr>
   <tr>
-    <td class="tg-031e">Answer(1/0)</td>
-    <td class="tg-031e">binary: post contains an answer</td>
+    <td class="tg-031e">Date</td>
+    <td class="tg-031e">Date when the row's participant session occurred<br></td>
   </tr>
   <tr>
-    <td class="tg-031e">Sentiment(1-7)</td>
-    <td class="tg-031e">Learner sentiment expressed in post: 1=negative; 7=positive; 4=neutral</td>
+    <td class="tg-031e">Time</td>
+    <td class="tg-031e">Time when the row's participant session started<br></td>
   </tr>
   <tr>
-    <td class="tg-031e">Confusion(1-7)</td>
-    <td class="tg-031e">Learner degree of confusion expressed in post: 1=not confused; 7=very confused</td>
+    <td class="tg-031e">SessionLength (sec)</td>
+    <td class="tg-031e">Length of session in seconds</td>
   </tr>
   <tr>
-    <td class="tg-031e">Urgency(1-7)</td>
-    <td class="tg-031e">How urgent is it that instructor reads the post: 1=not urgent, 7=very urgent</td>
-  </tr>
-  <tr>
-    <td class="tg-031e">CourseType</td>
-    <td class="tg-031e">One of Education, Humanities, and Medicine</td>
-  </tr>
-  <tr>
-    <td class="tg-031e">forum_post_id</td>
-    <td class="tg-031e">Unique ID of the respective row's post in its original OpenEdX context</td>
-  </tr>
-  <tr>
-    <td class="tg-031e">course_display_name</td>
-    <td class="tg-031e">Name of course in context of Stanford's online, free, public offerings</td>
-  </tr>
-  <tr>
-    <td class="tg-031e">forum_uid</td>
-    <td class="tg-031e">Unique identifier of learner who posted the post</td>
-  </tr>
-  <tr>
-    <td class="tg-031e">created_at</td>
-    <td class="tg-031e">Post date</td>
-  </tr>
-  <tr>
-    <td class="tg-031e">post_type</td>
-    <td class="tg-031e">One of <i>Comment</i> or <i>CommentThread</i>; the
-    latter is assigned to posts that originated a thread, while the
-    former is assigned to all other posts</td>
-  </tr>
-  <tr>
-    <td class="tg-031e">anonymous</td>
-    <td class="tg-031e">If True, poster appears to everyone as name `anonymous'</td>
-  </tr>
-  <tr>
-    <td class="tg-031e">anonymous_to_peers</td>
-    <td class="tg-031e">If True, poster appears under his/her own
-    screen name to discussion moderator and instructor, but as 'anonymous' to everyone else.</td>
-  </tr>
-  <tr>
-    <td class="tg-031e">up_count</td>
-    <td class="tg-031e">Number of post's up-votes</td>
-  </tr>
-  <tr>
-    <td class="tg-031e">comment_thread_id</td>
-    <td class="tg-031e">ID of thread object</td>
-  </tr>
-  <tr>
-    <td class="tg-031e">reads</td>
-    <td class="tg-031e">The total number of reads logged for the
-    thread with ID comment_thread_id.</td>
+    <td class="tg-031e">NumEventsInSession</td>
+    <td class="tg-031e">Number of events that comprise this row's session</td>
   </tr>
 </table>
+</p><p>
+A few example lines from an engagement_allData table:
+<center><img src="figs/engagement_alldata.png"/></center>
+</p><p>
 
-<h2 id="demographics">Corpus Demographics</h2>
-
-The following table shows self-reported gender and education
-distribution for all but one of the courses. Course
-HumanitiesSciences/Econ1V/Summer2014 was small, and its demographics
-are folded into course HumanitiesSciences/Econ1/Summer2014. For
-convenience,
-an <a href="stanfordMOOCForumPostsSetDemographics.xlsx">Excel
-version</a> is available.
-<p>
-Column header <i>GenderO</i> stands for <i>Other</i>.
-</i>Column <i>EduNotCollected</i> shows the number of learners who
-enrolled before the level of education was collected by the OpenEdX
-software.
-
-<table border="1" class="table.readme">
-<tr>
-    <td></td>
-    <td>GenderF</td>
-    <td>GenderM</td>
-    <td>GenderO</td>
-    <td>GenderWithheld</td>
-    <td>EduElementary</td>
-    <td>EduJunHighSchool</td>
-    <td>EduHighSchool</td>
-    <td>EduAssocDeg</td>
-    <td>EduBachelors</td>
-    <td>EduMasters</td>
-    <td>EduPhD</td>
-    <td>EduOther</td>
-    <td>EduNone</td>
-    <td>EduWithheld</td>
-    <td>EduNotCollected</td>
-</tr>
-<tr><td>GlobalHealth/WomensHealth/Winter2014</td>
-    <td>5049</td><td>647</td><td>22</td><td>190</td><td>5</td><td>56</td><td>689</td>
-    <td>245</td><td>2278</td><td>2050</td><td>273</td><td>112</td><td>6</td><td>187</td><td>7</td>
-</tr>
-<tr><td>HumanitiesScience/StatLearning/Winter2014
-    </td><td>10793</td><td>37124</td><td>92</td><td>5559</td><td>30</td><td>130</td>
-    <td>2522</td><td>603</td><td>15367</td><td>21827</td><td>7824</td><td>320</td>
-    <td>61</td><td>4703</td><td>181</td>
-</tr>
-<tr><td>HumanitiesScience/Stats216/Winter2014</td>
-    <td>9</td><td>25</td><td>0</td><td>258</td><td>0</td><td>0</td><td>6</td><td>0</td>
-    <td>16</td><td>9</td><td>3</td><td>0</td><td>0</td><td>12</td><td>246</td>
-</tr>
-<tr><td>HumanitiesSciences/EP101/Environmental_Physiology</td>
-    <td>5831</td><td>6416</td><td>31</td><td>1009</td><td>41</td><td>359</td><td>1768</td>
-    <td>523</td><td>4329</td><td>4198</td><td>894</td><td>232</td><td>24</td><td>894</td>
-    <td>25</td>
-</tr>
-<tr><td>HumanitiesSciences/Econ-1[+V]/Summer2014</td>
-    <td>6321</td><td>14774</td><td>53</td><td>1803</td><td>50</td><td>451</td><td>3392</td>
-    <td>681</td><td>8065</td><td>7122</td><td>1291</td><td>241</td><td>44</td><td>1536</td>
-    <td>78</td>
-</tr>
-<tr><td>Medicine/HRP258/Statistics_in_Medicine</td>
-    <td>9925</td><td>15215</td><td>65</td><td>2472</td><td>29</td><td>239</td><td>2036</td>
-    <td>520</td><td>7306</td><td>10193</td><td>4810</td><td>353</td><td>41</td><td>2098</td>
-    <td>52</td>
-</tr>
-<tr><td>Medicine/MedStats/Summer2014</td>
-    <td>6465</td><td>9132</td><td>28</td><td>1246</td><td>17</td><td>147</td><td>1379</td>
-    <td>251</td><td>4497</td><td>6399</td><td>2859</td><td>207</td><td>22</td><td>1030</td>
-    <td>63</td>
-</tr>
-<tr><td>Medicine/Sci Write/Fall2013</td>
-    <td>21004</td><td>24414</td><td>75</td><td>3402</td><td>45</td><td>298</td><td>3897</td>
-    <td>701</td><td>12435</td><td>19630</td><td>8463</td><td>429</td><td>46</td><td>2909</td>
-    <td>42</td>
-</tr>
-<tr><td>Medicine/SURG210/Managing_Emergencies_What...</td>
-    <td>43</td><td>82</td><td>0</td><td>67</td><td>1</td><td>0</td><td>62</td><td>0</td>
-    <td>33</td><td>15</td><td>13</td><td>0</td><td>0</td><td>10</td><td>58</td>
-</tr>
-<tr><td>Education/EDUC115N/How_to_Learn_Math</td>
-    <td>24565</td><td>14563</td><td>77</td><td>2571</td><td>136</td><td>318</td><td>2930</td>
-    <td>1163</td><td>13791</td><td>18583</td><td>2279</td><td>447</td><td>83</td><td>2041</td>
-    <td>5</td>
-</tr>
+The engagement_weeklyEffort table lists the sum of session lengths for
+each participant for each week.
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+</style>
+<table class="tg">
+  <tr>
+    <th class="tg-s6z2" colspan="2"><b>Engagement_weeklyEffort</b></th>
+  </tr>
+  <tr>
+    <td class="tg-031e">Platform</td>
+    <td class="tg-031e">Platform where course ran<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Course</td>
+    <td class="tg-031e">Name of course<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">anon_screen_name</td>
+    <td class="tg-031e">Hashed name of participant<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Week</td>
+    <td class="tg-031e">Running week of the course; starting with 1
+          for first week of the course.<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Effort (sec)<br></td>
+    <td class="tg-031e">Number of minutes expended by the row's participant during the row's week<br></td>
+  </tr>
 </table>
+</p><p>
+A typical row in engagement_weeklyEffort looks like this:
+<center><img src="figs/engagement_weeklyEffort.png"/></center>
 
+</p><p>
+The final table in the engagement group is a single row for each
+course. The row summarizes the efforts across all weeks in one
+course. If a single course is being exported, then the table will
+contain only one line.
+</p><p>
+This table provides an overview of session lengths that learners tended to
+invest in a course. For example, if the number of weeks in which the median
+session length exceeded one hour is high, then learners had to invest
+long, contiguous studying times throughout most of the course. In contrast,
+if the number of weeks in which the median session length was 1-20min
+is high, then the course tended to have students frequently engage
+for short periods of time.
+</p><p>
+As an extreme, consider a learner who works through an entire course
+in the first week, then sits out the remaining time. (This example
+would require all course materials to be available from the start.)
+This learner would possibly increment the greater-than-one-hour week
+count by one. Whether or not that increment occurs depends on the
+behavior of other learners during that same week. If everyone else
+only spent 1 minute during that week, the median would be 1-20min for
+that week, and the corresponding 1-20min count would be incremented
+instead of the greater-than-one-hour count.
+</p><p>
+This summary measure is therefore not sensitive to extreme
+behaviors by individual learners. Such learners do not unduly distort
+the result. Note, however, that the summary measure does not
+tell us <i>when</i> in a course long sessions prevailed.
+</p><p>
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+</style>
+<table class="tg">
+  <tr>
+    <th class="tg-s6z2" colspan="2"><b>Engagement_summary</b></th>
+  </tr>
+  <tr>
+    <td class="tg-031e">Platform</td>
+    <td class="tg-031e">Platform where course ran<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">Course</td>
+    <td class="tg-031e">Name of course<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">TotalStudentSessions</td>
+    <td class="tg-031e">Total number of sessions by all participants in the course<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">TotalEffortAllStudents(secs)<br></td>
+    <td class="tg-031e">Sum of seconds from all participants' sessions in the course<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">MedPerWeekOneToTwenty</td>
+    <td class="tg-031e">The number of times a weekly median of 1 to
+         20 minutes of time engagement was observed, counting each participant, each week.</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">MedPerWeekTwentyoneToSixty</td>
+    <td class="tg-031e">The number of times a median of 21min to 1hr
+        of time engagement was observed, counting each participant, each week.</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">MedPerWeekGreaterSixty</td>
+    <td class="tg-031e">Median number of sessions with weekly median
+         larger than one hour.<br></td>
+  </tr>
+</table>
+</p><p>
+A typical row in engagement_summary looks like this:
+<center><img src="figs/engagement_summary.png"/></center>
 
-<h2 id="procedures">Procedures</h2>
+</p><p>
+<hr>
+</p><p>
+The following tables are only available.
+by <a href="#accessProcedure">special arrangement</a>
 
-Creating the final set involved several steps. First, the randomly
-chosen posts were anonymized via an automated facility. Then the
-30,000 posts were distributed to ODesk consultants for coding. The
-returned sets were then combined into one gold set. These steps are
-next described in more detail.
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 8px;border-style:solid;border-width:1px;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;}
+</style>
+<table class="tg">
+  <tr>
+    <th colspan="2" class="tg-s6z2"><b>UserGrade</b></th>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">name</td>
+    <td class="tg-031e">Participant's self reported name</td>
+  </tr>
+  <tr>
+    <td class="tg-031e">screen_name</td>
+    <td class="tg-031e">Participant's choice of name for him/herself on the online learning platform</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">grade</td>
+    <td class="tg-031e">Currently known
+      grade.<br> (<img src="figs/expert.png" width="2%">
+                        The information comes
+                        from platform tables auth_user and
+                        certificates_generatedcertificate.)
+    </td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">course_id</td>
+    <td class="tg-031e">Name of course in format foo/bar/fum</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">distinction</td>
+    <td class="tg-031e">0 or 1</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">status</td>
+    <td class="tg-031e">downloadable, generating, notpassing, or unavailable</td>
+  </tr>
+  <tr class="tg-even">
+    <td class="tg-031e">user_int_id</td>
+    <td class="tg-031e">Integer identifier for participant as used in
+                        platform native
+                        tables.<br> (<img src="figs/expert.png"
+                        width="2%">This is the same value as the
+                        student_id column in courseware_studentmodule.)
+   </td>
+  </tr>
+  <tr>
+    <td class="tg-031e">anon_screen_name</td>
+    <td class="tg-031e">Anonymization code used for this
+                        participant. Since this table contains both<br>
+                        the integer ID used on platform tables, and<br>
+                        the 40 byte id used elsewhere on datastage,<br>
+                        this table is used for translation. See<br>
+                        stored functions idInt2Anon() and
+                        idAnon2Int().)
+    </td>
+  </tr>
+</table>
+</p><p>
 
-<h3 id="anonymization">Anonymization</h3>
-
-The original forum posts were on the Web, visible to tens of thousands
-of learners who had enrolled in the respective course. Anyone,
-anywhere was free to enroll without cost, and thereby enjoyed access
-to the material. We nevertheless removed personally identifiable
-information from this research set as best we could. Here a
-description of our procedure.
+<h3 id="discarded">Event types not currently parsed</h3>
 <p>
-Automated anonymization replaced identity-revealing words with a
-single word that indicates the type of revealing information being
-obscured. Example: when the anonymization algorithm detects a string
-that might be a telephone number, the string is replaced
-with <i>&lt;phoneRedac&gt;</i>. Some such fillers contain underscores, all are
-delimited by angle brackets. Except for rare cases of a full,
-two-part name being redacted, word count of the posts is thus the
-same as the original, as long as the tokenizer underneath the word
-counter considers the terms in angle brackets as one token. Strings
-that are suspected to be zip codes are replaced by <i>&lt;zipRedac&gt;</i>, email
-addresses are replaced by <i>&lt;emailRedac&gt;</i>. For uninteresting reasons,
-posters’ names are replaced by the more complex
-<i>&lt;nameRedac_&lt;anon_screen_name_redacted&gt;&gt;</i>.
-<p>
-The coders were asked to note any posts that still contained
-personally identifying information. A staff member went through all
-those posts, and manually redacted as per the above automated
-procedure.
+  We are currently discarding the following event types from our tracking logs:
+<ul>
+  <li>'list-students'</li>
+  <li>'dump-grades'</li>
+  <li>'dump-grades-raw'</li>
+  <li>'dump-grades-csv'</li>
+  <li>'dump-grades-csv-raw'</li>
+  <li>'dump-answer-dist-csv'</li>
+  <li>'dump-graded-assignments-config'</li>
+  <li>'list-staff'</li>
+  <li>'list-instructors'</li>
+  <li>'list-beta-testers'</li>
+  <li>'edx.user.settings.changed'</li>
+</ul>
+  If you are using our parsed tracking log data and need any of these events,
+  please contact us with specifics on what you need the data for.
+</p>
 
-We ask that you respect the posters' anonymity, and do not attempt to
-reconstruct redacted information.
+<h3 id="mirrors">Platform tables mirrored on Datastage</h3>
 
-<h3 id="coding">Coding Process</h3>
+This list may change. To add additional tables, see
+script json_to_relation/scripts/cronRefreshEdxprod.sh.
+<a href="https://media.readthedocs.org/pdf/edx/latest/edx.pdf">
+Documentation for these tables</a> is provided by the EdX consortium.
+<ul>
+<li>auth_user</li>
+<li>auth_userprofile</li>
+<li>certificates_generatedcertificate</li>
+<li>courseware_studentmodule</li>
+<li>courseware_studentmodulehistory</li>
+<li>external_auth_externalauthmap</li>
+<li>student_anonymoususerid</li>
+<li>student_courseenrollment</li>
+</ul>
+</p><p>
+<h3 id="functions">Useful MySQL Functions</h3>
 
-Each course set was coded by three distinct, independent, paid
-coders. That is three triplets of coders each worked on one set of
-10,000 posts. No coder worked on more than one course set. Each coder
-attempted to code every post for his or her particular set. All posts
-with malformed or missing scores in at least one coder’s spreadsheet
-were discarded. This elision accounts for the difference between the
-29,604 posts in the final set, and the original 30,002 posts.
-
-<h3 id="setgen">Generating the Gold Sets</h3>
-
-We employed the following heuristics in computing scores for the gold
-sets: For each course set and <b>Likert variable</b> in that course
-set, we computed the
-<a href="http://en.wikipedia.org/wiki/Krippendorff%27s_alpha">Krippendorff
-alphas</a> for all possible combinations of coders. In every case, we
-found that some combination of two coders achieved higher agreement
-than the combination of all three coders. For each variable we
-therefore picked the coder combination that achieved the highest
-agreement and discarded the scores from the coder not included in that
-combination. A given post’s gold score was computed as an unweighted
-average of the two scores assigned to it by the selected coder
-combination. You can download CSV files containing scores submitted by
-the
-<a href="likert-coder-combinations">
-optimal coder combination for each Likert variable, across all three
-course sets</a>. Each row in these files correspond to one row in the
-gold set. The two columns in each file list the scores given by the
-two most similar coders. The gold set contains the average of those
-number pairs. For example, file education-pair-confusion.csv lists for
-each post the confusion scores given by the coders with the highest
-Krippendorff alpha around the confusion dimension. Note: you can use
-these files to compute your own inter-coder reliability score between
-the two coders.
-<p>
-For each course set's <b>binary variable</b>, post gold scores were
-chosen by majority vote across all three coders.  Download CSV files
-with <a href="binary-scores-pre-vote"> scores submitted by all three
-coders for every binary variable, across all course sets</a>, and
-the <a href="binary-scores-pre-vote/consensus"> consensus
-files</a>. Note: you can use these files to compute your own
-inter-coder reliability score between the three coders with respect to
-each binary quantity.
-<p>
-The <a href="Krippendorff.xlsx"> spreadsheet titled
-Krippendorff</a> enumerates the Krippendorff alphas for the CSVs of
-Likert and binary variables. Note that the spreadsheet contains two
-worksheets. Alphas were computed using <code>ReCal</code>, a free
-online tool. Likert variables were treated as interval data, while
-binary variables were treated as nominal.
-<p>
-Thanks to Alyssa Weiss and her team our standard MOOC forum post
-training set has been extended for about 300 of the posts. A binary 1/0 tag was added to indicate whether a post
-was on topic for its associated course, or not.
-The courses for which this extension is available are:
-<a href="Winter2014_statlearn_postid_code.xlsx">statlearn</a>,
-<a href="Environmental_Physiology_ybw__postid_code.xlsx">environmental_physiology</a>,
-<a href="Statistics_in_Medicine_statmed'13_postid_code.xlsx">statmed'13</a>, and
-<a href="Summer2014_statmed'14_postid_code.xlsx">statmed'14</a>.
-
-
-<h3 id="coderinstructions">Coder Instructions</h3>
-The <a href="CoderInstructions.pdf">coder instructions</a> were posted
-on <a href="https://www.odesk.com/">oDesk</a>. We hired nine
-colleagues for the task. During the first week of coding some
-questions arose, which we answered immediately. The most important
-clarification was that it was possible for a post to have multiple
-binary dimensions be true. That is, a post could express both a
-question, and an opinion.
-
-
-<h2 id="appendix1">Appendix: Corpus Learner Origins</h2>
-
-The following tables show course countries of learner origins for
-countries that contributed more than 100 learners to a respective
-course. Courses without a table below only hosted learners in
-which no country contributed more than 100 learners.
-
+If you query the database directly, the following stored functions and procedures
+might prove useful. Some of the functions are privileged because they perform
+user id conversions that would put privacy in peril. Those functions
+can only be used with the prefix <i>EdxPrivate</i>. You'll know that
+you hit on one of these if you try to use a function, and MySQL
+complains that the function does not exist. The current set of
+private functions are tagged with an asterisk in the table below.
+<br>
+Note that there is a difference between MySQL functions, and MySQL procedures.
+A function is invoked as if it were a built-in function, like MIN(), or COUNT().
+Examples:
 <pre>
-GlobalHealth/WomensHealth/Winter2014:
-+----------------+------------------+
-| country        | LearnerCountries |
-+----------------+------------------+
-| Australia      |              205 |
-| Brazil         |              136 |
-| Canada         |              310 |
-| China          |              134 |
-| France         |              145 |
-| Germany        |              173 |
-| India          |              254 |
-| Reserved       |              107 |
-| United Kingdom |              409 |
-| United States  |             2973 |
-+----------------+------------------+
-<p>
-
-HumanitiesScience/StatLearning/Winter2014:
-+---------------------------------+------------------+
-| country                         | LearnerCountries |
-+---------------------------------+------------------+
-| Argentina                       |              246 |
-| Australia                       |             1312 |
-| Austria                         |              632 |
-| Bangladesh                      |              103 |
-| Belarus                         |              103 |
-| Belgium                         |              326 |
-| Brazil                          |             1131 |
-| Bulgaria                        |              151 |
-| Canada                          |             1931 |
-| Chile                           |              195 |
-| China                           |             3794 |
-| Colombia                        |              380 |
-| Croatia (LOCAL Name: Hrvatska)  |              138 |
-| Czech Republic                  |              324 |
-| Denmark                         |              411 |
-| Egypt                           |              407 |
-| European Union                  |              175 |
-| Finland                         |              307 |
-| France                          |             1464 |
-| Germany                         |             2327 |
-| Greece                          |              386 |
-| Hong Kong                       |              549 |
-| Hungary                         |              168 |
-| India                           |             5272 |
-| Indonesia                       |              210 |
-| Iran (ISLAMIC Republic Of)      |              319 |
-| Ireland                         |              250 |
-| Israel                          |              362 |
-| Italy                           |              976 |
-| Japan                           |              887 |
-| Kenya                           |              138 |
-| Korea Republic of               |              977 |
-| Lithuania                       |              225 |
-| Malaysia                        |              213 |
-| Mexico                          |              535 |
-| Netherlands                     |              910 |
-| New Zealand                     |              246 |
-| Nigeria                         |              116 |
-| Norway                          |              600 |
-| Pakistan                        |              314 |
-| Peru                            |              164 |
-| Philippines                     |              175 |
-| Poland                          |              824 |
-| Portugal                        |              308 |
-| Reserved                        |             1356 |
-| Romania                         |              316 |
-| Russian Federation              |             1377 |
-| Saudi Arabia                    |              167 |
-| Serbia                          |              155 |
-| Singapore                       |              888 |
-| Slovakia (SLOVAK Republic)      |              141 |
-| South Africa                    |              286 |
-| Spain                           |             1692 |
-| Sweden                          |              761 |
-| Switzerland                     |              593 |
-| Taiwan; Republic of China (ROC) |              447 |
-| Thailand                        |              144 |
-| Turkey                          |              273 |
-| Ukraine                         |              307 |
-| United Arab Emirates            |              147 |
-| United Kingdom                  |             3140 |
-| United States                   |            23138 |
-| Venezuela                       |              128 |
-| Viet Nam                        |              261 |
-+---------------------------------+------------------+
-<p>
-
-HumanitiesSciences/EP101/Environmental_Physiology:
-+--------------------+------------------+
-| country            | LearnerCountries |
-+--------------------+------------------+
-| Australia          |              352 |
-| Austria            |              136 |
-| Brazil             |              315 |
-| Canada             |              497 |
-| China              |              433 |
-| Colombia           |              136 |
-| Denmark            |              116 |
-| Egypt              |              165 |
-| France             |              323 |
-| Germany            |              472 |
-| Greece             |              159 |
-| Hong Kong          |              111 |
-| India              |              858 |
-| Italy              |              223 |
-| Japan              |              165 |
-| Korea Republic of  |              105 |
-| Mexico             |              222 |
-| Netherlands        |              180 |
-| Norway             |              122 |
-| Pakistan           |              127 |
-| Poland             |              234 |
-| Reserved           |              251 |
-| Romania            |              207 |
-| Russian Federation |              446 |
-| Singapore          |              144 |
-| Spain              |              288 |
-| Sweden             |              138 |
-| Switzerland        |              104 |
-| Turkey             |              103 |
-| Ukraine            |              183 |
-| United Kingdom     |              710 |
-| United States      |             5413 |
-+--------------------+------------------+
-<p>
-
-HumanitiesSciences/Econ-1/Summer2014:
-+---------------------------------+------------------+
-| country                         | LearnerCountries |
-+---------------------------------+------------------+
-| Argentina                       |              124 |
-| Australia                       |              722 |
-| Austria                         |              213 |
-| Belgium                         |              139 |
-| Brazil                          |              799 |
-| Canada                          |              703 |
-| Chile                           |              134 |
-| China                           |             1625 |
-| Colombia                        |              251 |
-| Czech Republic                  |              107 |
-| Denmark                         |              156 |
-| Egypt                           |              920 |
-| France                          |              596 |
-| Germany                         |              756 |
-| Greece                          |              191 |
-| Hong Kong                       |              291 |
-| India                           |             2616 |
-| Indonesia                       |              146 |
-| Iran (ISLAMIC Republic Of)      |              143 |
-| Ireland                         |              111 |
-| Israel                          |              130 |
-| Italy                           |              369 |
-| Japan                           |              429 |
-| Korea Republic of               |              279 |
-| Malaysia                        |              177 |
-| Mexico                          |              385 |
-| Netherlands                     |              299 |
-| Nigeria                         |              140 |
-| Norway                          |              213 |
-| Pakistan                        |              250 |
-| Peru                            |              127 |
-| Philippines                     |              143 |
-| Poland                          |              277 |
-| Portugal                        |              114 |
-| Reserved                        |              667 |
-| Romania                         |              201 |
-| Russian Federation              |              548 |
-| Saudi Arabia                    |              208 |
-| Singapore                       |              425 |
-| South Africa                    |              146 |
-| Spain                           |              454 |
-| Sweden                          |              253 |
-| Switzerland                     |              207 |
-| Taiwan; Republic of China (ROC) |              198 |
-| Turkey                          |              200 |
-| Ukraine                         |              187 |
-| United Arab Emirates            |              166 |
-| United Kingdom                  |             1343 |
-| United States                   |             7737 |
-| Viet Nam                        |              195 |
-+---------------------------------+------------------+
-50 rows in set (2.78 sec)
-<p>
-
-Medicine/HRP258/Statistics_in_Medicine:
-+---------------------------------+------------------+
-| country                         | LearnerCountries |
-+---------------------------------+------------------+
-| Argentina                       |              118 |
-| Australia                       |              805 |
-| Austria                         |              257 |
-| Belgium                         |              146 |
-| Brazil                          |              485 |
-| Canada                          |              925 |
-| Chile                           |              108 |
-| China                           |              917 |
-| Colombia                        |              225 |
-| Croatia (LOCAL Name: Hrvatska)  |              104 |
-| Czech Republic                  |              109 |
-| Denmark                         |              226 |
-| Egypt                           |              695 |
-| Finland                         |              119 |
-| France                          |              649 |
-| Germany                         |              936 |
-| Greece                          |              255 |
-| Hong Kong                       |              182 |
-| India                           |             2127 |
-| Iran (ISLAMIC Republic Of)      |              241 |
-| Ireland                         |              141 |
-| Israel                          |              129 |
-| Italy                           |              504 |
-| Japan                           |              342 |
-| Kenya                           |              316 |
-| Korea Republic of               |              217 |
-| Lithuania                       |              133 |
-| Malaysia                        |              142 |
-| Mexico                          |              316 |
-| Morocco                         |              104 |
-| Netherlands                     |              407 |
-| New Zealand                     |              103 |
-| Nigeria                         |              155 |
-| Norway                          |              347 |
-| Pakistan                        |              412 |
-| Poland                          |              376 |
-| Portugal                        |              226 |
-| Reserved                        |              419 |
-| Romania                         |              231 |
-| Russian Federation              |              465 |
-| Saudi Arabia                    |              262 |
-| Singapore                       |              246 |
-| South Africa                    |              161 |
-| Spain                           |              611 |
-| Sweden                          |              386 |
-| Switzerland                     |              244 |
-| Taiwan; Republic of China (ROC) |              112 |
-| Turkey                          |              105 |
-| Ukraine                         |              102 |
-| United Arab Emirates            |              106 |
-| United Kingdom                  |             1627 |
-| United States                   |            10403 |
-| Viet Nam                        |              195 |
-+---------------------------------+------------------+
-<p>
-
-Medicine/MedStats/Summer2014:
-+---------------------------------+------------------+
-| country                         | LearnerCountries |
-+---------------------------------+------------------+
-| Australia                       |              550 |
-| Austria                         |              191 |
-| Belgium                         |              121 |
-| Brazil                          |              449 |
-| Canada                          |              637 |
-| China                           |              613 |
-| Colombia                        |              177 |
-| Czech Republic                  |              117 |
-| Denmark                         |              246 |
-| Egypt                           |             1064 |
-| France                          |              489 |
-| Germany                         |              642 |
-| Greece                          |              160 |
-| Hong Kong                       |              137 |
-| India                           |             1405 |
-| Iran (ISLAMIC Republic Of)      |              192 |
-| Italy                           |              395 |
-| Japan                           |              281 |
-| Kenya                           |              164 |
-| Korea Republic of               |              229 |
-| Malaysia                        |              112 |
-| Mexico                          |              289 |
-| Netherlands                     |              354 |
-| Nigeria                         |              171 |
-| Norway                          |              229 |
-| Pakistan                        |              272 |
-| Poland                          |              330 |
-| Portugal                        |              147 |
-| Reserved                        |              562 |
-| Romania                         |              228 |
-| Russian Federation              |              373 |
-| Saudi Arabia                    |              236 |
-| Singapore                       |              161 |
-| South Africa                    |              138 |
-| Spain                           |              532 |
-| Sweden                          |              283 |
-| Switzerland                     |              180 |
-| Taiwan; Republic of China (ROC) |              115 |
-| Turkey                          |              107 |
-| United Arab Emirates            |              109 |
-| United Kingdom                  |             1242 |
-| United States                   |             5954 |
-| Viet Nam                        |              108 |
-+---------------------------------+------------------+
-43 rows in set (2.37 sec)
-
-<p>
-Medicine/wSURG210/Managing_Emergencies_What_Every_Doctor_Must_Know:
-+---------------------------------+------------------+
-| country                         | LearnerCountries |
-+---------------------------------+------------------+
-| Argentina                       |              392 |
-| Australia                       |             1284 |
-| Austria                         |              676 |
-| Belgium                         |              318 |
-| Brazil                          |             2119 |
-| Bulgaria                        |              124 |
-| Canada                          |             1489 |
-| Chile                           |              331 |
-| China                           |             2921 |
-| Colombia                        |             1030 |
-| Croatia (LOCAL Name: Hrvatska)  |              154 |
-| Czech Republic                  |              256 |
-| Denmark                         |              392 |
-| Ecuador                         |              121 |
-| Egypt                           |              886 |
-| European Union                  |              109 |
-| Finland                         |              293 |
-| France                          |             1382 |
-| Germany                         |             2502 |
-| Greece                          |              469 |
-| Hong Kong                       |              444 |
-| Hungary                         |              153 |
-| India                           |             3383 |
-| Indonesia                       |              246 |
-| Iran (ISLAMIC Republic Of)      |              750 |
-| Ireland                         |              233 |
-| Israel                          |              245 |
-| Italy                           |             1139 |
-| Japan                           |              742 |
-| Kenya                           |              201 |
-| Korea Republic of               |              585 |
-| Lithuania                       |              225 |
-| Malaysia                        |              301 |
-| Mexico                          |              766 |
-| Morocco                         |              139 |
-| Netherlands                     |              917 |
-| New Zealand                     |              269 |
-| Nigeria                         |              201 |
-| Norway                          |              708 |
-| Pakistan                        |              615 |
-| Peru                            |              230 |
-| Philippines                     |              248 |
-| Poland                          |             1667 |
-| Portugal                        |              593 |
-| Reserved                        |              626 |
-| Romania                         |              428 |
-| Russian Federation              |             1513 |
-| Saudi Arabia                    |              398 |
-| Serbia                          |              206 |
-| Singapore                       |              408 |
-| Slovakia (SLOVAK Republic)      |              163 |
-| South Africa                    |              292 |
-| Spain                           |             2329 |
-| Sri Lanka                       |              112 |
-| Sweden                          |              722 |
-| Switzerland                     |              488 |
-| Taiwan; Republic of China (ROC) |              311 |
-| Thailand                        |              194 |
-| Turkey                          |              351 |
-| Ukraine                         |              475 |
-| United Arab Emirates            |              168 |
-| United Kingdom                  |             2583 |
-| United States                   |            12938 |
-| Venezuela                       |              106 |
-| Viet Nam                        |              381 |
-+---------------------------------+------------------+
-<p>
-Education/EDUC115N/How_to_Learn_Math:
-+----------------------+------------------+
-| country              | LearnerCountries |
-+----------------------+------------------+
-| Australia            |             1193 |
-| Austria              |              196 |
-| Brazil               |              418 |
-| Canada               |             1765 |
-| China                |              609 |
-| Colombia             |              192 |
-| Denmark              |              178 |
-| Egypt                |              131 |
-| Finland              |              106 |
-| France               |              488 |
-| Germany              |              711 |
-| Greece               |              203 |
-| Hong Kong            |              154 |
-| India                |             1543 |
-| Indonesia            |              121 |
-| Ireland              |              122 |
-| Israel               |              123 |
-| Italy                |              336 |
-| Japan                |              215 |
-| Korea Republic of    |              132 |
-| Malaysia             |              129 |
-| Mexico               |              370 |
-| Netherlands          |              170 |
-| New Zealand          |              380 |
-| Norway               |              181 |
-| Pakistan             |              251 |
-| Philippines          |              230 |
-| Poland               |              204 |
-| Reserved             |              326 |
-| Romania              |              200 |
-| Russian Federation   |              402 |
-| Singapore            |              224 |
-| South Africa         |              264 |
-| Spain                |              371 |
-| Sweden               |              346 |
-| Switzerland          |              120 |
-| Turkey               |              109 |
-| Ukraine              |              115 |
-| United Arab Emirates |              126 |
-| United Kingdom       |             1965 |
-| United States        |            23099 |
-+----------------------+------------------+
-
+SELECT wordcount('I love data');
+SELECT * FROM EventXtract WHERE anon_screen_name = idInt2Anon(44000);
 </pre>
-</body>
-</html>
+However, note that due to MySQL not being smart sometimes, the second
+SELECT above is much slower than the following idiom:
+<pre>
+SELECT idInt2Anon(44000) INTO @theAnon;
+SELECT * FROM EventXtract WHERE anon_screen_name = @theAnon;
+</pre>
+In contrast to functions, a procedure must be called in a separate
+statement, and a return variable must be provided. The idiom is:
+<pre>
+CALL computeEnrollmentCoursera('antimicrobial-001', @theEnrollment);
+SELECT @theEnrollment;
+</pre>
+</p><p>
+A word about the functions that begin with 'id', such as idAnon2Ext().
+These are functions that convert between a number of learner IDs that
+are used (i) in Datastage's tables, (2) in tables created by the EdX
+platform, and (3) as learner IDs given to outside learning tool
+vendors.
+</p><p>
+Instead of personally identifiable learner names, Datastage uses in
+its tables a 20-byte hash, which is always in column
+anon_screen_name. This ID shows up as the <i>Anon</i> in the above
+conversion function name.
+</p><p>
+Meanwhile, the OpenEdX platform code uses a different integer ID for
+each learner. We call those IDs a learner's <i>Int</i> id. You will
+see functions with embedded <i>Int</i>, such as idAnon2Int().
+</p><p>
+A third source of IDs for any given learner are 16-byte hashes that
+OpenEdX produces in line with the Learning Technology Interchange
+(LTI) method of generating IDs. OpenEdX assigns each learner a
+different LTI ID for each course they enroll in. Also assigned to each
+learner is one distinguished LTI ID that is independent from any
+course: the learner's <i>Global LTI ID</i>.  For historic reasons, we
+call a learner's LTI IDs their <i>External</i> IDs. You will see
+function names that include the letters <i>Ext</i>, which stands for
+external (e.g. idAnon2Ext())
+</p>
+
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.tg .tg-e3zv{font-weight:bold}
+</style>
+<table class="tg" style="undefined;table-layout: fixed; width: 907px">
+<colgroup>
+<col style="width: 419px">
+<col style="width: 488px">
+</colgroup>
+  <tr>
+    <th class="tg-e3zv">Function/Procedure</th>
+    <th class="tg-031e">Explanation<br></th>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">earliestLog()</td>
+    <td class="tg-031e"><br>the earliest OpenEdX event log load date/time. The function provides two times:  'Loaded' is the time when the earliest log was loaded into Datastage. Collected is the date when the log was originally created.</td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">latestLog()</td>
+    <td class="tg-031e">the most recent OpenEdX event log date. The 'loaded' date is supposed to show when the log was loaded into Datastage. But this date is unreliable. The second date is the date the log was created.<br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">idAnon2Int(anon_screen_name)</td>
+    <td class="tg-031e">takes a learner identifier that as encoded in the Datastage archive. Returns an integer identifier for the same learner, as used in tables generated by the OpenEdX production platform.<br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">idInt2Anon(openEdxPlatformLearnerId)<br></td>
+    <td class="tg-031e">takes an integer learner ID as used in OpenEdX production tables. Returns the corresponding anon_screen_name hash value used in the archive.<br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">idAnon2Ext(anon_screen_name)</td>
+    <td class="tg-031e">converts an anon_screen_name learner ID to a
+    'global' LTI ID (in contrast to idAnon2ExtByCourse(), which
+    returns a learner's course-specific LTI ID.<br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">idAnon2ExtByCourse(anon_screen_name, course_display_name)</td>
+    <td class="tg-031e">converts an anon_screen_name learner ID and course name pair to an LTI ID as used in Qualtrics and other outside vendors.<br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">idAnon2Exts(anon_screen_name)<br>(procedure)<br></td>
+    <td class="tg-031e">procedure takes an anon_screen_name, and fills
+    a temporary memory table with all external LTI-uid/course
+    name,pairs. The procedure creates a temporary in-memory table of,
+    two columns: <br>   ext_id, course_display_name.<br>The new table
+    is called ExtCourseTable, and is available after the procedure
+    call returns. The table is wiped and renewed with every
+    call. Each MySQL connection has its own temp table name space, so
+    no collision with other connections occurs. The table vanishes
+    with connection closure.<br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">idExt2Anon(ltiExternalId)</td>
+    <td class="tg-031e">given an external, LTI learner ID as used in
+    Qualtrics and other outside services, return the corresponding
+    anon_screen_name. The input LTI may be the global LTI, or any of
+    the learner's course-specific ones.<br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">idInt2Forum(openEdxPlatformLearnerId)</td>
+    <td class="tg-031e">convert integer learner IDs as used in platform production tables to ID used in forum table for the same learner.<br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">idForum2Int(openEdxPlatformLearnerId)*</td>
+    <td class="tg-031e">convert forum learner IDs to integer learner IDs as used in platform production tables.<br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">idForum2Anon(forumArchiveLearnerId)*</td>
+    <td class="tg-031e">convert learner ID used in forum table to hash, values used in anon_screen_name columns</td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">wasCertified(anon_screen_name, course_display_name)</td>
+    <td class="tg-031e">return 1 if OpenEdX learner was issued a certificate, else return 0.</td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">isUserEvent(event_type)</td>
+    <td class="tg-031e">given a user event type, return 1 if that type of event is triggered by a user action, as opposed to one by the OpenEdX platform server<br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">wordcount(string)</td>
+    <td class="tg-031e">this function works by passing a string, or it can be used to compute the sum of words in an entire colum: SELECT SUM(wordcount(body)) FROM (SELECT body FROM contents) AS Contents;</td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">enrollment(course_display_name)</td>
+    <td class="tg-031e">given an OpenEdX course name, return its current enrollment.<br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">computeEnrollmentCoursera(course_name)<br>(procedure)<br></td>
+    <td class="tg-031e">given a course name that ran on Coursera, return its enrollment. All the following course name examples are acceptable:<br>
+       <ul>
+       <li>coursera_antimicrobial-001_demographics</li>
+       <li>antimicrobial-001_demographics</li>
+       <li>antimicrobial-001_anonymized_general</li>
+       <li>antimicrobial-001</li>
+       </ul>
+       <br></td>
+  </tr>
+  <tr>
+    <td class="tg-e3zv">computeEnrollmentNovoEd(course_name)</td>
+    <td class="tg-031e">given a course name that ran on NovoEd, return its enrollment. All the following course name examples are acceptable:<br>
+        <ul>
+	<li>novoed_crs_93</li>
+	<li>novoed_crs_email_93</li>
+	<li>93</li>
+	</ul>
+	<br></td>
+  </tr>
+  <tr>
+    <td class="tg-031e">* procedure or function is only available in EdxPrivate.</td>
+    <td class="tg-031e"></td>
+  </tr>
+</table>
+
+<html>
+<head>
+</head>
+<body>
